@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Smart Clinic OS v13.0 - Clean Production</title>
+    <title>Smart Clinic OS v13.5 - Elite Mobile Responsive</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2 family=Cairo:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -79,6 +79,7 @@
 
         .app-layout { display: none; width: 100%; min-height: 100vh; position: relative; }
 
+        /* الهامش الجانبي المستقر */
         .sidebar {
             width: var(--sidebar-width); background: var(--bg-sidebar); border-inline-end: 1px solid var(--border-sidebar);
             padding: 2.5rem 1.75rem; display: flex; flex-direction: column; position: fixed; height: 100vh; top: 0; z-index: 1050; transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
@@ -132,7 +133,6 @@
         .chart-canvas-container { position: relative; margin: 0 auto; width: 100%; max-width: 250px; height: 250px; }
 
         .workspace-grid-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 2.5rem; margin-top: 2.5rem; }
-        @media (max-width: 1200px) { .workspace-grid-layout { grid-template-columns: 1fr; } }
         
         .premium-widget-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; gap: 1.5rem; height: fit-content; }
         .widget-header { display: flex; align-items: center; gap: 10px; font-weight: 700; color: var(--accent); border-bottom: 1px dashed var(--border); padding-bottom: 10px; font-size: 1.1rem; }
@@ -146,12 +146,10 @@
         .btn-action { width: 100%; padding: 16px; background: linear-gradient(135deg, var(--primary), var(--primary-hover)); color: #ffffff; border: none; border-radius: var(--radius-md); font-weight: 700; font-size: 1.05rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; transition: var(--transition); }
         .btn-action:hover { box-shadow: 0 10px 25px var(--primary-light); transform: translateY(-4px); }
 
-        /* ==========================================
-           🏛️ هندسة الـ الجدول الجديد الانسيابي 100% بدون أي تداخل
-           ========================================== */
+        /* هندسة التابلوه الانسيابي */
         .table-filter-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; gap: 1rem; flex-wrap: wrap; }
-        .table-container { width: 100%; overflow-x: auto; border-radius: var(--radius-md); border: 1px solid var(--border); background: var(--bg-card); }
-        .custom-table { width: 100%; border-collapse: collapse; text-align: start; table-layout: auto; }
+        .table-container { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius-md); border: 1px solid var(--border); background: var(--bg-card); }
+        .custom-table { width: 100%; border-collapse: collapse; text-align: start; min-width: 1100px; }
         .custom-table th { background-color: var(--primary-light); color: var(--primary); padding: 18px 15px; font-weight: 700; border-bottom: 2px solid var(--border); font-size: 0.9rem; white-space: nowrap; }
         .custom-table td { padding: 16px 15px; border-bottom: 1px solid var(--border); vertical-align: middle; font-size: 0.95rem; line-height: 1.6; }
         .custom-table tr:hover td { background-color: var(--primary-light); }
@@ -182,12 +180,64 @@
         .gallery-img-card { border-radius: 14px; border: 2px solid var(--border); overflow: hidden; height: 140px; cursor: pointer; }
         .gallery-img-card img { width: 100%; height: 100%; object-fit: cover; }
 
-        .toast-container { position: fixed; top: 25px; left: 25px; z-index: 9999; display: flex; flex-direction: column; gap: 12px; }
-        html[dir="rtl"] .toast-container { left: auto; right: 25px; }
-        .toast { background: var(--bg-card); backdrop-filter: var(--glass-blur); color: var(--text-main); padding: 16px 22px; border-radius: 14px; box-shadow: var(--shadow-md); border-inline-start: 6px solid var(--primary); display: flex; align-items: center; gap: 12px; font-weight: 700; min-width: 280px; animation: toastIn 0.35s ease, toastOut 0.5s ease 2.7s forwards; transform: translateX(120%); }
-        html[dir="rtl"] .toast { transform: translateX(-120%); }
-        @keyframes toastIn { to { transform: translateX(0); } }
-        @keyframes toastOut { to { opacity: 0; transform: translateY(-20px); visibility: hidden; } }
+        .sidebar-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(4px); z-index: 1035; display: none; }
+
+        /* ==========================================
+           📱 طبقة الـ Responsive الخارقة والـ iOS Bottom Nav
+           ========================================== */
+        .mobile-bottom-nav {
+            display: none; position: fixed; bottom: 0; left: 0; right: 0; height: 68px;
+            background: var(--bg-sidebar); backdrop-filter: var(--glass-blur); border-top: 1px solid var(--border);
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.04); z-index: 1040; justify-content: space-around; align-items: center;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        .mobile-nav-btn {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: var(--text-muted); text-decoration: none; font-size: 0.8rem; font-weight: 700; gap: 4px;
+            background: none; border: none; cursor: pointer; width: 65px; transition: var(--transition);
+        }
+        .mobile-nav-btn i { font-size: 1.3rem; }
+        .mobile-nav-btn.active { color: var(--primary); }
+
+        @media (max-width: 1200px) {
+            .workspace-grid-layout { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(100%);
+                width: 290px !important;
+                box-shadow: -10px 0 35px rgba(0,0,0,0.15);
+                z-index: 1060;
+            }
+            html[dir="ltr"] .sidebar { transform: translateX(-100%); box-shadow: 10px 0 35px rgba(0,0,0,0.15); }
+            
+            .main-content {
+                margin-right: 0 !important; margin-left: 0 !important;
+                padding: 15px !important; padding-bottom: 100px !important; /* مسافة أمان لعدم تغطية الـ Bottom Nav الكود */
+            }
+            
+            html.sidebar-mobile-open .sidebar { transform: translateX(0) !important; }
+            html.sidebar-mobile-open .sidebar-overlay { display: block !important; }
+            
+            .top-bar { flex-direction: column-reverse; padding: 15px !important; gap: 15px; }
+            .top-bar-right { width: 100%; justify-content: space-between; }
+            .search-wrapper { width: 100%; max-width: 100%; }
+            .card { padding: 1.5rem !important; border-radius: 18px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px; }
+            .stat-box { padding: 1.25rem; }
+            .stat-box h2 { font-size: 1.5rem; }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-bottom-nav { display: flex; }
+            .menu-toggle-btn { display: none !important; } /* نعتمد شريط الموبايل السفلي كلياً */
+        }
+
+        @media (max-width: 576px) {
+            .stats-grid { grid-template-columns: 1fr !important; }
+            .charts-row-layout { grid-template-columns: 1fr !important; gap: 1.5rem; }
+        }
 
         @media print {
             body * { visibility: hidden; }
@@ -234,7 +284,7 @@
 
     <div class="app-layout" id="appMainLayout">
         <aside class="sidebar">
-            <div class="brand"><i class="fa-solid fa-tooth"></i><div class="brand-info"><div class="brand-title" id="txtHeaderTitle">جاري التعرف...</div><small style="color: var(--text-muted); font-weight: 700; font-size: 0.8rem;">OS v13.0 White-Label</small></div></div>
+            <div class="brand"><i class="fa-solid fa-tooth"></i><div class="brand-info"><div class="brand-title" id="txtHeaderTitle">جاري التعرف...</div><small style="color: var(--text-muted); font-weight: 700; font-size: 0.8rem;">OS v13.5 White-Label</small></div></div>
             <ul class="nav-menu">
                 <li class="nav-item active" id="liTabMain"><a href="javascript:void(0)" onclick="setActiveNav('liTabMain')"><i class="fa-solid fa-chart-line"></i> <span id="tabMain">الرئيسية ولوحة التحكم</span></a></li>
                 <li class="nav-item" id="liTabApp"><a href="javascript:void(0)" onclick="setActiveNav('liTabApp')"><i class="fa-solid fa-folder-plus"></i> <span id="lblAddAppTitle">إضافة سجل وموعد جديد</span></a></li>
@@ -246,6 +296,13 @@
                 <button class="sys-btn logout-btn" id="btnLogoutToggle" onclick="handleLogout()"><i class="fa-solid fa-door-open"></i> <span id="lblLogoutText">تسجيل الخروج</span></button>
             </div>
         </aside>
+
+        <div class="mobile-bottom-nav">
+            <button class="mobile-nav-btn active" id="mBtnMain" onclick="setActiveNav('liTabMain')"><i class="fa-solid fa-chart-line"></i><span>الرئيسية</span></button>
+            <button class="mobile-nav-btn" id="mBtnApp" onclick="setActiveNav('liTabApp')"><i class="fa-solid fa-folder-plus"></i><span>إضافة سجل</span></button>
+            <button class="mobile-nav-btn" id="mBtnArchive" onclick="setActiveNav('liTabArchive')"><i class="fa-solid fa-server"></i><span>الأرشيف</span></button>
+            <button class="mobile-nav-btn" id="mBtnMenu" onclick="toggleSidebarMenu()"><i class="fa-solid fa-bars"></i><span>المزيد</span></button>
+        </div>
 
         <main class="main-content">
             <div class="top-bar">
@@ -441,42 +498,29 @@
 
         function injectDoctorDynamicIdentity() {
             const drName = getDoctorProfileName();
-            let drPhone = "هاتف العيادة";
-            let drAddress = "طرابلس - لبنان";
-            
+            let drPhone = "هاتف العيادة"; let drAddress = "طرابلس - لبنان";
             if (currentUser && currentUser.user_metadata) {
                 if (currentUser.user_metadata.clinic_phone) drPhone = currentUser.user_metadata.clinic_phone;
                 if (currentUser.user_metadata.clinic_address) drAddress = currentUser.user_metadata.clinic_address;
             }
-            
             document.getElementById('txtHeaderTitle').innerText = drName;
             document.getElementById('printRxDrName').innerText = drName;
             document.getElementById('printRxSignName').innerText = drName;
             document.getElementById('printRxPhone').innerHTML = `<i class="fa-solid fa-phone"></i> ${drPhone}`;
             document.getElementById('printRxAddress').innerHTML = `<i class="fa-solid fa-location-dot"></i> ${drAddress}`;
-            
             const welcomeText = currentLang === 'en' ? `Welcome, ${drName} 👋` : `مرحباً ${drName} 👋`;
             document.getElementById('lblWelcome').innerText = welcomeText;
         }
 
         function toggleAuthMode() {
-            const detailsGrp = document.getElementById('signUpDetailsGroup');
-            const submitBtn = document.getElementById('btnAuthSubmit');
-            const toggleLink = document.getElementById('btnAuthRegister');
-            const title = document.getElementById('lblAuthTitle');
-            
+            const detailsGrp = document.getElementById('signUpDetailsGroup'); const submitBtn = document.getElementById('btnAuthSubmit');
+            const toggleLink = document.getElementById('btnAuthRegister'); const title = document.getElementById('lblAuthTitle');
             if (authMode === 'login') {
-                authMode = 'signup';
-                detailsGrp.style.display = 'block';
-                title.innerText = "إنشاء حساب طبي جديد";
-                submitBtn.innerHTML = `<i class="fa-solid fa-user-plus"></i> <span>إنشاء حساب طبي</span>`;
-                toggleLink.innerText = "العودة لتسجيل الدخول";
+                authMode = 'signup'; detailsGrp.style.display = 'block'; title.innerText = "إنشاء حساب طبي جديد";
+                submitBtn.innerHTML = `<i class="fa-solid fa-user-plus"></i> <span>إنشاء حساب طبي</span>`; toggleLink.innerText = "العودة لتسجيل الدخول";
             } else {
-                authMode = 'login';
-                detailsGrp.style.display = 'none';
-                title.innerText = "تسجيل الدخول";
-                submitBtn.innerHTML = `<i class="fa-solid fa-fingerprint"></i> <span>دخول</span>`;
-                toggleLink.innerText = "أو إنشاء حساب طبي جديد";
+                authMode = 'login'; detailsGrp.style.display = 'none'; title.innerText = "تسجيل الدخول";
+                submitBtn.innerHTML = `<i class="fa-solid fa-fingerprint"></i> <span>دخول</span>`; toggleLink.innerText = "أو إنشاء حساب طبي جديد";
             }
         }
 
@@ -495,8 +539,7 @@
         }
 
         function triggerToast(msg, type = 'success') {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div'); toast.className = `toast ${type}`;
+            const container = document.getElementById('toastContainer'); const toast = document.createElement('div'); toast.className = `toast ${type}`;
             toast.innerHTML = `<i class="fa-solid ${type==='success'?'fa-circle-check':'fa-circle-exclamation'}"></i> <span>${msg}</span>`;
             container.appendChild(toast); setTimeout(() => toast.remove(), 3200);
         }
@@ -516,27 +559,11 @@
 
         async function handleAuthSignUp() {
             const email = document.getElementById('authEmail').value.trim(); const pass = document.getElementById('authPassword').value;
-            const fullName = document.getElementById('authFullName').value.trim();
-            const clinicPhone = document.getElementById('authClinicPhone').value.trim();
-            const clinicAddress = document.getElementById('authClinicAddress').value.trim();
-            
+            const fullName = document.getElementById('authFullName').value.trim(); const clinicPhone = document.getElementById('authClinicPhone').value.trim(); const clinicAddress = document.getElementById('authClinicAddress').value.trim();
             if(!email || !pass || !fullName || !clinicPhone || !clinicAddress) return triggerToast("الرجاء إدخال كافة الحقول لتهيئة حسابك!", 'error');
             if(pass.length < 6) return triggerToast("كلمة المرور يجب ألا تقل عن 6 خانات!", 'error');
-            
-            const { error } = await dbClient.auth.signUp({ 
-                email, 
-                password: pass,
-                options: { 
-                    emailRedirectTo: window.location.href,
-                    data: { 
-                        full_name: fullName,
-                        clinic_phone: clinicPhone,
-                        clinic_address: clinicAddress
-                    } 
-                }
-            });
-            if (error) triggerToast(error.message, 'error'); 
-            else triggerToast("تم إرسال رسالة التأكيد لإيميلك بنجاح!", 'success');
+            const { error } = await dbClient.auth.signUp({ email, password: pass, options: { emailRedirectTo: window.location.href, data: { full_name: fullName, clinic_phone: clinicPhone, clinic_address: clinicAddress } } });
+            if (error) triggerToast(error.message, 'error'); else triggerToast("تم إرسال رسالة التأكيد لإيميلك بنجاح!", 'success');
         }
 
         async function handleLogout() { if (dbClient) { await dbClient.auth.signOut(); window.location.reload(); } }
@@ -560,16 +587,14 @@
         }
 
         function updateMultiSelectPlaceholder() {
-            const checkedBoxes = document.querySelectorAll('#procDropdownMenu input[type="checkbox"]:checked'); 
-            const placeholder = document.getElementById('multiselectPlaceholder');
+            const checkedBoxes = document.querySelectorAll('#procDropdownMenu input[type="checkbox"]:checked'); const placeholder = document.getElementById('multiselectPlaceholder');
             if (checkedBoxes.length === 0) { placeholder.innerText = currentLang === 'ar' ? 'اختر الإجراء...' : 'Select procedures...'; return; }
             let selectedTexts = []; checkedBoxes.forEach(cb => { const span = cb.parentElement.querySelector('.proc-text'); selectedTexts.push(currentLang === 'ar' ? span.getAttribute('data-ar') : span.getAttribute('data-en')); });
             placeholder.innerText = selectedTexts.join(' + ');
         }
 
         function previewSelectedImages() {
-            const container = document.getElementById('imagePreviewContainer'); container.innerHTML = '';
-            const files = document.getElementById('pImages').files;
+            const container = document.getElementById('imagePreviewContainer'); container.innerHTML = ''; const files = document.getElementById('pImages').files;
             for (let i = 0; i < files.length; i++) {
                 const reader = new FileReader(); reader.onload = e => { const img = document.createElement('img'); img.src = e.target.result; img.style = 'width:55px; height:55px; object-fit:cover; border-radius:10px; border:2px solid var(--primary);'; container.appendChild(img); }; reader.readAsDataURL(files[i]);
             }
@@ -577,13 +602,27 @@
 
         function toggleMultiSelectDropdown(e) { e.stopPropagation(); const menu = document.getElementById('procDropdownMenu'); menu.style.display = menu.style.display === 'block' ? 'none' : 'block'; }
 
+        // ⚡ تعديل دالة التنقل لربط التبويبات والمزامنة التامة مع شريط الموبايل والـ Desktop سوا ⚡
         function setActiveNav(activeId) {
-            document.querySelectorAll('.nav-menu .nav-item').forEach(item => item.classList.remove('active')); const clickedItem = document.getElementById(activeId); if (clickedItem) clickedItem.classList.add('active');
+            document.querySelectorAll('.nav-menu .nav-item').forEach(item => item.classList.remove('active'));
+            document.querySelectorAll('.mobile-bottom-nav .mobile-nav-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.page-section').forEach(section => section.classList.remove('active-page'));
-            if (activeId === 'liTabMain') document.getElementById('secDashboard').classList.add('active-page');
-            if (activeId === 'liTabApp') document.getElementById('secAppointment').classList.add('active-page');
-            if (activeId === 'liTabArchive') document.getElementById('secArchive').classList.add('active-page');
-            if (activeId === 'secPatientProfile') document.getElementById('secPatientProfile').classList.add('active-page');
+            
+            if (activeId === 'liTabMain') {
+                const item = document.getElementById('liTabMain'); if(item) item.classList.add('active');
+                const btn = document.getElementById('mBtnMain'); if(btn) btn.classList.add('active');
+                document.getElementById('secDashboard').classList.add('active-page');
+            } else if (activeId === 'liTabApp') {
+                const item = document.getElementById('liTabApp'); if(item) item.classList.add('active');
+                const btn = document.getElementById('mBtnApp'); if(btn) btn.classList.add('active');
+                document.getElementById('secAppointment').classList.add('active-page');
+            } else if (activeId === 'liTabArchive') {
+                const item = document.getElementById('liTabArchive'); if(item) item.classList.add('active');
+                const btn = document.getElementById('mBtnArchive'); if(btn) btn.classList.add('active');
+                document.getElementById('secArchive').classList.add('active-page');
+            } else if (activeId === 'secPatientProfile') {
+                document.getElementById('secPatientProfile').classList.add('active-page');
+            }
             document.getElementById('htmlTag').classList.remove('sidebar-mobile-open'); 
         }
 
@@ -613,17 +652,12 @@
                 if (!dbClient || !currentUser) return;
                 const name = document.getElementById('pName').value.trim(); const date = document.getElementById('pDate').value;
                 const total = parseFloat(document.getElementById('totalAmount').value) || 0; const paid = parseFloat(document.getElementById('paidAmount').value) || 0;
-                const notes = document.getElementById('pNotes').value.trim();
-                const checkedBoxes = document.querySelectorAll('#procDropdownMenu input[type="checkbox"]:checked');
+                const notes = document.getElementById('pNotes').value.trim(); const checkedBoxes = document.querySelectorAll('#procDropdownMenu input[type="checkbox"]:checked');
                 if (!name || !date || checkedBoxes.length === 0) return triggerToast('الرجاء إدخال الاسم، التاريخ، والإجراء الطبي عوناً!', 'error');
-
-                let procValues = []; checkedBoxes.forEach(cb => procValues.push(cb.value));
-                const joinedProcs = procValues.join(' + ');
-                const discount = parseFloat(document.getElementById('discountAmount').value) || 0;
-                const cost = parseFloat(document.getElementById('costAmount').value) || 0;
+                let procValues = []; checkedBoxes.forEach(cb => procValues.push(cb.value)); const joinedProcs = procValues.join(' + ');
+                const discount = parseFloat(document.getElementById('discountAmount').value) || 0; const cost = parseFloat(document.getElementById('costAmount').value) || 0;
                 const debt = total - discount - paid; const calculatedDebt = debt < 0 ? 0 : debt;
                 const phone = document.getElementById('pPhone').value.trim() || (currentLang === 'ar' ? 'غير مسجل' : 'Not Registered');
-
                 const imageFiles = document.getElementById('pImages').files; let uploadedUrls = [];
                 if (imageFiles.length > 0) {
                     for (let i = 0; i < imageFiles.length; i++) {
@@ -633,7 +667,6 @@
                     }
                 }
                 let finalImagesString = uploadedUrls.length > 0 ? uploadedUrls.join(',') : (editingRecordId ? existingImagesString : "");
-
                 if (editingRecordId) {
                     const { error } = await dbClient.from('appointments').update({ name, phone, proc: joinedProcs, date, total, cost, discount, paid, debt: calculatedDebt, images: finalImagesString, notes }).eq('id', editingRecordId);
                     if (error) throw error; triggerToast('📝 تم تحديث سجل المريض وحفظه!'); editingRecordId = null;
@@ -641,13 +674,11 @@
                     const { error = null } = await dbClient.from('appointments').insert([{ name, phone, proc: joinedProcs, date, total, cost, discount, paid, debt: calculatedDebt, images: finalImagesString, user_id: currentUser.id, notes }]);
                     if (error) throw error; triggerToast('✅ تم إضافة السجل وحفظه!');
                 }
-
                 document.getElementById('pName').value = ''; document.getElementById('pPhone').value = ''; document.getElementById('totalAmount').value = '0';
                 document.getElementById('costAmount').value = '0'; document.getElementById('discountAmount').value = '0'; document.getElementById('paidAmount').value = '0';
                 document.getElementById('pNotes').value = ''; document.getElementById('pImages').value = ''; document.getElementById('imagePreviewContainer').innerHTML = '';
                 existingImagesString = ""; checkedBoxes.forEach(cb => cb.checked = false); updateMultiSelectPlaceholder(); if(datePickerInstance) datePickerInstance.clear();
                 document.getElementById('btnSaveApp').innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> <span>${currentLang === 'ar' ? 'إضافة السجل و حفظه' : 'Save Record'}</span>`;
-
                 setActiveNav('liTabArchive'); fetchCloudData(true);
             } catch(e) { triggerToast("خطأ بالعملية: " + e.message, 'error'); }
         }
@@ -687,41 +718,27 @@
 
         async function executeDeletion(id) { if (confirm(currentLang === 'ar' ? 'تأكيد الحذف النهائي للسجل من السحاب؟' : 'Confirm deletion?')) { try { const { error } = await dbClient.from('appointments').delete().eq('id', id); if (error) throw error; triggerToast('🗑️ تم مسح السجل بنجاح!', 'success'); fetchCloudData(true); } catch(e) { triggerToast('فشل حذف السجل!', 'error'); } } }
 
-        // 💎 محرك البناء التلقائي للتابلو بنظام Rowspan المعماري المانع للتداخل 💎
         function renderTable() {
             const tbody = document.getElementById('tableBody'); if (!tbody) return;
             const filterType = document.getElementById('archiveFilterSelector').value;
             const filteredRecords = records.filter(rec => { if (filterType === 'paid') return (rec.debt || 0) === 0; if (filterType === 'debt') return (rec.debt || 0) > 0; return true; });
             if (filteredRecords.length === 0) { tbody.innerHTML = `<tr><td colspan="10" class="no-data-msg">${currentLang === 'ar' ? 'لا يوجد سجلات متوفرة.' : 'No records found.'}</td></tr>`; return; }
-            
             let groupedData = {}; filteredRecords.forEach(rec => { const key = rec.name.trim().toLowerCase(); groupedData[key] = groupedData[key] || { name: rec.name, phone: rec.phone, visits: [] }; groupedData[key].visits.push(rec); });
             tbody.innerHTML = '';
-            
             Object.keys(groupedData).forEach(key => {
-                const patient = groupedData[key];
-                const totalVisits = patient.visits.length;
-                
+                const patient = groupedData[key]; const totalVisits = patient.visits.length;
                 patient.visits.forEach((v, index) => {
-                    const tr = document.createElement('tr');
-                    let patientCell = '';
-                    
-                    // حقن الـ rowspan للخلية الأولى فقط لتثبيت المحاذاة العمودية ومنع أي اعوجاج
+                    const tr = document.createElement('tr'); let patientCell = '';
                     if (index === 0) {
                         patientCell = `<td rowspan="${totalVisits}" style="border-inline-end: 1px solid var(--border); font-weight:700; background: var(--bg-card); vertical-align: middle;">
                             <a href="javascript:void(0)" class="patient-clickable-name" onclick="displayPatientFullProfilePortal('${patient.name}')"><i class="fa-solid fa-circle-user" style="margin-inline-end:6px;"></i>${patient.name}</a><br>
                             <small style="color:var(--text-muted); font-weight: 600;">${patient.phone || ''}</small>
                         </td>`;
                     }
-                    
-                    let displayProc = v.proc || '';
-                    if (currentLang === 'en') displayProc = displayProc.replace(/خلع سن \/ ضرس/g, "Extraction").replace(/تنظيف وتلميع أسنان/g, "Cleaning").replace(/سحب عصب/g, "Root Canal").replace(/تلبيس سن \/ ضرس/g, "Crown");
-                    
+                    let displayProc = v.proc || ''; if (currentLang === 'en') displayProc = displayProc.replace(/خلع سن \/ ضرس/g, "Extraction").replace(/تنظيف وتلميع أسنان/g, "Cleaning");
                     tr.innerHTML = `
                         ${patientCell}
-                        <td>
-                            <span style="background:var(--primary-light); color:var(--primary); padding:4px 8px; border-radius:6px; font-weight:700; font-size:0.85rem;">${displayProc} ${v.images ? '📸' : ''}</span>
-                            ${v.notes ? `<div class="clinical-blockquote-notes">📜 ${v.notes}</div>` : ''}
-                        </td>
+                        <td><span style="background:var(--primary-light); color:var(--primary); padding:4px 8px; border-radius:6px; font-weight:700; font-size:0.85rem;">${displayProc} ${v.images ? '📸' : ''}</span>${v.notes ? `<div class="clinical-blockquote-notes">📜 ${v.notes}</div>` : ''}</td>
                         <td style="color:var(--accent); font-weight:600; font-family: 'Plus Jakarta Sans', sans-serif;">${v.date}</td>
                         <td style="font-weight:600; font-family: 'Plus Jakarta Sans', sans-serif;">$${v.total}</td>
                         <td style="color:#f97316; font-family: 'Plus Jakarta Sans', sans-serif;">$${v.cost}</td>
@@ -747,7 +764,6 @@
         function updateCounters() {
             let cash = 0; let costs = 0; let sales = 0; let ops = 0; let uniquePatients = new Set(); let payingCount = 0;
             let pcounts = { "خلع": 0, "تنظيف": 0, "عصب": 0, "تلبيس": 0, "تقويم": 0, "زراعة": 0, "تبييض": 0, "حشوة": 0 };
-            
             records.forEach(rec => {
                 cash += parseFloat(rec.paid) || 0; costs += parseFloat(rec.cost) || 0; sales += parseFloat(rec.total) || 0;
                 if((parseFloat(rec.paid) || 0) > 0) payingCount++; if(rec.name) uniquePatients.add(rec.name.trim().toLowerCase());
@@ -756,7 +772,6 @@
                     prs.forEach(op => { if (op.includes("خلع")) pcounts["خلع"]++; if (op.includes("تنظيف")) pcounts["تنظيف"]++; if (op.includes("عصب")) pcounts["عصب"]++; if (op.includes("تلبيس")) pcounts["تلبيس"]++; if (op.includes("تقويم")) pcounts["تقويم"]++; if (op.includes("زراعة")) pcounts["زراعة"]++; if (op.includes("تبييض")) pcounts["تبييض"]++; if (op.includes("حشوة")) pcounts["حشوة"]++; });
                 }
             });
-
             document.getElementById('valTotalPatients').innerText = currentLang === 'ar' ? `${uniquePatients.size} مريض` : `${uniquePatients.size} Patients`;
             document.getElementById('valPayingPercent').innerText = `${records.length>0?Math.round((payingCount/records.length)*100):0}%`;
             document.getElementById('valTotalOps').innerText = `${ops}`; document.getElementById('valTotalRevenue').innerText = `$${cash}`;
