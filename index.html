@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Smart Clinic OS v15.0 - Ultimate Enterprise Masterpiece</title>
+    <title>Smart Clinic System v15.0 - Enterprise Edition</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -69,8 +69,14 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        *, *:before, *:after { box-sizing: border-box; margin: 0; padding: 0; }
         
+        /* Toast Notification Styles */
+        .toast-container { position: fixed; top: 20px; left: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+        .toast { background: var(--bg-sidebar); border-right: 4px solid var(--primary); box-shadow: var(--shadow-md); padding: 12px 20px; border-radius: var(--radius-md); display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 0.9rem; animation: slideIn 0.3s ease; color: var(--text-main); }
+        .toast.error { border-right-color: #ef4444; }
+        @keyframes slideIn { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
         .auth-container { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: radial-gradient(circle at center, var(--primary-light), var(--bg-app)); padding: 20px; }
         .auth-card { background: var(--bg-card); backdrop-filter: var(--glass-blur); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 3rem 2.5rem; width: 100%; max-width: 460px; box-shadow: var(--shadow-md); text-align: center; }
 
@@ -113,13 +119,20 @@
 
         .top-bar { display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; margin-bottom: 2rem; background: var(--bg-card); backdrop-filter: var(--glass-blur); padding: 1rem 1.5rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); border: 1px solid var(--border); }
         .top-bar-right { display: flex; align-items: center; gap: 14px; }
+        .search-wrapper { position: relative; width: 320px; }
+        .search-input-group { display: flex; align-items: center; gap: 10px; background: var(--bg-app); border: 1px solid var(--border); padding: 8px 14px; border-radius: var(--radius-md); }
+        .search-bar { border: none; background: transparent; outline: none; color: var(--text-main); width: 100%; font-family: inherit; }
+        .search-results-dropdown { position: absolute; top: 100%; left: 0; right: 0; background: var(--bg-sidebar); border: 1px solid var(--border); border-radius: var(--radius-md); box-shadow: var(--shadow-md); z-index: 1000; margin-top: 5px; display: none; max-height: 250px; overflow-y: auto; }
+        .search-result-item { padding: 10px 14px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); font-size: 0.85rem; color: var(--text-main); }
+        .search-result-item:hover { background: var(--primary-light); }
+        .menu-toggle-btn { background: transparent; border: none; font-size: 1.25rem; color: var(--text-main); cursor: pointer; display: none; }
 
         .card { background-color: var(--bg-card); backdrop-filter: var(--glass-blur); border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-sm); border: 1px solid var(--border); margin-bottom: 2rem; }
         .card-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px; color: var(--primary); border-bottom: 2px solid var(--primary-light); padding-bottom: 1rem; }
         
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.25rem; }
-        .stat-box { background: var(--bg-app); padding: 1.5rem; border-radius: var(--radius-md); border-inline-start: 5px solid var(--primary); transition: var(--transition); position: relative; overflow: hidden; }
-        .stat-box h2 { font-size: 1.75rem; font-weight: 700; margin-top: 6px; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .stat-box { background: var(--bg-app); padding: 1.5rem; border-radius: var(--radius-md); border-inline-start: 5px solid var(--primary); transition: var(--transition); position: relative; overflow: hidden; cursor: pointer; }
+        .stat-box h2 { font-size: 1.75rem; font-weight: 700; margin-top: 6px; font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-main); }
 
         .charts-row-layout { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
         .chart-card-wrapper { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-sm); text-align: center; }
@@ -137,12 +150,10 @@
         .notation-btn.active { background: var(--primary); color: #fff; box-shadow: var(--shadow-sm); }
         
         .dental-chart-container { display: flex; flex-direction: column; gap: 15px; background: var(--bg-app); padding: 20px; border-radius: var(--radius-lg); border: 1px solid var(--border); overflow-x: auto; }
-        .chart-quadrant-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .chart-quadrant-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; min-width: 750px; }
         .chart-quadrant { display: flex; gap: 6px; justify-content: center; align-items: center; padding: 10px; border-radius: 8px; background: var(--bg-sidebar); border: 1px dashed var(--border); }
-        .chart-quadrant.ur, .chart-quadrant.lr { flex-direction: row; }
-        .chart-quadrant.ul, .chart-quadrant.ll { flex-direction: row; }
         
-        .tooth-node { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 42px; height: 54px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-app); cursor: pointer; transition: var(--transition); font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.85rem; font-weight: 700; user-select: none; }
+        .tooth-node { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 44px; height: 58px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-app); cursor: pointer; transition: var(--transition); font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.75rem; font-weight: 700; user-select: none; color: var(--text-main); position: relative; }
         .tooth-node:hover { border-color: var(--primary); background: var(--primary-light); transform: scale(1.05); }
         .tooth-node.selected { background: var(--primary) !important; color: #fff !important; border-color: var(--primary-hover) !important; box-shadow: 0 4px 10px rgba(13, 148, 136, 0.3); }
         .tooth-icon-svg { font-size: 1.1rem; margin-bottom: 2px; color: var(--text-muted); }
@@ -151,7 +162,7 @@
 
         /* الشروط والمربعات الطبية */
         .clinical-checkbox-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; background: var(--bg-app); padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--border); }
-        .clinical-checkbox-label { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 0.85rem; cursor: pointer; }
+        .clinical-checkbox-label { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 0.85rem; cursor: pointer; color: var(--text-main); }
         .clinical-checkbox-label input { width: 18px; height: 18px; accent-color: var(--primary); }
 
         .form-grid-layout { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; margin-bottom: 1.25rem; }
@@ -163,14 +174,16 @@
         .btn-action { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--primary), var(--primary-hover)); color: #ffffff; border: none; border-radius: var(--radius-md); font-weight: 700; font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: var(--transition); }
         .btn-action:hover { box-shadow: 0 8px 20px var(--primary-light); transform: translateY(-2px); }
 
-        /* هندسة التابلوه الجغل الانسيابي 100% الكلي */
+        /* هندسة الجدول المركزي */
         .table-filter-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; gap: 1rem; flex-wrap: wrap; }
         .table-container { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius-md); border: 1px solid var(--border); background: var(--bg-card); box-shadow: var(--shadow-sm); }
         .custom-table { width: 100%; border-collapse: collapse; text-align: start; min-width: 1200px; table-layout: fixed; }
         .custom-table th { background-color: var(--primary-light); color: var(--primary); padding: 16px 12px; font-weight: 700; border-bottom: 2px solid var(--border); font-size: 0.85rem; white-space: nowrap; }
-        .custom-table td { padding: 14px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; font-size: 0.9rem; line-height: 1.6; word-wrap: break-word; overflow: hidden; }
+        .custom-table td { padding: 14px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; font-size: 0.9rem; line-height: 1.6; word-wrap: break-word; overflow: hidden; color: var(--text-main); }
         .custom-table tr:hover td { background-color: var(--primary-light); }
         
+        .patient-clickable-name { text-decoration: none; color: var(--accent); font-weight: 700; cursor: pointer; }
+        .patient-clickable-name:hover { text-decoration: underline; }
         .clinical-blockquote-notes { background: rgba(37, 99, 235, 0.04); color: var(--text-main); border-inline-start: 4px solid var(--accent); padding: 10px 14px; border-radius: 6px; font-style: italic; margin-top: 6px; font-size: 0.85rem; }
         .no-data-msg { text-align: center; color: var(--text-muted); padding: 4rem !important; font-style: italic; font-size: 1rem; }
         
@@ -179,8 +192,8 @@
         .badge-danger { background-color: rgba(239, 68, 68, 0.12); color: #dc2626; border: 1px solid rgba(239, 68, 68, 0.25); }
 
         .action-menu-wrapper { position: relative; display: inline-block; }
-        .action-icon-btn { background: var(--bg-app); border: 1px solid var(--border); cursor: pointer; font-size: 0.85rem; padding: 6px 12px; border-radius: 6px; color: var(--text-main); white-space: nowrap; }
-        .action-dropdown-popup { position: absolute; top: 100%; left: 0; background-color: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; box-shadow: var(--shadow-md); min-width: 120px; z-index: 1000; padding: 4px; display: none; }
+        .action-icon-btn { background: var(--bg-app); border: 1px solid var(--border); cursor: pointer; font-size: 0.85rem; padding: 6px 12px; border-radius: 6px; color: var(--text-main); white-space: nowrap; font-weight: bold; }
+        .action-dropdown-popup { position: absolute; top: 100%; left: 0; background-color: var(--bg-sidebar); border: 1px solid var(--border); border-radius: 8px; box-shadow: var(--shadow-md); min-width: 120px; z-index: 1000; padding: 4px; display: none; }
         .action-dropdown-item { display: flex; align-items: center; gap: 8px; padding: 8px; font-size: 0.85rem; font-weight: 700; cursor: pointer; border-radius: 4px; color: var(--text-main); text-align: start; }
         .action-dropdown-item:hover { background-color: var(--bg-app); }
         .action-dropdown-item.edit-item { color: var(--accent); }
@@ -221,8 +234,9 @@
             .stats-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px; }
             .stat-box { padding: 1.25rem; }
             .stat-box h2 { font-size: 1.4rem; }
+            .menu-toggle-btn { display: block; }
         }
-        @media (max-width: 768px) { .mobile-bottom-nav { display: flex; } .menu-toggle-btn { display: none !important; } }
+        @media (max-width: 768px) { .mobile-bottom-nav { display: flex; } .menu-toggle-btn { display: block; } }
         @media (max-width: 576px) { .stats-grid { grid-template-columns: 1fr !important; } .charts-row-layout { grid-template-columns: 1fr !important; gap: 1.25rem; } }
 
         /* ==========================================
@@ -240,7 +254,7 @@
             .print-meta-box p { margin: 0; font-size: 0.9rem; color: #334155; }
             .print-table { width: 100%; border-collapse: collapse; margin-bottom: 25px; }
             .print-table th { background: #f1f5f9; text-align: start; padding: 10px; font-weight: 700; font-size: 0.85rem; border-bottom: 2px solid #cbd5e1; }
-            .print-table td { padding: 10px; font-size: 0.9rem; border-bottom: 1px solid #e2e8f0; vertical-align: top; }
+            .print-table td { padding: 10px; font-size: 0.9rem; border-bottom: 1px solid #e2e8f0; vertical-align: top; text-align: start; }
             .print-footer-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px; margin-top: 15px; }
             .print-financial-summary { border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px; background: #f8fafc; }
             .print-financial-row { display: flex; justify-content: space-between; padding: 5px 0; font-size: 0.85rem; border-bottom: 1px dashed #e2e8f0; }
@@ -253,7 +267,6 @@
 
     <div class="toast-container" id="toastContainer"></div>
 
-    <!-- 🔐 بوابة الأمان المشتركة -->
     <div id="authSection" class="auth-container">
         <div class="auth-card">
             <i class="fa-solid fa-unlock-keyhole" style="font-size: 3rem; color: var(--primary); margin-bottom: 1.25rem;"></i>
@@ -276,14 +289,13 @@
 
     <div class="sidebar-overlay" onclick="toggleSidebarMenu()"></div>
 
-    <!-- 🏛 المنظومة الطبية الرئيسية -->
     <div class="app-layout" id="appMainLayout">
         <aside class="sidebar">
             <div class="brand"><i class="fa-solid fa-tooth"></i><div class="brand-info"><div class="brand-title" id="txtHeaderTitle">جاري التعرف...</div><small style="color: var(--text-muted); font-weight: 700; font-size: 0.75rem;">OS v15.0 Enterprise</small></div></div>
             <ul class="nav-menu">
-                <li class="nav-item active" id="liTabMain"><a href="javascript:void(0)" onclick="setActiveNav('liTabMain')"><i class="fa-solid fa-chart-line"></i> <span id="tabMain">الرئيسية ولوحة التحكم</span></a></li>
-                <li class="nav-item" id="liTabApp"><a href="javascript:void(0)" onclick="setActiveNav('liTabApp')"><i class="fa-solid fa-folder-plus"></i> <span id="lblAddAppTitle">إضافة سجل وموعد جديد</span></a></li>
-                <li class="nav-item" id="liTabArchive"><a href="javascript:void(0)" onclick="setActiveNav('liTabArchive')"><i class="fa-solid fa-server"></i> <span id="tabPatients">أرشيف وإدارة المرضى</span></a></li>
+                <li class="nav-menu-item nav-item active" id="liTabMain"><a href="javascript:void(0)" onclick="setActiveNav('liTabMain')"><i class="fa-solid fa-chart-line"></i> <span id="tabMain">الرئيسية ولوحة التحكم</span></a></li>
+                <li class="nav-menu-item nav-item" id="liTabApp"><a href="javascript:void(0)" onclick="setActiveNav('liTabApp')"><i class="fa-solid fa-folder-plus"></i> <span id="lblAddAppTitle">إضافة سجل وموعد جديد</span></a></li>
+                <li class="nav-menu-item nav-item" id="liTabArchive"><a href="javascript:void(0)" onclick="setActiveNav('liTabArchive')"><i class="fa-solid fa-server"></i> <span id="tabPatients">أرشيف وإدارة المرضى</span></a></li>
             </ul>
             <div class="sidebar-footer">
                 <button class="sys-btn" id="btnThemeToggle" onclick="toggleDarkMode()"><i class="fa-solid fa-moon"></i> <span id="lblThemeText">الوضع الليلي</span></button>
@@ -299,6 +311,8 @@
             <button class="mobile-nav-btn" id="mBtnMenu" onclick="toggleSidebarMenu()"><i class="fa-solid fa-bars"></i><span>المزيد</span></button>
         </div>
 
+        <div class="sidebar-overlay" onclick="toggleSidebarMenu()"></div>
+
         <main class="main-content">
             <div class="top-bar">
                 <div class="search-wrapper">
@@ -308,7 +322,6 @@
                 <div class="top-bar-right"><button class="menu-toggle-btn" onclick="toggleSidebarMenu()"><i class="fa-solid fa-bars-staggered"></i></button><div><span style="font-weight: 700; font-size: 1rem;" id="lblWelcome">مرحباً دكتور 👋</span></div></div>
             </div>
 
-            <!-- لوحة التحكم الرئيسية -->
             <section id="secDashboard" class="page-section active-page">
                 <div class="card">
                     <h3 class="card-title"><i class="fa-solid fa-gauge-high"></i> <span id="lblPerfIndicators">مؤشرات الأداء المباشرة والوضع المالي الفوري للعيادة</span></h3>
@@ -346,7 +359,6 @@
                 </div>
             </section>
 
-            <!-- البوابة الثانية: إضافة موعد وسجل طبي متكامل -->
             <section id="secAppointment" class="page-section">
                 <div class="card">
                     <h3 class="card-title"><i class="fa-solid fa-square-plus"></i> <span id="lblAddAppTitleInner">إنشاء سجل طبي ومالي متكامل للمريض</span></h3>
@@ -367,7 +379,6 @@
                         </div>
                     </div>
 
-                    <!-- ⚡ حقول الشرطية الاجتماعية والفسيولوجية للإناث ⚡ -->
                     <div class="form-grid-layout" id="femaleConditionalsRow" style="display:none; background: var(--primary-light); padding:15px; border-radius:var(--radius-md); border:1px dashed var(--primary);">
                         <div class="form-group">
                             <label>الحالة الاجتماعية:</label>
@@ -377,7 +388,7 @@
                             </select>
                         </div>
                         <div class="form-group" id="marriedConditionalsGroup" style="display:none;">
-                            <label>الحالة الفسيولوجية الطارئة:</label>
+                            <label>الحالة الفسيولوجية للمتزوجة:</label>
                             <select id="pPregnancyStatus" class="form-control" onchange="handlePregnancyOtherField()">
                                 <option value="غير ذلك">طبيعي / غير ذلك</option>
                                 <option value="حامل">حامل (Pregnant)</option>
@@ -388,7 +399,6 @@
                         </div>
                     </div>
 
-                    <!-- ⚡ سيكشن الحالة الصحية والطبية المتقدمة ⚡ -->
                     <h4 class="chart-title-lbl" style="text-align:start; margin-top:1.5rem; margin-bottom:10px;"><i class="fa-solid fa-heart-pulse"></i> التاريخ الطبي والحالة الصحية العامة للمريض</h4>
                     <div class="form-group">
                         <label>اختر الأمراض المزمنة أو المشاكل الصحية إن وجدت:</label>
@@ -409,8 +419,7 @@
                         <input type="text" id="pDentalCondition" class="form-control" placeholder="مثال: آلام حادة بالرحى السفلي الأيمن عند شرب البارد">
                     </div>
 
-                    <!-- 🏛️ مصفوفة لوحة تسمية الأسنان التفاعلية الشاملة (v15.0 Enterprise) 🏛️ -->
-                    <h4 class="chart-title-lbl" style="text-align:start; margin-top:1.5rem; margin-bottom:5px;"><i class="fa-solid fa-歯"></i> خريطة الأسنان الجراحية والعمليات المحددة</h4>
+                    <h4 class="chart-title-lbl" style="text-align:start; margin-top:1.5rem; margin-bottom:5px;"><i class="fa-solid fa-tooth"></i> خريطة الأسنان الجراحية والعمليات المحددة (اضغط لتحديد سن أو أكثر)</h4>
                     
                     <div class="notation-switcher-wrapper">
                         <button type="button" class="notation-btn active" id="btnFdi" onclick="switchDentalSystem('FDI')">FDI / ISO 3950</button>
@@ -419,27 +428,23 @@
                     </div>
 
                     <div class="dental-chart-container">
-                        <div class="chart-title-lbl" style="color:var(--text-muted)">الفك العلوي الحكيم (Upper Jaw)</div>
+                        <div class="chart-title-lbl" style="color:var(--text-muted)">الفك العلوي (Maxillary Arch)</div>
                         <div class="chart-quadrant-row">
-                            <!-- فك علوي أيمن -->
                             <div class="chart-quadrant ur" id="quadUR"></div>
-                            <!-- فك علوي أيسر -->
                             <div class="chart-quadrant ul" id="quadUL"></div>
                         </div>
                         
                         <div class="chart-quadrant-row" style="margin-top:10px;">
-                            <!-- فك سفلي أيمن -->
                             <div class="chart-quadrant lr" id="quadLR"></div>
-                            <!-- فك سفلي أيسر -->
                             <div class="chart-quadrant ll" id="quadLL"></div>
                         </div>
-                        <div class="chart-title-lbl" style="color:var(--text-muted); margin-top:5px;">الفك السفلي الحكيم (Lower Jaw)</div>
+                        <div class="chart-title-lbl" style="color:var(--text-muted); margin-top:5px;">الفك السفلي (Mandibular Arch)</div>
                     </div>
 
                     <div class="form-grid-layout" style="margin-top: 1.5rem;">
                         <div class="form-group">
-                            <label>السن الجراحي المختار حالياً للعملية:</label>
-                            <input type="text" id="pSelectedToothDisplay" class="form-control" style="font-weight:700; color:var(--primary); background:var(--bg-sidebar)" placeholder="اضغط على سن من اللوحة العلوية..." readonly>
+                            <label>الأسنان الجراحية المختارة حالياً للعملية:</label>
+                            <input type="text" id="pSelectedToothDisplay" class="form-control" style="font-weight:700; color:var(--primary); background:var(--bg-sidebar)" placeholder="اضغط على سن أو أكثر من اللوحة العلوية..." readonly>
                         </div>
                         <div class="form-group">
                             <label>الإجراء الطبي الأساسي:</label>
@@ -455,7 +460,6 @@
                             </select>
                         </div>
                         
-                        <!-- تفريعات الإجراءات الجراحية الديناميكية المتقدمة -->
                         <div class="form-group" id="subProcCleaningGroup">
                             <label>درجة المعالجة اللثوية المصاحبة:</label>
                             <select id="subProcCleaning" class="form-control">
@@ -485,7 +489,7 @@
                     <div class="form-grid-layout">
                         <div class="form-group" style="grid-column: 1 / -1;">
                             <label>توقيت وجدولة الجلسة الجراحية:</label>
-                            <input type="text" id="pDate" class="form-control" placeholder="إختر الموعد بدقة" readonly>
+                            <input type="text" id="pDate" class="form-control" placeholder="إختر الموعد والوقت بدقة" readonly>
                         </div>
                     </div>
 
@@ -494,7 +498,6 @@
                         <textarea id="pNotes" class="form-control" rows="3" placeholder="أدخل هنا القياسات المستخدمة، الأدوية الموصوفة، أو الملاحظات المعملية..."></textarea>
                     </div>
 
-                    <!-- ⚡ مستودع الأشعة والصور ثنائي الحالات المتقدم ⚡ -->
                     <h4 class="chart-title-lbl" style="text-align:start; margin-top:1.5rem; margin-bottom:10px;"><i class="fa-solid fa-images"></i> مستودع الأشعة والملفات المصاحبة للحالة (X-Rays & Photos Matrix)</h4>
                     <div class="form-grid-layout" style="background:var(--bg-sidebar); padding:15px; border-radius:var(--radius-lg); border:1px dashed var(--border);">
                         <div class="form-group">
@@ -524,7 +527,6 @@
                         </div>
                     </div>
 
-                    <!-- ⚡ محرك الحسابات المالية مضافاً إليه قيمة المختبر ⚡ -->
                     <h4 class="chart-title-lbl" style="text-align:start; margin-top:1.5rem; margin-bottom:10px;"><i class="fa-solid fa-money-bill-wave"></i> التسوية والمسار المالي للجلسة</h4>
                     <div class="form-grid-layout" style="border-top: 1px dashed var(--border); padding-top: 1.25rem;">
                         <div class="form-group"><label>المبلغ الكلي ($):</label><input type="number" id="totalAmount" class="form-control" value="0"></div>
@@ -537,7 +539,6 @@
                 </div>
             </section>
 
-            <!-- البوابة الثالثة: الأرشيف المطور الجغل الانسيابي 100% كلياً -->
             <section id="secArchive" class="page-section">
                 <div class="card">
                     <div class="table-filter-header">
@@ -566,7 +567,6 @@
                 </div>
             </section>
 
-            <!-- البوابة الرابعة: ملف العيادة الموحد الكامل للمريض -->
             <section id="secPatientProfile" class="page-section">
                 <div class="card">
                     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--primary-light); padding-bottom:1rem; margin-bottom:2rem;"><h3 style="font-weight:700; color:var(--primary); margin:0;"><i class="fa-solid fa-id-card-clip"></i> <span id="profPatientTitleName">الملف الطبي الكامل للمريض</span></h3><button class="sys-btn" onclick="setActiveNav('liTabArchive')" style="padding:8px 16px;"><i class="fa-solid fa-arrow-turn-right"></i> العودة للأرشيف</button></div>
@@ -580,7 +580,6 @@
         </main>
     </div>
 
-    <!-- 🖨️ مستند الطباعة الملوكي المطور بالمسطرة (v15.0 Luxury Print Layout) -->
     <div id="printRxContainer" style="display:none;">
         <div class="print-header-grid">
             <div class="print-header-right">
@@ -589,7 +588,7 @@
                 <small style="font-weight:600; color:#475569;">زراعة وتجميل الأسنان بروفيشونال</small>
             </div>
             <div class="print-header-left">
-                <p id="printRxAddress"><i class="fa-solid fa-location-dot"></i> طرابلس - لبنان</p>
+                <p id="printRxAddress"><i class="fa-solid fa-location-dot"></i> طرانلس - لبنان</p>
                 <p id="printRxPhone"><i class="fa-solid fa-phone"></i> هاتف العيادة الآمن</p>
             </div>
         </div>
@@ -608,14 +607,14 @@
         <table class="print-table">
             <thead>
                 <tr>
-                    <th style="width:30%;">السن / التسمية العلمية</th>
+                    <th style="width:35%;">الأسنان / التسمية العلمية المعتمدة</th>
                     <th style="width:45%;">الإجراء الطبي والعملية المنفذة</th>
-                    <th style="width:25%;">القيمة المالية ($)</th>
+                    <th style="width:20%;">القيمة المالية ($)</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td id="printRxToothCell" style="font-weight:700; color:#0d9488;">-</td>
+                    <td id="printRxToothCell" style="font-weight:700; color:#0d9488; font-size: 0.85rem; line-height: 1.4;">-</td>
                     <td>
                         <div id="printRxProcCell" style="font-weight:700;">-</div>
                         <div id="printRxNotesCell" style="margin-top:5px; font-style:italic; color:#475569; font-size:0.85rem;">-</div>
@@ -644,37 +643,44 @@
         const SUPABASE_ANON_KEY = 'sb_publishable_c0ww0-XGjqkQQKKnuHADKg_ZIRhB9D_'; 
         
         let dbClient = null; let monthlyChartInstance = null; let procsChartInstance = null;
-        let editingRecordId = null; let existingImagesString = ""; let currentUser = null;
+        let editingRecordId = null; let currentUser = null;
         let currentLang = 'ar'; let records = []; let datePickerInstance = null;
         let authMode = 'login';
         let currentActiveSystem = 'FDI'; // FDI, UNIVERSAL, PALMER
-        let selectedToothCode = "";
+        let selectedToothCodes = []; // مصفوفة تدعم الاختيار المتعدد للأسنان
 
-        // 🧠 ترسانة تعريف وبناء مصفوفة الأسنان الكاملة بالملّي للأنظمة الثلاثة
+        // 🧠 ترسانة مصفوفة الـ 32 سن دائم كاملة ومطابقة للأنظمة العالمية
         const ADULT_TEETH_DATA = [
-            // الفك العلوي الأيمن (UR)
+            // الفك العلوي الأيمن (UR) - من ضرس العقل للسن المركزي
             { fdi: "18", universal: "1", palmer: "8┘", area: "ur" }, { fdi: "17", universal: "2", palmer: "7┘", area: "ur" },
             { fdi: "16", universal: "3", palmer: "6┘", area: "ur" }, { fdi: "15", universal: "4", palmer: "5┘", area: "ur" },
             { fdi: "14", universal: "5", palmer: "4┘", area: "ur" }, { fdi: "13", universal: "6", palmer: "3┘", area: "ur" },
             { fdi: "12", universal: "7", palmer: "2┘", area: "ur" }, { fdi: "11", universal: "8", palmer: "1┘", area: "ur" },
-            // الفك العلوي الأيسر (UL)
+            // الفك العلوي الأيسر (UL) - من السن المركزي لضرس العقل
             { fdi: "21", universal: "9", palmer: "└1", area: "ul" }, { fdi: "22", universal: "10", palmer: "└2", area: "ul" },
             { fdi: "23", universal: "11", palmer: "└3", area: "ul" }, { fdi: "24", universal: "12", palmer: "└4", area: "ul" },
             { fdi: "25", universal: "13", palmer: "└5", area: "ul" }, { fdi: "26", universal: "14", palmer: "└6", area: "ul" },
             { fdi: "27", universal: "15", palmer: "└7", area: "ul" }, { fdi: "28", universal: "16", palmer: "└8", area: "ul" },
-            // الفك السفلي الأيمن (LR)
+            // الفك السفلي الأيمن (LR) - من ضرس العقل للسن المركزي
             { fdi: "48", universal: "32", palmer: "8┐", area: "lr" }, { fdi: "47", universal: "31", palmer: "7┐", area: "lr" },
             { fdi: "46", universal: "30", palmer: "6┐", area: "lr" }, { fdi: "45", universal: "29", palmer: "5┐", area: "lr" },
             { fdi: "44", universal: "28", palmer: "4┐", area: "lr" }, { fdi: "43", universal: "27", palmer: "3┐", area: "lr" },
             { fdi: "42", universal: "26", palmer: "2┐", area: "lr" }, { fdi: "41", universal: "25", palmer: "1┐", area: "lr" },
-            // الفك السفلي الأيسر (LL)
+            // الفك السفلي الأيسر (LL) - من السن المركزي لضرس العقل
             { fdi: "31", universal: "24", palmer: "┌1", area: "ll" }, { fdi: "32", universal: "23", palmer: "┌2", area: "ll" },
             { fdi: "33", universal: "22", palmer: "┌3", area: "ll" }, { fdi: "34", universal: "21", palmer: "┌4", area: "ll" },
             { fdi: "35", universal: "20", palmer: "┌5", area: "ll" }, { fdi: "36", universal: "19", palmer: "┌6", area: "ll" },
             { fdi: "37", universal: "18", palmer: "┌7", area: "ll" }, { fdi: "38", universal: "17", palmer: "┌8", area: "ll" }
         ];
 
-        // مصفوفة الذاكرة لتخزين روابط الصور المشفرة والبيانات للرفع السحابي
+        // مسميات المادة العلمية التشريحية الدقيقة لكل رقم سن بالجهتين
+        const TOOTH_SCIENTIFIC_NAMES = {
+            "1": "رحى ثالثة علوية يمنى (ضرس العقل)", "2": "رحى ثانية علوية يمنى", "3": "رحى أولى علوية يمنى", "4": "ضاحك ثاني علوي أيمن", "5": "ضاحك أول علوي أيمن", "6": "ناب علوي أيمن", "7": "قاطعة جانبية علوية يمنى", "8": "قاطعة مركزية علوية يمنى",
+            "9": "قاطعة مركزية علوية يسرى", "10": "قاطعة جانبية علوية يسرى", "11": "ناب علوي أيسر", "12": "ضاحك أول علوي أيسر", "13": "ضاحك ثاني علوي أيسر", "14": "رحى أولى علوية يسرى", "15": "رحى ثانية علوية يسرى", "16": "رحى ثالثة علوية يسرى (ضرس العقل)",
+            "17": "رحى ثالثة سفلية يسرى (ضرس العقل)", "18": "رحى ثانية سفلية يسرى", "19": "رحى أولى سفلية يسرى", "20": "ضاحك ثاني سفلي أيسر", "21": "ضاحك أول سفلي أيسر", "22": "ناب سفلي أيسر", "23": "قاطعة جانبية سفلية يسرى", "24": "قاطعة مركزية سفلية يسرى",
+            "25": "قاطعة مركزية سفلية يمنى", "26": "قاطعة جانبية سفلية يمنى", "27": "ناب سفلي أيمن", "28": "ضاحك أول سفلي أيمن", "29": "ضاحك ثاني سفلي أيمن", "30": "رحى أولى سفلية يمنى", "31": "رحى ثانية سفلية يمنى", "32": "رحى ثالثة سفلية يمنى (ضرس العقل)"
+        };
+
         let imageMatrixUrls = { XrayBefore: "", XrayAfter: "", PhotoBefore: "", PhotoAfter: "" };
 
         try { if (window.supabase && typeof window.supabase.createClient === 'function') dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); } catch(e) {}
@@ -696,11 +702,29 @@
                     }
                 });
             }
-            try { if (localStorage.getItem('clinic_lang')) currentLang = localStorage.getItem('clinic_lang'); if (localStorage.getItem('clinic_theme')) { const savedTheme = localStorage.getItem('clinic_theme'); document.getElementById('htmlTag').setAttribute('data-theme', savedTheme); updateThemeToggleUI(savedTheme); } } catch(e) {}
+            try { 
+                if (localStorage.getItem('clinic_lang')) currentLang = localStorage.getItem('clinic_lang'); 
+                if (localStorage.getItem('clinic_theme')) { 
+                    const savedTheme = localStorage.getItem('clinic_theme'); 
+                    document.getElementById('htmlTag').setAttribute('data-theme', savedTheme); 
+                    updateThemeToggleUI(savedTheme); 
+                } 
+            } catch(e) {}
             applyLanguageUI();
         });
 
-        // 🦷 محرك البناء الديناميكي للوحة الأسنان التفاعلية الشاملة
+        // 🧠 تهيئة ومحرك الجدولة والتواريخ لإصلاح مشكلة عدم الاستجابة والتعليق
+        function initDatePicker() {
+            if(datePickerInstance) datePickerInstance.destroy();
+            datePickerInstance = flatpickr("#pDate", {
+                enableTime: true,
+                dateFormat: "Y-m-d H:i",
+                time_24hr: true,
+                locale: currentLang === 'ar' ? window.flatpickr.l10ns.ar : "default"
+            });
+        }
+
+        // 🦷 بناء خريطة الأسنان التفاعلية الشاملة الـ 32 سن دائم
         function buildVisualDentalChartEngine() {
             const sectors = { ur: document.getElementById('quadUR'), ul: document.getElementById('quadUL'), lr: document.getElementById('quadLR'), ll: document.getElementById('quadLL') };
             Object.values(sectors).forEach(el => { if(el) el.innerHTML = ''; });
@@ -713,9 +737,8 @@
                 node.setAttribute('data-universal', tooth.universal);
                 node.setAttribute('data-palmer', tooth.palmer);
                 
-                // حقن مسميات ديناميكية بناء على السيركت الفعالة حالياً
                 node.innerHTML = `<i class="fa-solid fa-tooth tooth-icon-svg"></i><span class="tooth-lbl-txt">${getToothLabelByActiveSystem(tooth)}</span>`;
-                node.onclick = () => selectToothNodeFromChart(tooth.fdi);
+                node.onclick = () => toggleToothNodeMultiSelect(tooth.fdi);
                 
                 if (sectors[tooth.area]) sectors[tooth.area].appendChild(node);
             });
@@ -734,7 +757,6 @@
             if(systemCode === 'UNIVERSAL') document.getElementById('btnUniversal').classList.add('active');
             if(systemCode === 'PALMER') document.getElementById('btnPalmer').classList.add('active');
             
-            // تحديث نصوص المسميات على اللوحة فوراً
             ADULT_TEETH_DATA.forEach(tooth => {
                 const node = document.querySelector(`#tooth-${tooth.fdi} .tooth-lbl-txt`);
                 if(node) node.innerText = getToothLabelByActiveSystem(tooth);
@@ -742,29 +764,51 @@
             updateSelectedToothDisplayField();
         }
 
-        function selectToothNodeFromChart(fdiCode) {
-            document.querySelectorAll('.tooth-node').forEach(n => n.classList.remove('selected'));
+        // 🦷 محرك التحكم بالاختيار المتعدد للأسنان الجراحية معاً
+        function toggleToothNodeMultiSelect(fdiCode) {
             const matchedNode = document.getElementById(`tooth-${fdiCode}`);
-            if (matchedNode) {
+            if (!matchedNode) return;
+
+            if (selectedToothCodes.includes(fdiCode)) {
+                selectedToothCodes = selectedToothCodes.filter(code => code !== fdiCode);
+                matchedNode.classList.remove('selected');
+            } else {
+                selectedToothCodes.push(fdiCode);
                 matchedNode.classList.add('selected');
-                selectedToothCode = fdiCode;
-                updateSelectedToothDisplayField();
             }
+            updateSelectedToothDisplayField();
         }
 
         function updateSelectedToothDisplayField() {
-            if(!selectedToothCode) return;
-            const tooth = ADULT_TEETH_DATA.find(t => t.fdi === selectedToothCode);
-            if(!tooth) return;
-            
-            let label = `السن [ FDI: ${tooth.fdi} ]`;
-            if(currentActiveSystem === 'UNIVERSAL') label = `السن [ Universal: ${tooth.universal} ]`;
-            if(currentActiveSystem === 'PALMER') label = `السن [ Palmer: ${tooth.palmer} ]`;
-            
-            document.getElementById('pSelectedToothDisplay').value = label;
+            if (selectedToothCodes.length === 0) {
+                document.getElementById('pSelectedToothDisplay').value = "";
+                return;
+            }
+
+            let labels = selectedToothCodes.map(code => {
+                const tooth = ADULT_TEETH_DATA.find(t => t.fdi === code);
+                if (!tooth) return "";
+                if (currentActiveSystem === 'UNIVERSAL') return tooth.universal;
+                if (currentActiveSystem === 'PALMER') return tooth.palmer;
+                return tooth.fdi;
+            });
+
+            const systemTitle = currentActiveSystem === 'FDI' ? 'FDI' : (currentActiveSystem === 'UNIVERSAL' ? 'Universal' : 'Palmer');
+            document.getElementById('pSelectedToothDisplay').value = `${systemTitle}: [ ${labels.join(', ')} ]`;
         }
 
-        // 📱 المسارات الجراحية ومربعات التحقق الطبية المشروطة للإناث
+        // جلب أسماء الأسنان العلمية التراكمية الدقيقة للطباعة والأرشيف المركزي
+        function getScientificNamesForSelectedTeeth() {
+            if (selectedToothCodes.length === 0) return "عام / غير محدد";
+            return selectedToothCodes.map(code => {
+                const tooth = ADULT_TEETH_DATA.find(t => t.fdi === code);
+                if (!tooth) return code;
+                const scName = TOOTH_SCIENTIFIC_NAMES[tooth.universal] || "سن غير معرف دقيقاً";
+                return `${scName} (FDI: ${tooth.fdi}, Universal: ${tooth.universal})`;
+            }).join(' + ');
+        }
+
+        // المسارات الجراحية ومربعات التحقق الطبية المشروطة للإناث والتاريخ المرضي
         function handleGenderConditionals() {
             const gender = document.getElementById('pGender').value;
             const row = document.getElementById('femaleConditionalsRow');
@@ -812,7 +856,7 @@
             document.getElementById('subProcFittingGroup').style.display = (mainProc === 'تركيب') ? 'block' : 'none';
         }
 
-        // المعاينة والرفع المشفر لمستودع الصور ثنائي الحالات (v15.0 Photo Engine)
+        // المعاينة والرفع لمستودع الصور ثنائي الحالات
         async function previewImageMatrix(categoryKey) {
             const fileInput = document.getElementById(`img${categoryKey}`);
             const previewRow = document.getElementById(`preview${categoryKey.startsWith('Xray')?'Xray':'Photo'}Row`);
@@ -821,13 +865,11 @@
             const file = fileInput.files[0];
             const reader = new FileReader();
             reader.onload = async (e) => {
-                // إنشاء كرت معاينة محلي مؤقت
                 const wrapper = document.createElement('div');
                 wrapper.style = "position:relative; width:65px; height:65px; border-radius:8px; overflow:hidden; border:2px solid var(--primary);";
                 wrapper.innerHTML = `<img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover;"><div style="position:absolute; bottom:0; left:0; right:0; background:rgba(0,0,0,0.6); color:#fff; font-size:9px; text-align:center; font-weight:700;">${categoryKey.endsWith('Before')?'قبل':'بعد'}</div>`;
                 previewRow.appendChild(wrapper);
                 
-                // رفع آمن مباشر إلى سوبابيس استورج
                 if(dbClient && currentUser) {
                     const fileName = `${Date.now()}-${categoryKey}-${file.name}`;
                     const { error: uploadError } = await dbClient.storage.from('patient-photos').upload(fileName, file);
@@ -842,7 +884,7 @@
 
         function getDoctorProfileName() {
             if (currentUser && currentUser.user_metadata && currentUser.user_metadata.full_name) return currentUser.user_metadata.full_name;
-            return "د. عبدالله ملص";
+            return "د. محمود أحمد";
         }
 
         function injectDoctorDynamicIdentity() {
@@ -882,7 +924,7 @@
             } catch (error) { console.error(error); }
         }
 
-        // رفع وتثبيت الداتا المركزية مضافاً إليها الملفات الطبية الكاملة
+        // رفع وتثبيت البيانات المركزية والملفات الطبية كاملة لسوبابيس
         async function addPatientRecordCloud() {
             try {
                 if (!dbClient || !currentUser) return;
@@ -900,9 +942,10 @@
                 const discount = parseFloat(document.getElementById('discountAmount').value) || 0;
                 const paid = parseFloat(document.getElementById('paidAmount').value) || 0;
                 
-                if (!name || !date || !selectedToothCode) return triggerToast('الرجاء إدخال اسم المريض، التاريخ، وتحديد السن من الخريطة العلوية!', 'error');
+                if (!name || !date || selectedToothCodes.length === 0) {
+                    return triggerToast('الرجاء إدخال اسم المريض، تاريخ الجلسة، وتحديد سن أو أكثر من الخريطة!', 'error');
+                }
 
-                // تجميع وحقن مصفوفة الحالة الطبية والصحية العامة
                 let healthIssues = [];
                 document.querySelectorAll('.health-chk:checked').forEach(c => healthIssues.push(c.value));
                 if(document.getElementById('chkHealthyStatus').checked) healthIssues.push("سليم مية بالمية");
@@ -912,11 +955,10 @@
                 }
                 const healthStatusString = healthIssues.join(' + ') || "سليم";
 
-                // تجميع الحالة الاجتماعية والشرطية للإناث
                 let socialStatusString = "ذكر";
                 if(gender === 'أنثى') {
                     const marital = document.getElementById('pMaritalStatus').value;
-                    if(marital === 'מתزوجة' || marital === 'متزوجة') {
+                    if(marital === 'متزوجة') {
                         const preg = document.getElementById('pPregnancyStatus').value;
                         const pregOther = document.getElementById('pPregnancyOtherText').value.trim();
                         socialStatusString = `أنثى / متزوجة / ${preg === 'أخرى' ? pregOther : preg}`;
@@ -925,26 +967,24 @@
                     }
                 }
 
-                // بناء كود تفريع العمليات الطبية الدقيق
                 const mainProc = document.getElementById('pMainProc').value;
                 let subProcDetail = "";
                 if(mainProc === 'تنظيف') subProcDetail = ` (${document.getElementById('subProcCleaning').value})`;
                 if(mainProc === 'قلع') subProcDetail = ` (${document.getElementById('subProcExtraction').value})`;
                 if(mainProc === 'تركيب') subProcDetail = ` (${document.getElementById('subProcFitting').value})`;
-                const finalProcedureLabel = `${mainProc}${subProcDetail} - سن رقم ${selectedToothCode}`;
+                
+                // حفظ كود الأسنان المتعددة بوضوح في العنوان الإجرائي
+                const finalProcedureLabel = `${mainProc}${subProcDetail} - أسنان رقم [ ${selectedToothCodes.join(', ')} ]`;
 
                 const debt = total - discount - paid;
                 const calculatedDebt = debt < 0 ? 0 : debt;
 
-                // دمج مصفوفة الصور الأربعة المرفوعة سحابياً بسلسلة نصية واحدة منظمة
                 const finalImagesPayload = [imageMatrixUrls.XrayBefore, imageMatrixUrls.XrayAfter, imageMatrixUrls.PhotoBefore, imageMatrixUrls.PhotoAfter].join(',');
 
-                // حقن وبناء البيانات بقلب قاعدة بيانات سوبابيس المشفرة
                 const recordPayload = {
                     name, phone, date, total, cost, discount, paid, debt: calculatedDebt,
-                    images: finalImagesPayload, notes, user_id: currentUser.id,
+                    images: finalImagesPayload, user_id: currentUser.id,
                     proc: finalProcedureLabel, 
-                    // استخدام الحقول المتاحة بمرونة وتخزين الإضافات الطبية بالملاحظات أو الحقول الممتدة بذكاء
                     notes: `[العمر: ${age} | العنوان: ${address} | الحالة الصحية: ${healthStatusString} | الملف الاجتماعي: ${socialStatusString} | الشكوى المرضية: ${dentalCondition} | قيمة الأدوات المخبرية: $${labCost}] \n ${notes}`
                 };
 
@@ -956,7 +996,7 @@
                     if (error) throw error; triggerToast('✅ تم إضافة سجل المريض وحفظه بنجاح!');
                 }
 
-                // تصفير وتهيئة كافة الخانات فوراً للوضعية النظيفة
+                // تفريغ وتصفير خانات الإدخال بعد الحفظ النظيف
                 document.getElementById('pName').value = ''; document.getElementById('pAge').value = ''; document.getElementById('pAddress').value = '';
                 document.getElementById('pDentalCondition').value = ''; document.getElementById('pNotes').value = '';
                 document.getElementById('totalAmount').value = '0'; document.getElementById('labCostAmount').value = '0';
@@ -964,7 +1004,7 @@
                 document.getElementById('previewXrayRow').innerHTML = ''; document.getElementById('previewPhotoRow').innerHTML = '';
                 document.querySelectorAll('.health-chk').forEach(c => c.checked = false); document.getElementById('chkHealthyStatus').checked = false;
                 document.getElementById('chkOtherStatus').checked = false; document.getElementById('pHealthOtherText').style.display = 'none';
-                document.querySelectorAll('.tooth-node').forEach(n => n.classList.remove('selected')); selectedToothCode = "";
+                document.querySelectorAll('.tooth-node').forEach(n => n.classList.remove('selected')); selectedToothCodes = [];
                 document.getElementById('pSelectedToothDisplay').value = "";
                 imageMatrixUrls = { XrayBefore: "", XrayAfter: "", PhotoBefore: "", PhotoAfter: "" };
                 if(datePickerInstance) datePickerInstance.clear();
@@ -980,11 +1020,21 @@
             document.getElementById('totalAmount').value = rec.total; document.getElementById('discountAmount').value = rec.discount;
             document.getElementById('paidAmount').value = rec.paid; document.getElementById('costAmount').value = rec.cost;
             
-            // استخراج كود السن المعزول من السلسلة النصية للعملية
-            if(rec.proc && rec.proc.includes('سن رقم ')) {
-                const match = rec.proc.match(/سن رقم (\d+)/);
-                if(match && match[1]) { selectedToothCode = match[1]; selectToothNodeFromChart(selectedToothCode); }
+            // استخراج أكواد الأسنان المتعددة المحددة مسبقاً وتنشيطها على اللوحة
+            selectedToothCodes = [];
+            document.querySelectorAll('.tooth-node').forEach(n => n.classList.remove('selected'));
+            if(rec.proc && rec.proc.includes('[ ')) {
+                const parts = rec.proc.split('[ ');
+                if(parts[1] && parts[1].includes(' ]')) {
+                    const codesString = parts[1].split(' ]')[0];
+                    selectedToothCodes = codesString.split(',').map(s => s.trim());
+                    selectedToothCodes.forEach(code => {
+                        const node = document.getElementById(`tooth-${code}`);
+                        if(node) node.classList.add('selected');
+                    });
+                }
             }
+            updateSelectedToothDisplayField();
             setSaveButtonState(true);
         }
 
@@ -1001,7 +1051,7 @@
             return info;
         }
 
-        // محرك طباعة الروشتة والفاتورة التراكمية الـ Luxury الهاي فاي
+        // محرك وطباعة الروشتة الملوكية المحسّنة لدعم طباعة مسميات الأسنان المتعددة بدقة
         function printDoctorPrescriptionFromRecord(id) {
             const rec = records.find(r => r.id === id); if (!rec) return;
             const cInfo = parseClinicalNotesString(rec.notes);
@@ -1011,13 +1061,22 @@
             document.getElementById('printRxDate').innerText = rec.date;
             document.getElementById('printRxHealthStatus').innerText = cInfo.health;
             
-            // تفتيت خريطة السن الجراحي المختار للطباعة
-            if(rec.proc && rec.proc.includes('سن رقم ')) {
-                const match = rec.proc.match(/سن رقم (\d+)/);
-                if(match && match[1]) {
-                    const tooth = ADULT_TEETH_DATA.find(t => t.fdi === match[1]);
-                    if(tooth) document.getElementById('printRxToothCell').innerText = `FDI: ${tooth.fdi} | UNS: ${tooth.universal} | Palmer: ${tooth.palmer}`;
+            // حقن الأسماء التشريحية التفصيلية للأسنان المستهدفة بالطباعة
+            let extractedCodes = [];
+            if(rec.proc && rec.proc.includes('[ ')) {
+                const parts = rec.proc.split('[ ');
+                if(parts[1] && parts[1].includes(' ]')) {
+                    extractedCodes = parts[1].split(' ]')[0].split(',').map(s => s.trim());
                 }
+            }
+            
+            if(extractedCodes.length > 0) {
+                document.getElementById('printRxToothCell').innerHTML = extractedCodes.map(code => {
+                    const tooth = ADULT_TEETH_DATA.find(t => t.fdi === code);
+                    if(!tooth) return code;
+                    const scName = TOOTH_SCIENTIFIC_NAMES[tooth.universal] || "سن طبي";
+                    return `• ${scName} (FDI: ${tooth.fdi}, Universal: ${tooth.universal})`;
+                }).join('<br>');
             } else {
                 document.getElementById('printRxToothCell').innerText = "عام / غير محدد";
             }
@@ -1026,7 +1085,6 @@
             document.getElementById('printRxNotesCell').innerText = cInfo.cleanNotes || "لا يوجد ملاحظات إضافية موصوفة.";
             document.getElementById('printRxTotalCostCell').innerText = `$${rec.total}`;
             
-            // حقن المسار المالي الكامل والمفصل بالفاتورة
             document.getElementById('printRxSumTotal').innerText = `$${rec.total}`;
             document.getElementById('printRxSumDiscount').innerText = `$${rec.discount}`;
             document.getElementById('printRxSumPaid').innerText = `$${rec.paid}`;
@@ -1060,11 +1118,10 @@
                 tableBody.appendChild(tr);
             });
             document.getElementById('profTotalDebt').innerText = `$${accumulatedDebt}`;
-            if (allImagesUrls.length === 0) galleryGrid.innerHTML = `<p style="color:var(--text-muted); font-style:italic; grid-column:1/-1;">لا يوجد أي صور أشعة (قبل/بعد) محفوظة لهذا مريض.</p>`;
+            if (allImagesUrls.length === 0) galleryGrid.innerHTML = `<p style="color:var(--text-muted); font-style:italic; grid-column:1/-1;">لا يوجد أي صور أشعة (قبل/بعد) محفوظة لهذا المريض.</p>`;
             else allImagesUrls.forEach(item => galleryGrid.innerHTML += `<div class="gallery-img-card" onclick="window.open('${item.url}','_blank')"><img src="${item.url}"><div class="gallery-img-label">${item.label}</div></div>`);
         }
 
-        // محرك بناء وعرض التابلوه الملوكي الجغل الانسيابي 100% بدون أي اعوجاج
         function renderTable() {
             const tbody = document.getElementById('tableBody'); if (!tbody) return;
             const filterType = document.getElementById('archiveFilterSelector').value;
@@ -1081,11 +1138,11 @@
                     const cInfo = parseClinicalNotesString(v.notes);
                     
                     if (index === 0) {
-                        patientCell = `<td rowspan="${totalVisVisVisits}" style="border-inline-end: 1px solid var(--border); font-weight:700; background: var(--bg-sidebar); vertical-align: middle;">
+                        patientCell = `<td rowspan="${totalVisVisits}" style="border-inline-end: 1px solid var(--border); font-weight:700; background: var(--bg-sidebar); vertical-align: middle;">
                             <a href="javascript:void(0)" class="patient-clickable-name" onclick="displayPatientFullProfilePortal('${patient.name}')"><i class="fa-solid fa-circle-user" style="margin-inline-end:5px; color:var(--primary);"></i>${patient.name}</a><br>
                             <small style="color:var(--text-muted); font-weight: 600;"><i class="fa-solid fa-phone" style="font-size:10px;"></i> ${patient.phone || ''}</small>
                         </td>`;
-                        detailsCell = `<td rowspan="${totalVisVisVisits}" style="border-inline-end: 1px solid var(--border); background: var(--bg-app); vertical-align: middle; font-size:0.8rem; font-weight:600; color:var(--text-sidebar);">
+                        detailsCell = `<td rowspan="${totalVisVisits}" style="border-inline-end: 1px solid var(--border); background: var(--bg-app); vertical-align: middle; font-size:0.8rem; font-weight:600; color:var(--text-sidebar);">
                             <div><strong>العمر:</strong> ${cInfo.age} سنة</div>
                             <div style="margin-top:4px;"><strong>الصحة:</strong> <span style="color:var(--accent)">${cInfo.health}</span></div>
                             <div style="margin-top:4px; font-size:10px; color:var(--text-muted);"><strong>اجتماعي:</strong> ${cInfo.social.split('/').slice(1).join('/') || '-'}</div>
@@ -1121,6 +1178,22 @@
             });
         }
 
+        function openProfessionalActionMenu(e, dropdownId) {
+            e.stopPropagation();
+            const alreadyOpen = document.getElementById(dropdownId).style.display === 'block';
+            document.querySelectorAll('.action-dropdown-popup').forEach(p => p.style.display = 'none');
+            if(!alreadyOpen) document.getElementById(dropdownId).style.display = 'block';
+        }
+        document.addEventListener('click', () => document.querySelectorAll('.action-dropdown-popup').forEach(p => p.style.display = 'none'));
+
+        async function executeDeletion(id) {
+            if(!confirm("هل أنت متأكد من حذف هذا السجل الطبي نهائياً؟")) return;
+            if(dbClient) {
+                const { error } = await dbClient.from('appointments').delete().eq('id', id);
+                if(!error) { triggerToast("تم حذف السجل بنجاح"); fetchCloudData(true); }
+            }
+        }
+
         function updateCounters() {
             let cash = 0; let costs = 0; let sales = 0; let ops = 0; let uniquePatients = new Set(); let payingCount = 0;
             let pcounts = { "خلع": 0, "تنظيف": 0, "عصب": 0, "تركيب": 0, "تقويم": 0, "زراعة": 0, "تبييض": 0, "حشوة": 0 };
@@ -1129,7 +1202,12 @@
                 if(rec.paid > 0) payingCount++; if(rec.name) uniquePatients.add(rec.name.trim().toLowerCase());
                 if (rec.proc) {
                     const prs = rec.proc.split(' + '); ops += prs.length;
-                    prs.forEach(op => { if (op.includes("خلع")) pcounts["خلع"]++; if (op.includes("تنظيف")) pcounts["تنظيف"]++; if (op.includes("عصب")) pcounts["عصب"]++; if (op.includes("تركيب")) pcounts["تركيب"]++; if (op.includes("تقويم")) pcounts["تقويم"]++; if (op.includes("زراعة")) pcounts["زراعة"]++; if (op.includes("تبييض")) pcounts["تبييض"]++; if (op.includes("حشوة")) pcounts["حشوة"]++; });
+                    prs.forEach(op => { 
+                        if (op.includes("خلع")) pcounts["خلع"]++; if (op.includes("تنظيف")) pcounts["تنظيف"]++; 
+                        if (op.includes("عصب")) pcounts["عصب"]++; if (op.includes("تركيب")) pcounts["تركيب"]++; 
+                        if (op.includes("تقويم")) pcounts["تقويم"]++; if (op.includes("زراعة")) pcounts["زراعة"]++; 
+                        if (op.includes("تبييض")) pcounts["تبييض"]++; if (op.includes("حشوة")) pcounts["حشوة"]++; 
+                    });
                 }
             });
             document.getElementById('valTotalPatients').innerText = `${uniquePatients.size} مريض`;
@@ -1177,16 +1255,16 @@
             document.querySelectorAll('.page-section').forEach(section => section.classList.remove('active-page'));
             
             if (activeId === 'liTabMain') {
-                const item = document.getElementById('liTabMain'); if(item) item.classList.add('active');
-                const btn = document.getElementById('mBtnMain'); if(btn) btn.classList.add('active');
+                document.getElementById('liTabMain').classList.add('active');
+                document.getElementById('mBtnMain').classList.add('active');
                 document.getElementById('secDashboard').classList.add('active-page');
             } else if (activeId === 'liTabApp') {
-                const item = document.getElementById('liTabApp'); if(item) item.classList.add('active');
-                const btn = document.getElementById('mBtnApp'); if(btn) btn.classList.add('active');
+                document.getElementById('liTabApp').classList.add('active');
+                document.getElementById('mBtnApp').classList.add('active');
                 document.getElementById('secAppointment').classList.add('active-page');
             } else if (activeId === 'liTabArchive') {
-                const item = document.getElementById('liTabArchive'); if(item) item.classList.add('active');
-                const btn = document.getElementById('mBtnArchive'); if(btn) btn.classList.add('active');
+                document.getElementById('liTabArchive').classList.add('active');
+                document.getElementById('mBtnArchive').classList.add('active');
                 document.getElementById('secArchive').classList.add('active-page');
             } else if (activeId === 'secPatientProfile') {
                 document.getElementById('secPatientProfile').classList.add('active-page');
@@ -1203,7 +1281,7 @@
             if (btnIcon && btnText) { if (theme === 'dark') { btnIcon.className = 'fa-solid fa-sun'; btnText.innerText = currentLang === 'ar' ? 'الوضع النهارى' : 'Light Mode'; } else { btnIcon.className = 'fa-solid fa-moon'; btnText.innerText = currentLang === 'ar' ? 'الوضع الليلي' : 'Dark Mode'; } }
         }
 
-        function toggleLanguage() { currentLang = currentLang === 'ar' ? 'en' : 'ar'; localStorage.setItem('clinic_lang', currentLang); if(datePickerInstance) datePickerInstance.destroy(); initDatePicker(); applyLanguageUI(); updateMultiSelectPlaceholder(); renderTable(); updateCounters(); }
+        function toggleLanguage() { currentLang = currentLang === 'ar' ? 'en' : 'ar'; localStorage.setItem('clinic_lang', currentLang); initDatePicker(); applyLanguageUI(); renderTable(); updateCounters(); }
 
         function applyLanguageUI() {
             const h = document.getElementById('htmlTag'); const btn = document.getElementById('btnLangToggle'); const isDark = h.getAttribute('data-theme') === 'dark';
@@ -1226,6 +1304,67 @@
                 document.getElementById('thAppActions').innerText = "Action";
             } else { h.dir = 'rtl'; h.lang = 'ar'; if(btn) btn.innerText = '🌐 English'; }
             updateThemeToggleUI(isDark ? 'dark' : 'light');
+        }
+
+        function saveDoctorStickyNotes() {
+            const txt = document.getElementById('drStickyNotes').value;
+            localStorage.setItem('dr_sticky_notes', txt);
+        }
+        function loadDoctorStickyNotes() {
+            const txt = localStorage.getItem('dr_sticky_notes') || "";
+            document.getElementById('drStickyNotes').value = txt;
+        }
+
+        function printDoctorPrescription() {
+            const pName = document.getElementById('rxPatientName').value || "....................................";
+            const content = document.getElementById('rxContent').value || "....................................";
+            document.getElementById('printRxPatient').innerText = pName;
+            document.getElementById('printRxToothCell').innerText = "وصفة عامة للعيادة";
+            document.getElementById('printRxProcCell').innerText = "أدوية / تعليمات طبية موصوفة";
+            document.getElementById('printRxNotesCell').innerText = content;
+            window.print();
+        }
+
+        function toggleAuthMode() {
+            const title = document.getElementById('lblAuthTitle');
+            const desc = document.getElementById('lblAuthDesc');
+            const subBtn = document.getElementById('btnAuthSubmit');
+            const regLink = document.getElementById('btnAuthRegister');
+            const extra = document.getElementById('signUpDetailsGroup');
+            if(authMode === 'login') {
+                authMode = 'register'; title.innerText = "إنشاء حساب طبي"; desc.innerText = "سجل عيادتك الطبية في السحابة الآمنة"; subBtn.innerHTML = "<i class='fa-solid fa-user-plus'></i> <span>إنشاء الحساب وتفعيل الأمان</span>"; regLink.innerText = "لديك حساب بالفعل؟ تسجيل الدخول"; extra.style.display = 'block';
+            } else {
+                authMode = 'login'; title.innerText = "تسجيل الدخول"; desc.innerText = "منظومة العيادة الطبية الذكية"; subBtn.innerHTML = "<i class='fa-solid fa-fingerprint'></i> <span>دخول</span>"; regLink.innerText = "أو إنشاء حساب طبي جديد"; extra.style.display = 'none';
+            }
+        }
+
+        async function submitAuthForm() {
+            const email = document.getElementById('authEmail').value.trim();
+            const password = document.getElementById('authPassword').value.trim();
+            if(!email || !password) return triggerToast("الرجاء إدخال البريد الإلكتروني وكلمة المرور", "error");
+            if(!dbClient) return triggerToast("Supabase client is not configured correctly.", "error");
+
+            if(authMode === 'register') {
+                const fullName = document.getElementById('authFullName').value.trim();
+                const clinicPhone = document.getElementById('authClinicPhone').value.trim();
+                const clinicAddress = document.getElementById('authClinicAddress').value.trim();
+                if(!fullName) return triggerToast("الرجاء إدخال اسم الدكتور الثلاثي", "error");
+                
+                const { data, error } = await dbClient.auth.signUp({
+                    email, password,
+                    options: { data: { full_name: fullName, clinic_phone: clinicPhone, clinic_address: clinicAddress } }
+                });
+                if(error) triggerToast(error.message, "error");
+                else triggerToast("تم إنشاء الحساب بنجاح! يرجى مراجعة بريدك للتأكيد.");
+            } else {
+                const { data, error } = await dbClient.auth.signInWithPassword({ email, password });
+                if(error) triggerToast(error.message, "error");
+                else triggerToast("مرحباً بك مجدداً دكتور!");
+            }
+        }
+
+        async function handleLogout() {
+            if(dbClient) { await dbClient.auth.signOut(); triggerToast("تم تسجيل الخروج بأمان."); }
         }
     </script>
 </body>
