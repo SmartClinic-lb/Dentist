@@ -1778,29 +1778,33 @@
         }
 
         async function submitAuthForm() {
-            const email = document.getElementById('authEmail').value.trim();
-            const password = document.getElementById('authPassword').value.trim();
-            if(!email || !password) return triggerToast("الرجاء إدخال البريد الإلكتروني وكلمة المرور", "error");
-            if(!dbClient) return triggerToast("Supabase client is not configured correctly.", "error");
+    const email = document.getElementById('authEmail').value.trim();
+    const password = document.getElementById('authPassword').value.trim();
+    if(!email || !password) return triggerToast("الرجاء إدخال البريد الإلكتروني وكلمة المرور", "error");
+    if(!dbClient) return triggerToast("Supabase client is not configured correctly.", "error");
 
-            if(authMode === 'register') {
-                const fullName = document.getElementById('authFullName').value.trim();
-                const clinicPhone = document.getElementById('authClinicPhone').value.trim();
-                const clinicAddress = document.getElementById('authClinicAddress').value.trim();
-                if(!fullName) return triggerToast("الرجاء إدخال اسم الدكتور الثلاثي", "error");
-                
-                const { data, error } = await dbClient.auth.signUp({
-                    email, password,
-                    options: { data: { full_name: fullName, clinic_phone: clinicPhone, clinic_address: clinicAddress } }
-                });
-                if(error) triggerToast(error.message, "error");
-                else triggerToast("تم إنشاء الحساب بنجاح! يرجى مراجعة بريدك للتأكيد.");
-            } else {
-                const { data, error } = await dbClient.auth.signInWithPassword({ email, password });
-                if(error) triggerToast(error.message, "error");
-                else triggerToast("مرحباً بك مجدداً دكتور!");
+    if(authMode === 'register') {
+        const fullName = document.getElementById('authFullName').value.trim();
+        const clinicPhone = document.getElementById('authClinicPhone').value.trim();
+        const clinicAddress = document.getElementById('authClinicAddress').value.trim();
+        if(!fullName) return triggerToast("الرجاء إدخال اسم الدكتور الثلاثي", "error");
+        
+        // 🔥 ضفنا الـ redirectTo الديناميكي هون كمان لإنشاء الحساب الجديد عشان يروح ع جيت هاب فوراً
+        const { data, error } = await dbClient.auth.signUp({
+            email, password,
+            options: { 
+                data: { full_name: fullName, clinic_phone: clinicPhone, clinic_address: clinicAddress },
+                redirectTo: window.location.origin + window.location.pathname
             }
-        }
+        });
+        if(error) triggerToast(error.message, "error");
+        else triggerToast("تم إنشاء الحساب بنجاح! يرجى مراجعة بريدك للتأكيد.");
+    } else {
+        const { data, error } = await dbClient.auth.signInWithPassword({ email, password });
+        if(error) triggerToast(error.message, "error");
+        else triggerToast("مرحباً بك مجدداً دكتور!");
+    }
+}
 
         async function handleLogout() {
             if(dbClient) { await dbClient.auth.signOut(); triggerToast("تم تسجيل الخروج بأمان."); }
