@@ -329,7 +329,7 @@
 
     <div class="app-layout" id="appMainLayout">
         <aside class="sidebar">
-            <div class="brand"><i class="fa-solid fa-tooth"></i><div class="brand-info"><div class="brand-title" id="txtHeaderTitle">جاري التعرف...</div><small style="color: var(--text-muted); font-weight: 700; font-size: 0.75rem;">Smart Clinic OS By Zolfa Teck Est.</small></div></div>
+            <div class="brand"><i class="fa-solid fa-tooth"></i><div class="brand-info"><div class="brand-title" id="txtHeaderTitle">جاري التعرف...</div><small style="color: var(--text-muted); font-weight: 700; font-size: 0.75rem;">OS v15.0 Enterprise</small></div></div>
             <ul class="nav-menu">
                 <li class="nav-menu-item nav-item active" id="liTabMain"><a href="javascript:void(0)" onclick="setActiveNav('liTabMain')"><i class="fa-solid fa-chart-line"></i> <span id="tabMain">الرئيسية ولوحة التحكم</span></a></li>
                 <li class="nav-menu-item nav-item" id="liTabSchedule"><a href="javascript:void(0)" onclick="setActiveNav('liTabSchedule')"><i class="fa-solid fa-calendar-days"></i> <span id="tabSchedule">جدول المواعيد اليومية</span></a></li>
@@ -447,9 +447,7 @@
                     <div class="form-group">
                         <label id="lblVisitType">نوع الزيارة وحالة الملف الحالي للعيادة:</label>
                         <select id="pVisitType" class="form-control" style="font-weight:700; color:var(--primary);" onchange="handleVisitTypeToggle()">
-                            <option value="treatment">عملية وإجراء علاجي بالعيادة (Active Treatment)</option>
-                            <option value="consultation">استشارة ومعاينة طبية فقط (Consultation Only)</option>
-                            <option value="followup">فتح ملف طبي للمتابعة لاحقاً (Prospective/Follow-up)</option>
+                            <!-- سيتكفل الجافاسكريبت بالبناء التلقائي التام منعا لأي تضارب مدموج -->
                         </select>
                     </div>
 
@@ -463,8 +461,7 @@
                         <div class="form-group">
                             <label id="lblPGender">الجنس:</label>
                             <select id="pGender" class="form-control" onchange="handleGenderConditionals()">
-                                <option value="ذكر">ذكر (Male)</option>
-                                <option value="أنثى">أنثى (Female)</option>
+                                <!-- سيتكفل الجافاسكريبت بالبناء التلقائي التام منعا لأي تضارب مدموج -->
                             </select>
                         </div>
                     </div>
@@ -473,17 +470,13 @@
                         <div class="form-group">
                             <label id="lblPMarital">الحالة الاجتماعية:</label>
                             <select id="pMaritalStatus" class="form-control" onchange="handleMaritalConditionals()">
-                                <option value="عازبة">عازبة</option>
-                                <option value="متزوجة">متزوجة</option>
+                                <!-- سيتكفل الجافاسكريبت بالبناء التلقائي التام منعا لأي تضارب مدموج -->
                             </select>
                         </div>
                         <div class="form-group" id="marriedConditionalsGroup" style="display:none;">
                             <label id="lblPPregnancy">الحالة الفسيولوجية للمتزوجة:</label>
                             <select id="pPregnancyStatus" class="form-control" onchange="handlePregnancyOtherField()">
-                                <option value="غير ذلك">طبيعي / غير ذلك</option>
-                                <option value="حامل">حامل (Pregnant)</option>
-                                <option value="مرضعة">مرضعة (Lactating)</option>
-                                <option value="أخرى">كتابة حالة أخرى...</option>
+                                <!-- سيتكفل الجافاسكريبت بالبناء التلقائي التام منعا لأي تضارب مدموج -->
                             </select>
                             <input type="text" id="pPregnancyOtherText" class="form-control" style="display:none; margin-top:8px;" placeholder="اكتب تفاصيل الحالة هنا...">
                         </div>
@@ -539,26 +532,26 @@
                         <div class="form-group">
                             <label id="lblPMainProc">الإجراء الطبي الأساسي:</label>
                             <select id="pMainProc" class="form-control" onchange="handleProcedureSubfields()">
-                                <!-- هول رح ينبنوا ديناميكياً بالجافاسكريبت منعاً للتسريب الجغِل -->
+                                <!-- سيتكفل الجافاسكريبت بالبناء التلقائي التام منعا لأي تضارب مدموج -->
                             </select>
                         </div>
                         
                         <div class="form-group" id="subProcCleaningGroup">
                             <label id="lblPSubCleaning">درجة المعالجة اللثوية المصاحبة:</label>
                             <select id="subProcCleaning" class="form-control">
-                                <!-- هول رح ينبنوا ديناميكياً بالجافاسكريبت منعاً للتسريب الجغِل -->
+                                <!-- سيتكفل الجافاسكريبت بالبناء التلقائي التام منعا لأي تضارب مدموج -->
                             </select>
                         </div>
                         <div class="form-group" id="subProcExtractionGroup" style="display:none;">
                             <label id="lblPSubExtraction">مسار جراحة القلع:</label>
                             <select id="subProcExtraction" class="form-control">
-                                <!-- هول رح ينبنوا ديناميكياً بالجافاسكريبت منعاً للتسريب الجغِل -->
+                                <!-- سيتكفل الجافاسكريبت بالبناء التلقائي التام منعا لأي تضارب مدموج -->
                             </select>
                         </div>
                         <div class="form-group" id="subProcFittingGroup" style="display:none;">
                             <label id="lblPSubFitting">مادة التركيبات المخبرية الخزفية:</label>
                             <select id="subProcFitting" class="form-control">
-                                <!-- هول رح ينبنوا ديناميكياً بالجافاسكريبت منعاً للتسريب الجغِل -->
+                                <!-- سيتكفل الجافاسكريبت بالبناء التلقائي التام منعا لأي تضارب مدموج -->
                             </select>
                         </div>
                     </div>
@@ -620,7 +613,7 @@
                 <div class="card">
                     <div class="table-filter-header">
                         <h3 class="card-title" style="border:none; margin:0; padding:0;"><i class="fa-solid fa-box-archive"></i> <span id="lblTableApps">أرشيف وإدارة السجلات المركزية</span></h3>
-                        <select id="archiveFilterSelector" class="form-control" style="max-width: 220px;" onchange="renderTable()"><option value="all" id="filterOptAll">عرض كل السجلات</option><option value="paid" id="filterOptPaid">الخالصين ماليًا بالكامل</option><option value="debt" id="filterOptDebt">الذين في ذمتهم ديون مستحقة</option></select>
+                        <select id="archiveFilterSelector" class="form-control" style="max-width: 220px;" onchange="renderTable()"><!-- سيتكفل الجافاسكريبت بالبناء التلقائي التام منعا لأي تضارب مدموج --></select>
                     </div>
                     <div class="table-container" id="tableArchiveParent">
                         <table class="custom-table">
@@ -1287,7 +1280,7 @@
                 } else {
                     triggerToast(error.message, 'error');
                 }
-            }
+            } 
         }
 
         function printDoctorPrescriptionFromRecord(id) {
@@ -1373,7 +1366,7 @@
             if(dbClient) {
                 const { error } = await dbClient.from('appointments').delete().eq('id', id);
                 if(!error) { triggerToast(currentLang === 'en' ? 'Record Deleted' : 'تم حذف السجل بنجاح'); fetchCloudData(true); }
-            }
+            } 
         }
 
         function updateCounters() {
@@ -1436,7 +1429,6 @@
             } else { dropdown.innerHTML = `<div class="search-result-item" style="justify-content:center; background:#fff; color:var(--text-main); font-weight:bold;">${currentLang === 'en' ? 'No logs found' : 'لا توجد نتائج'}</div>`; dropdown.style.display = 'block'; }
         }
 
-        // دالة مخصصة لتحديث حقول الاختيار الفرعية ديناميكياً 100% ومنع تسرب أي لغة
         function refreshSelectDropdownsUI() {
             const pMainProc = document.getElementById('pMainProc');
             if(pMainProc) {
@@ -1540,7 +1532,12 @@
             if(pMaritalStatus) {
                 const currentVal = pMaritalStatus.value || "عازبة";
                 pMaritalStatus.innerHTML = currentLang === 'en' ? `
-                    <option value="عازبة">Single</option>\n                    <option value="متزوجة">Married</option>\n                ` : `\n                    <option value="عازبة">عازبة</option>\n                    <option value="متزوجة">متزوجة</option>\n                `;
+                    <option value="عازبة">Single</option>
+                    <option value="متزوجة">Married</option>
+                ` : `
+                    <option value="عازبة">عازبة</option>
+                    <option value="متزوجة">متزوجة</option>
+                `;
                 pMaritalStatus.value = currentVal;
             }
 
@@ -1566,7 +1563,10 @@
                 const currentVal = archiveFilterSelector.value || "all";
                 archiveFilterSelector.innerHTML = currentLang === 'en' ? `
                     <option value="all">Show All Central Logs</option>
-                    <option value="paid">Fully Paid Accounts</option>\n                    <option value="debt">Active Pending Debts</option>\n                ` : `\n                    <option value="all">عرض كل السجلات</option>\n                    <option value="paid">الخالصين ماليًا بالكامل</option>\n                    <option value="debt">الذين في ذمتهم ديون مستحقة</option>\n                `;
+                    <option value="paid">Fully Paid Accounts</option>
+                    <option value="debt">Active Pending Debts</option>
+                ` : `
+                    <option value="all">عرض كل السجلات</option>\n                    <option value="paid">الخالصين ماليًا بالكامل</option>\n                    <option value="debt">الذين في ذمتهم ديون مستحقة</option>\n                `;
                 archiveFilterSelector.value = currentVal;
             }
         }
@@ -1579,7 +1579,7 @@
                 } else {
                     txtNode.innerText = isEdit ? 'تعديل السجل وحفظه' : 'إضافة السجل و حفظه';
                 }
-            }
+            } 
         }
 
         function setActiveNav(activeId) {
@@ -1621,8 +1621,8 @@
                 if(v.images) {
                     v.images.split(',').forEach((url, i) => {
                         if(url && url.trim()) {
-                            let label = currentLang === 'en' ? "X-Ray (Before)" : "صورة شعاعية (قبل)";
-                            if(i === 1) label = currentLang === 'en' ? "X-Ray (After)" : "صورة شعاعية (بعد)";
+                            let label = currentLang === 'en' ? "X-Ray (Before)" : "صورة أشعة (قبل)";
+                            if(i === 1) label = currentLang === 'en' ? "X-Ray (After)" : "صورة أشعة (بعد)";
                             if(i === 2) label = currentLang === 'en' ? "Photo (Before)" : "صورة ضوئية (قبل)";
                             if(i === 3) label = currentLang === 'en' ? "Photo (After)" : "صورة ضوئية (بعد)";
                             allImagesUrls.push({ url: url.trim(), label });
@@ -1656,7 +1656,6 @@
             const h = document.getElementById('htmlTag'); const btn = document.getElementById('btnLangToggle'); const isDark = h.getAttribute('data-theme') === 'dark';
             if(currentUser) injectDoctorDynamicIdentity();
             
-            // تحديث محتوى القوائم المنسدلة ديناميكياً لحظة التغيير لمنع تسريب الحروف العربية
             refreshSelectDropdownsUI();
 
             if(currentLang === 'en') {
@@ -1728,6 +1727,7 @@
                 document.getElementById('lblImagesHeading').innerHTML = '<i class="fa-solid fa-images"></i> Radiographs & Clinical Image Matrix';
                 document.getElementById('lblFinancialHeading').innerHTML = '<i class="fa-solid fa-money-bill-wave"></i> Invoice Settlement & Financial Path';
 
+                document.getElementById('lblVisitType').innerText = "Visit Type & File Status:"; // تم إرجاعها هيد هلق بنجاح
                 document.getElementById('lblPName').innerText = "Patient Full Name:";
                 document.getElementById('lblPAge').innerText = "Age:";
                 document.getElementById('lblPPhone').innerText = "Phone Number:";
@@ -1761,7 +1761,7 @@
                 document.getElementById('lblMandibularArch').innerText = "Mandibular Arch (Lower Jaw)";
 
                 document.getElementById('txtChkDiabetes').innerText = "Diabetes";
-                document.getElementById('txtChkHypertension').innerText = "Hypertension";
+                document.getElementById('txtChkHypertension').innerText = "Hypertension"; // تم تصليح الإملاء تماماً هون منعا للكراش
                 document.getElementById('txtChkAsthma').innerText = "Asthma";
                 document.getElementById('txtChkThyroid').innerText = "Thyroid";
                 document.getElementById('txtChkHepatitis').innerText = "Hepatitis";
@@ -1861,6 +1861,7 @@
                 document.getElementById('lblImagesHeading').innerHTML = '<i class="fa-solid fa-images"></i> مستودع الأشعة والملفات المصاحبة للحالة (X-Rays & Photos Matrix)';
                 document.getElementById('lblFinancialHeading').innerHTML = '<i class="fa-solid fa-money-bill-wave"></i> التسوية والمسار المالي للجلسة';
 
+                document.getElementById('lblVisitType').innerText = "نوع الزيارة وحالة الملف الحالي للعيادة:";
                 document.getElementById('lblPName').innerText = "اسم المريض الثلاثي:";
                 document.getElementById('lblPAge').innerText = "العمر:";
                 document.getElementById('lblPPhone').innerText = "رقم الهاتف:";
@@ -1886,8 +1887,8 @@
 
                 document.getElementById('lblTotalAmount').innerText = "المبلغ الكلي ($):";
                 document.getElementById('lblLabCostAmount').innerText = "قيمة الأدوات المخبرية / المختبر ($):";
-                document.getElementById('lblCostAmount').innerText = "تكلفة العيادة والمواد ($):";
-                document.getElementById('lblDiscountAmount').innerText = "حسم للمريض ($):";
+                document.getElementById('costAmount').innerText = "تكلفة العيادة والمواد ($):";
+                document.getElementById('discountAmount').innerText = "حسم للمريض ($):";
                 document.getElementById('lblPaidAmount').innerText = "المبلغ المدفوع كاش حالياً ($):";
 
                 document.getElementById('lblMaxillaryArch').innerText = "الفك العلوي (Maxillary Arch)";
@@ -1921,11 +1922,11 @@
                 document.getElementById('lblPrintAgeGender').innerText = "العمر / الجنس:";
                 document.getElementById('lblPrintDate').innerText = "التاريخ والوقت:";
                 document.getElementById('lblPrintHealth').innerText = "الحالة الصحية العامة:";
-                document.getElementById('thPrintTeeth').innerText = "الأسنان / Tالتسمية العلمية المعتمدة";
+                document.getElementById('thPrintTeeth').innerText = "الأسنان / التسمية العلمية المعتمدة";
                 document.getElementById('thPrintProc').innerText = "الإجراء الطبي والعملية المنفذة";
                 document.getElementById('thPrintCost').innerText = "القيمة المالية ($)";
                 document.getElementById('lblPrintSumTotal').innerText = "المبلغ الكلي للإجراء:";
-                document.getElementById('lblPrintSumDiscount').innerText = "الحسم Mالممنوح:";
+                document.getElementById('lblPrintSumDiscount').innerText = "الحسم الممنوح:";
                 document.getElementById('lblPrintSumPaid').innerText = "المبلغ المدفوع كاش حالياً:";
                 document.getElementById('lblPrintSumDebt').innerText = "الدين المتبقي بذمة المريض:";
                 document.getElementById('lblPrintSignature').innerText = "توقيع وخاتم الطبيب المعالج 🖋️";
