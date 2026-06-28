@@ -116,14 +116,14 @@
         
         @keyframes smoothSectionUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* 🔥 تم إصلاح الـ z-index وموقع الـ Top-bar لتظهر نتائج البحث فوق الكروت دائماً ومنع الأكل الصوري */
+        /* 🔥 تم قفل الـ z-index لمنع تداخل نتائج كرت البحث تحت كروت الأرشيف الخضراء */
         .top-bar { display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; margin-bottom: 2rem; background: var(--bg-card); backdrop-filter: var(--glass-blur); padding: 1rem 1.5rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); border: 1px solid var(--border); position: relative; z-index: 1090; }
         .top-bar-right { display: flex; align-items: center; gap: 14px; }
         .search-wrapper { position: relative; width: 320px; }
         .search-input-group { display: flex; align-items: center; gap: 10px; background: var(--bg-app); border: 1px solid var(--border); padding: 8px 14px; border-radius: var(--radius-md); }
         .search-bar { border: none; background: transparent; outline: none; color: var(--text-main); width: 100%; font-family: inherit; }
         
-        /* 🔥 تم رفع الأولوية لـ 2500 وجعل الخلفية مصمتة تماماً لمنع التشوه */
+        /* 🔥 زاوية ظهور كرت البحث فوق الأرشيف 100% واضحة وجغلة */
         .search-results-dropdown { position: absolute; top: 100%; left: 0; right: 0; background: var(--bg-sidebar) !important; border: 2px solid var(--primary); border-radius: var(--radius-md); box-shadow: 0 10px 30px rgba(0,0,0,0.15); z-index: 2500 !important; margin-top: 8px; display: none; max-height: 280px; overflow-y: auto; }
         .search-result-item { padding: 12px 14px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); font-size: 0.85rem; color: var(--text-main); background: var(--bg-sidebar); }
         .search-result-item:hover { background: var(--primary-light) !important; }
@@ -664,8 +664,8 @@
         let editingRecordId = null; let currentUser = null;
         let currentLang = 'ar'; let records = []; let datePickerInstance = null;
         let authMode = 'login';
-        let currentActiveSystem = 'FDI'; 
-        let selectedToothCodes = []; 
+        let currentActiveSystem = 'FDI'; // FDI, UNIVERSAL, PALMER
+        let selectedToothCodes = [];
 
         const ADULT_TEETH_DATA = [
             { fdi: "18", universal: "1", palmer: "8┘", area: "ur" }, { fdi: "17", universal: "2", palmer: "7┘", area: "ur" },
@@ -692,8 +692,6 @@
             "17": "رحى ثالثة سفلية يسرى (ضرس العقل)", "18": "رحى ثانية سفلية يسرى", "19": "رحى أولى سفلية يسرى", "20": "ضاحك ثاني سفلي أيسر", "21": "ضاحك أول سفلي أيسر", "22": "ناب سفلي أيسر", "23": "قاطعة جانبية سفلية يسرى", "24": "قاطعة مركزية سفلية يسرى",
             "25": "قاطعة مركزية سفلية يمنى", "26": "قاطعة جانبية سفلية يمنى", "27": "ناب سفلي أيمن", "28": "ضاحك أول سفلي أيمن", "29": "ضاحك ثاني سفلي أيمن", "30": "رحى أولى سفلية يمنى", "31": "رحى ثانية سفلية يمنى", "32": "رحى ثالثة سفلية يمنى (ضرس العقل)"
         };
-
-        let imageMatrixUrls = { XrayBefore: "", XrayAfter: "", PhotoBefore: "", PhotoAfter: "" };
 
         try { if (window.supabase && typeof window.supabase.createClient === 'function') dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); } catch(e) {}
 
@@ -735,7 +733,6 @@
             });
         }
 
-        // 🔥 تعديل تأثير الخريطة البصري عند اختيار استشارة أو متابعة
         function handleVisitTypeToggle() {
             const vType = document.getElementById('pVisitType').value;
             const chartContainer = document.querySelector('.dental-chart-container');
@@ -931,7 +928,6 @@
             } catch (error) { console.error(error); }
         }
 
-        // 🔥 تعديل آلية الرفع وتجاوز شرط الأسنان للاستشارات والملفات المؤقتة لمنع طيران السجل
         async function addPatientRecordCloud() {
             try {
                 if (!dbClient || !currentUser) return;
@@ -952,11 +948,11 @@
                 const visitType = document.getElementById('pVisitType').value;
 
                 if (!name || !date) {
-                    return triggerToast('الرجاء إدخال اسم المريض وتحديد تاريخ الموعد!', 'error');
+                    return triggerToast(currentLang === 'en' ? 'Please enter patient name and select visit date!' : 'الرجاء إدخال اسم المريض وتحديد تاريخ الموعد!', 'error');
                 }
 
                 if (visitType === 'treatment' && selectedToothCodes.length === 0) {
-                    return triggerToast('الرجاء تحديد سن أو أكثر من الخريطة للعمليات الإجرائية الطبية الحالية!', 'error');
+                    return triggerToast(currentLang === 'en' ? 'Please select at least one tooth from the chart for active treatments!' : 'الرجاء تحديد سن أو أكثر من الخريطة للعمليات الإجرائية الطبية الحالية!', 'error');
                 }
 
                 let healthIssues = [];
@@ -980,7 +976,6 @@
                     }
                 }
 
-                // بناء العنوان والبروتوكول بناء على حالة ونوع الملف المفتوح
                 let finalProcedureLabel = "";
                 if (visitType === 'consultation') {
                     finalProcedureLabel = currentLang === 'en' ? "Consultation Only" : "استشارة ومعاينة طبية فقط";
@@ -1008,13 +1003,12 @@
 
                 if (editingRecordId) {
                     const { error } = await dbClient.from('appointments').update(recordPayload).eq('id', editingRecordId);
-                    if (error) throw error; triggerToast('📝 تم تحديث سجل المريض وحفظه!'); editingRecordId = null;
+                    if (error) throw error; triggerToast(currentLang === 'en' ? '📝 Clinical Record Updated!' : '📝 تم تحديث سجل المريض وحفظه!'); editingRecordId = null;
                 } else {
                     const { error } = await dbClient.from('appointments').insert([recordPayload]);
-                    if (error) throw error; triggerToast('✅ تم إضافة سجل المريض وحفظه بنجاح!');
+                    if (error) throw error; triggerToast(currentLang === 'en' ? '✅ Patient Record Secured!' : '✅ تم إضافة سجل المريض وحفظه بنجاح!');
                 }
 
-                // تفريغ وتصفير الخانات بالكامل لوضعية الاستعداد
                 document.getElementById('pName').value = ''; document.getElementById('pAge').value = ''; document.getElementById('pAddress').value = '';
                 document.getElementById('pDentalCondition').value = ''; document.getElementById('pNotes').value = '';
                 document.getElementById('totalAmount').value = '0'; document.getElementById('labCostAmount').value = '0';
@@ -1026,7 +1020,6 @@
                 document.getElementById('pSelectedToothDisplay').value = "";
                 document.getElementById('pVisitType').value = 'treatment';
                 
-                // تفريغ خانات كرت الروشتة السريعة
                 document.getElementById('rxPatientName').value = ''; document.getElementById('rxAgeGender').value = '';
                 document.getElementById('rxHealth').value = ''; document.getElementById('rxTeeth').value = '';
                 document.getElementById('rxProcTitle').value = ''; document.getElementById('rxFinTotal').value = '';
@@ -1038,7 +1031,7 @@
                 
                 if(datePickerInstance) datePickerInstance.clear();
                 setSaveButtonState(false); setActiveNav('liTabArchive'); fetchCloudData(true);
-            } catch(e) { triggerToast("خطأ بالعملية: " + e.message, 'error'); }
+            } catch(e) { triggerToast("Error: " + e.message, 'error'); }
         }
 
         function initiateEditRecord(id) {
@@ -1087,106 +1080,7 @@
             return info;
         }
 
-        function printDoctorPrescriptionFromRecord(id) {
-            const rec = records.find(r => r.id === id); if (!rec) return;
-            const cInfo = parseClinicalNotesString(rec.notes);
-            
-            document.getElementById('printRxPatient').innerText = rec.name;
-            document.getElementById('printRxAgeGender').innerText = `${cInfo.age} سنة / ${cInfo.social.split('/')[0] || 'ذكر'}`;
-            document.getElementById('printRxDate').innerText = rec.date;
-            document.getElementById('printRxHealthStatus').innerText = cInfo.health;
-            
-            let extractedCodes = [];
-            if(rec.proc && rec.proc.includes('[ ')) {
-                const parts = rec.proc.split('[ ');
-                if(parts[1] && parts[1].includes(' ]')) {
-                    extractedCodes = parts[1].split(' ]')[0].split(',').map(s => s.trim());
-                }
-            }
-            
-            if(extractedCodes.length > 0) {
-                document.getElementById('printRxToothCell').innerHTML = extractedCodes.map(code => {
-                    const tooth = ADULT_TEETH_DATA.find(t => t.fdi === code);
-                    if(!tooth) return code;
-                    const scName = TOOTH_SCIENTIFIC_NAMES[tooth.universal] || "سن طبي";
-                    return `• ${scName} (FDI: ${tooth.fdi}, Universal: ${tooth.universal})`;
-                }).join('<br>');
-            } else {
-                document.getElementById('printRxToothCell').innerText = rec.proc;
-            }
-
-            document.getElementById('printRxProcCell').innerText = rec.proc;
-            document.getElementById('printRxNotesCell').innerText = cInfo.cleanNotes || "لا يوجد ملاحظات إضافية موصوفة.";
-            document.getElementById('printRxTotalCostCell').innerText = `$${rec.total}`;
-            
-            document.getElementById('printRxSumTotal').innerText = `$${rec.total}`;
-            document.getElementById('printRxSumDiscount').innerText = `$${rec.discount}`;
-            document.getElementById('printRxSumPaid').innerText = `$${rec.paid}`;
-            document.getElementById('printRxSumDebt').innerText = `$${rec.debt}`;
-            
-            window.print();
-        }
-
-        /* 🔥 تعديل دالة طباعة الروشتة السريعة لتسحب المدخلات التراكمية الملوكية كاملة */
-        function printDoctorPrescription() {
-            const pName = document.getElementById('rxPatientName').value || "....................................";
-            const ageGender = document.getElementById('rxAgeGender').value || "....................................";
-            const health = document.getElementById('rxHealth').value || "سليم / لا يعاني من أمراض مزمنة";
-            const teeth = document.getElementById('rxTeeth').value || "وصفة عامة / أسنان متعددة";
-            const procTitle = document.getElementById('rxProcTitle').value || "علاج ومتابعة دورية بالعيادة";
-            const content = document.getElementById('rxContent').value || "....................................";
-            
-            const fTotal = document.getElementById('rxFinTotal').value || "0";
-            const fDiscount = document.getElementById('rxFinDiscount').value || "0";
-            const fPaid = document.getElementById('rxFinPaid').value || "0";
-            const fDebt = document.getElementById('rxFinDebt').value || "0";
-
-            document.getElementById('printRxPatient').innerText = pName;
-            document.getElementById('printRxAgeGender').innerText = ageGender;
-            document.getElementById('printRxDate').innerText = new Date().toLocaleDateString();
-            document.getElementById('printRxHealthStatus').innerText = health;
-            document.getElementById('printRxToothCell').innerText = teeth;
-            document.getElementById('printRxProcCell').innerText = procTitle;
-            document.getElementById('printRxNotesCell').innerText = content;
-            
-            document.getElementById('printRxTotalCostCell').innerText = `$${fTotal}`;
-            document.getElementById('printRxSumTotal').innerText = `$${fTotal}`;
-            document.getElementById('printRxSumDiscount').innerText = `$${fDiscount}`;
-            document.getElementById('printRxSumPaid').innerText = `$${fPaid}`;
-            document.getElementById('printRxSumDebt').innerText = `$${fDebt}`;
-            
-            window.print();
-        }
-
-        function displayPatientFullProfilePortal(patientNameKey) {
-            const patientRecords = records.filter(r => r.name.trim().toLowerCase() === patientNameKey.trim().toLowerCase()); if (patientRecords.length === 0) return; setActiveNav('secPatientProfile');
-            document.getElementById('profName').innerText = patientRecords[0].name; document.getElementById('profPhone').innerText = patientRecords[0].phone;
-            let accumulatedDebt = 0; const tableBody = document.getElementById('profVisVisitsTableBody'); const galleryGrid = document.getElementById('profGalleryGrid');
-            tableBody.innerHTML = ''; galleryGrid.innerHTML = ''; let allImagesUrls = [];
-            
-            patientRecords.forEach(v => {
-                accumulatedDebt += parseFloat(v.debt) || 0;
-                if(v.images) {
-                    v.images.split(',').forEach((url, i) => {
-                        if(url && url.trim()) {
-                            let label = "صورة شعاعية (قبل)";
-                            if(i === 1) label = "صورة شعاعية (بعد)";
-                            if(i === 2) label = "صورة ضوئية (قبل)";
-                            if(i === 3) label = "صورة ضوئية (بعد)";
-                            allImagesUrls.push({ url: url.trim(), label });
-                        }
-                    });
-                }
-                const cInfo = parseClinicalNotesString(v.notes);
-                const tr = document.createElement('tr');
-                tr.innerHTML = `<td style="font-weight:600; color:var(--accent);">${v.date}</td><td><span style="background:var(--primary-light); color:var(--primary); padding:4px 8px; border-radius:6px; font-weight:700">${v.proc}</span><div class="clinical-blockquote-notes"><strong>💡 تقرير الزيارة:</strong> ${cInfo.cleanNotes}</div></td><td>$${v.total}</td><td style="color:var(--accent); font-weight:600;">$${cInfo.lab}</td><td style="color:#22c55e;">$${v.paid}</td><td style="font-weight:700; color:#ef4444;">$${v.debt}</td>`;
-                tableBody.appendChild(tr);
-            });
-            document.getElementById('profTotalDebt').innerText = `$${accumulatedDebt}`;
-            if (allImagesUrls.length === 0) galleryGrid.innerHTML = `<p style="color:var(--text-muted); font-style:italic; grid-column:1/-1;">لا يوجد أي صور أشعة (قبل/بعد) محفوظة لهذا المريض.</p>`;
-            else allImagesUrls.forEach(item => galleryGrid.innerHTML += `<div class="gallery-img-card" onclick="window.open('${item.url}','_blank')"><img src="${item.url}"><div class="gallery-img-label">${item.label}</div></div>`);
-        }
-
+        // 🔥 تعديل وتطهير دالة الـ renderTable() كاملة لمنع خروج لغات مدموجة
         function renderTable() {
             const tbody = document.getElementById('tableBody'); if (!tbody) return;
             const filterType = document.getElementById('archiveFilterSelector').value;
@@ -1215,7 +1109,7 @@
                         </td>`;
                         detailsCell = `<td rowspan="${totalVisVisits}" style="border-inline-end: 1px solid var(--border); background: var(--bg-app); vertical-align: middle; font-size:0.8rem; font-weight:600; color:var(--text-sidebar);">
                             <div><strong>${ageLbl}:</strong> ${cInfo.age} ${yrsLbl}</div>
-                            <div style="margin-top:4px;"><strong>${healthLbl}:</strong> <span style="color:var(--accent)">${cInfo.health}</span></div>
+                            <div><strong>${healthLbl}:</strong> <span style="color:var(--accent)">${cInfo.health}</span></div>
                             <div style="margin-top:4px; font-size:10px; color:var(--text-muted);"><strong>${socialLbl}:</strong> ${cInfo.social.split('/').slice(1).join('/') || '-'}</div>
                             <div style="margin-top:4px; font-size:11px;"><strong>${addressLbl}:</strong> ${cInfo.address}</div>
                         </td>`;
@@ -1258,6 +1152,76 @@
             });
         }
 
+        function printDoctorPrescriptionFromRecord(id) {
+            const rec = records.find(r => r.id === id); if (!rec) return;
+            const cInfo = parseClinicalNotesString(rec.notes);
+            
+            document.getElementById('printRxPatient').innerText = rec.name;
+            document.getElementById('printRxAgeGender').innerText = `${cInfo.age} سنة / ${cInfo.social.split('/')[0] || 'ذكر'}`;
+            document.getElementById('printRxDate').innerText = rec.date;
+            document.getElementById('printRxHealthStatus').innerText = cInfo.health;
+            
+            let extractedCodes = [];
+            if(rec.proc && rec.proc.includes('[ ')) {
+                const parts = rec.proc.split('[ ');
+                if(parts[1] && parts[1].includes(' ]')) {
+                    extractedCodes = parts[1].split(' ]')[0].split(',').map(s => s.trim());
+                }
+            }
+            
+            if(extractedCodes.length > 0) {
+                document.getElementById('printRxToothCell').innerHTML = extractedCodes.map(code => {
+                    const tooth = ADULT_TEETH_DATA.find(t => t.fdi === code);
+                    if(!tooth) return code;
+                    const scName = TOOTH_SCIENTIFIC_NAMES[tooth.universal] || "سن طبي";
+                    return `• ${scName} (FDI: ${tooth.fdi}, Universal: ${tooth.universal})`;
+                }).join('<br>');
+            } else {
+                document.getElementById('printRxToothCell').innerText = rec.proc;
+            }
+
+            document.getElementById('printRxProcCell').innerText = rec.proc;
+            document.getElementById('printRxNotesCell').innerText = cInfo.cleanNotes || "لا يوجد ملاحظات إضافية موصوفة.";
+            document.getElementById('printRxTotalCostCell').innerText = `$${rec.total}`;
+            
+            document.getElementById('printRxSumTotal').innerText = `$${rec.total}`;
+            document.getElementById('printRxSumDiscount').innerText = `$${rec.discount}`;
+            document.getElementById('printRxSumPaid').innerText = `$${rec.paid}`;
+            document.getElementById('printRxSumDebt').innerText = `$${rec.debt}`;
+            
+            window.print();
+        }
+
+        function printDoctorPrescription() {
+            const pName = document.getElementById('rxPatientName').value || "....................................";
+            const ageGender = document.getElementById('rxAgeGender').value || "....................................";
+            const health = document.getElementById('rxHealth').value || "سليم / لا يعاني من أمراض مزمنة";
+            const teeth = document.getElementById('rxTeeth').value || "وصفة عامة / أسنان متعددة";
+            const procTitle = document.getElementById('rxProcTitle').value || "علاج ومتابعة دورية بالعيادة";
+            const content = document.getElementById('rxContent').value || "....................................";
+            
+            const fTotal = document.getElementById('rxFinTotal').value || "0";
+            const fDiscount = document.getElementById('rxFinDiscount').value || "0";
+            const fPaid = document.getElementById('rxFinPaid').value || "0";
+            const fDebt = document.getElementById('rxFinDebt').value || "0";
+
+            document.getElementById('printRxPatient').innerText = pName;
+            document.getElementById('printRxAgeGender').innerText = ageGender;
+            document.getElementById('printRxDate').innerText = new Date().toLocaleDateString();
+            document.getElementById('printRxHealthStatus').innerText = health;
+            document.getElementById('printRxToothCell').innerText = teeth;
+            document.getElementById('printRxProcCell').innerText = procTitle;
+            document.getElementById('printRxNotesCell').innerText = content;
+            
+            document.getElementById('printRxTotalCostCell').innerText = `$${fTotal}`;
+            document.getElementById('printRxSumTotal').innerText = `$${fTotal}`;
+            document.getElementById('printRxSumDiscount').innerText = `$${fDiscount}`;
+            document.getElementById('printRxSumPaid').innerText = `$${fPaid}`;
+            document.getElementById('printRxSumDebt').innerText = `$${fDebt}`;
+            
+            window.print();
+        }
+
         function openProfessionalActionMenu(e, dropdownId) {
             e.stopPropagation();
             const alreadyOpen = document.getElementById(dropdownId).style.display === 'block';
@@ -1267,13 +1231,14 @@
         document.addEventListener('click', () => document.querySelectorAll('.action-dropdown-popup').forEach(p => p.style.display = 'none'));
 
         async function executeDeletion(id) {
-            if(!confirm("هل أنت متأكد من حذف هذا السجل الطبي نهائياً؟")) return;
+            if(!confirm(currentLang === 'en' ? 'Securely delete this medical entry permanently?' : 'هل أنت متأكد من حذف هذا السجل الطبي نهائياً؟')) return;
             if(dbClient) {
                 const { error } = await dbClient.from('appointments').delete().eq('id', id);
-                if(!error) { triggerToast("تم حذف السجل بنجاح"); fetchCloudData(true); }
+                if(!error) { triggerToast(currentLang === 'en' ? 'Record Deleted' : 'تم حذف السجل بنجاح'); fetchCloudData(true); }
             }
         }
 
+        // 🔥 تعديل وتطهير دالة الـ updateCounters اللغوية الصارمة لعداد المرضى
         function updateCounters() {
             let cash = 0; let costs = 0; let sales = 0; let ops = 0; let uniquePatients = new Set(); let payingCount = 0;
             let pcounts = { "خلع": 0, "تنظيف": 0, "عصب": 0, "تركيب": 0, "تقويم": 0, "زراعة": 0, "تبييض": 0, "حشوة": 0 };
@@ -1321,9 +1286,10 @@
                     item.onclick = () => { document.getElementById('searchBar').value = rec.name; dropdown.style.display = 'none'; displayPatientFullProfilePortal(rec.name); };
                     dropdown.appendChild(item);
                 }); dropdown.style.display = 'block';
-            } else { dropdown.innerHTML = `<div class="search-result-item" style="justify-content:center; background:#fff;">لا توجد نتائج</div>`; dropdown.style.display = 'block'; }
+            } else { dropdown.innerHTML = `<div class="search-result-item" style="justify-content:center; background:#fff; color:var(--text-main); font-weight:bold;">${currentLang === 'en' ? 'No logs found' : 'لا توجد نتائج'}</div>`; dropdown.style.display = 'block'; }
         }
 
+        // 🔥 تعديل وتثبيت لغة زر الحفظ الإجرائي السحابي بدقة
         function setSaveButtonState(isEdit) {
             const txtNode = document.getElementById('btnSaveText');
             if (txtNode) {
@@ -1358,6 +1324,35 @@
             document.getElementById('htmlTag').classList.remove('sidebar-mobile-open'); 
         }
 
+        function displayPatientFullProfilePortal(patientNameKey) {
+            const patientRecords = records.filter(r => r.name.trim().toLowerCase() === patientNameKey.trim().toLowerCase()); if (patientRecords.length === 0) return; setActiveNav('secPatientProfile');
+            document.getElementById('profName').innerText = patientRecords[0].name; document.getElementById('profPhone').innerText = patientRecords[0].phone;
+            let accumulatedDebt = 0; const tableBody = document.getElementById('profVisVisitsTableBody'); const galleryGrid = document.getElementById('profGalleryGrid');
+            tableBody.innerHTML = ''; galleryGrid.innerHTML = ''; let allImagesUrls = [];
+            
+            patientRecords.forEach(v => {
+                accumulatedDebt += parseFloat(v.debt) || 0;
+                if(v.images) {
+                    v.images.split(',').forEach((url, i) => {
+                        if(url && url.trim()) {
+                            let label = "صورة شعاعية (قبل)";
+                            if(i === 1) label = "صورة شعاعية (بعد)";
+                            if(i === 2) label = "صورة ضوئية (قبل)";
+                            if(i === 3) label = "صورة ضوئية (بعد)";
+                            allImagesUrls.push({ url: url.trim(), label });
+                        }
+                    });
+                }
+                const cInfo = parseClinicalNotesString(v.notes);
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td style="font-weight:600; color:var(--accent);">${v.date}</td><td><span style="background:var(--primary-light); color:var(--primary); padding:4px 8px; border-radius:6px; font-weight:700">${v.proc}</span><div class="clinical-blockquote-notes"><strong>💡 تقرير الزيارة:</strong> ${cInfo.cleanNotes}</div></td><td>$${v.total}</td><td style="color:var(--accent); font-weight:600;">$${cInfo.lab}</td><td style="color:#22c55e;">$${v.paid}</td><td style="font-weight:700; color:#ef4444;">$${v.debt}</td>`;
+                tableBody.appendChild(tr);
+            });
+            document.getElementById('profTotalDebt').innerText = `$${accumulatedDebt}`;
+            if (allImagesUrls.length === 0) galleryGrid.innerHTML = `<p style="color:var(--text-muted); font-style:italic; grid-column:1/-1;">لا يوجد أي صور أشعة (قبل/بعد) محفوظة لهذا المريض.</p>`;
+            else allImagesUrls.forEach(item => galleryGrid.innerHTML += `<div class="gallery-img-card" onclick="window.open('${item.url}','_blank')"><img src="${item.url}"><div class="gallery-img-label">${item.label}</div></div>`);
+        }
+
         function viewFilteredArchive(filterType) { const selector = document.getElementById('archiveFilterSelector'); if (selector) selector.value = filterType; setActiveNav('liTabArchive'); renderTable(); }
         function toggleSidebarMenu() { const html = document.getElementById('htmlTag'); if (window.innerWidth > 992) html.classList.toggle('sidebar-hidden'); else html.classList.toggle('sidebar-mobile-open'); }
         function toggleDarkMode() { const html = document.getElementById('htmlTag'); const newTheme = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light'; html.setAttribute('data-theme', newTheme); localStorage.setItem('clinic_theme', newTheme); updateThemeToggleUI(newTheme); }
@@ -1369,6 +1364,7 @@
 
         function toggleLanguage() { currentLang = currentLang === 'ar' ? 'en' : 'ar'; localStorage.setItem('clinic_lang', currentLang); initDatePicker(); applyLanguageUI(); renderTable(); updateCounters(); }
 
+        // 🔥 الدالة اللغوية الشاملة والمنقّحة 100% لمنع تسريب أي لغة أو حروف مدموجة أمام الحكيم
         function applyLanguageUI() {
             const h = document.getElementById('htmlTag'); const btn = document.getElementById('btnLangToggle'); const isDark = h.getAttribute('data-theme') === 'dark';
             if(currentUser) injectDoctorDynamicIdentity();
@@ -1389,6 +1385,41 @@
                 document.getElementById('thStatus').innerText = "Status";
                 document.getElementById('thAppActions').innerText = "Action";
                 
+                document.getElementById('lblLogoutText').innerText = "Logout";
+                document.querySelector('#mBtnMain span').innerText = "Home";
+                document.querySelector('#mBtnApp span').innerText = "New Entry";
+                document.querySelector('#mBtnArchive span').innerText = "Archive";
+                document.querySelector('#mBtnMenu span').innerText = "More";
+
+                document.getElementById('lblPerfIndicators').innerText = "Live Performance Indicators & Financial Status";
+                document.getElementById('statTotalPatientsLbl').innerText = "Total Registered Patients";
+                document.getElementById('statPayingPercentLbl').innerText = "Paying Patients Ratio";
+                document.getElementById('statTotalOpsLbl').innerText = "Total Executed Procedures";
+                document.getElementById('statTotalRevenueLbl').innerText = "Cash Received ($)";
+                document.getElementById('statTotalCostsLbl').innerText = "Materials & Tools Cost";
+                document.getElementById('statTotalSalesLbl').innerText = "Total Invoiced Revenue";
+                document.getElementById('statNetProfitLbl').innerText = "Net Clinical Profit";
+                
+                document.getElementById('chartLblMonthly').innerText = "Interactive Monthly Statistics";
+                document.getElementById('chartLblProcs').innerText = "Dental Operations Distribution";
+                document.getElementById('lblWidgetRxTitle').innerText = "Quick Medical Prescription (Rx)";
+                document.getElementById('lblWidgetNotesTitle').innerText = "Doctor's Personal Sticky Notes";
+                document.getElementById('drStickyNotes').placeholder = "Urgent appointments, material shortages...";
+                
+                document.getElementById('lblAddAppTitleInner').innerText = "Comprehensive Medical & Financial Patient Intake";
+                document.getElementById('lblTableApps').innerText = "Central Records Archive & Management";
+                document.getElementById('pName').placeholder = "Enter patient full name";
+                document.getElementById('pAge').placeholder = "e.g. 28";
+                document.getElementById('pPhone').placeholder = "70xxxxxx";
+                document.getElementById('pAddress').placeholder = "City - Street - Region";
+                document.getElementById('pDentalCondition').placeholder = "e.g. Sharp pain in lower right molar upon cold drinks...";
+                document.getElementById('pNotes').placeholder = "Enter precise technical measurements, custom prescriptions, or lab specs...";
+                document.getElementById('pDate').placeholder = "Select exact appointment date and time";
+
+                document.getElementById('filterOptAll').innerText = "Show All Central Records";
+                document.getElementById('filterOptPaid').innerText = "Fully Settled Invoices";
+                document.getElementById('filterOptDebt').innerText = "Patients with Pending Debts";
+
                 document.getElementById('lblVisitType').innerText = "Visit Type & File Status:";
                 document.getElementById('pVisitType').options[0].text = "Active Treatment / Clinical Procedure";
                 document.getElementById('pVisitType').options[1].text = "Consultation / Check-up Only";
@@ -1403,6 +1434,7 @@
                 document.getElementById('rxFinDiscount').placeholder = "Disc $";
                 document.getElementById('rxFinPaid').placeholder = "Paid $";
                 document.getElementById('rxFinDebt').placeholder = "Debt $";
+                document.getElementById('rxContent').placeholder = "Type medications or clinical instructions here...";
             } else { 
                 h.dir = 'rtl'; h.lang = 'ar'; if(btn) btn.innerText = '🌐 English'; 
                 document.getElementById('searchBar').placeholder = "البحث عن عملية، تقرير، أو اسم مريض...";
@@ -1410,7 +1442,42 @@
                 document.getElementById('lblAddAppTitle').innerText = "إضافة سجل وموعد جديد";
                 document.getElementById('tabPatients').innerText = "أرشيف وإدارة المرضى";
                 
-                document.getElementById('lblVisitType').innerText = "نوع الزيارة وحالة الملف الحالي:";
+                document.getElementById('lblLogoutText').innerText = "تسجيل الخروج";
+                document.querySelector('#mBtnMain span').innerText = "الرئيسية";
+                document.querySelector('#mBtnApp span').innerText = "إضافة سجل";
+                document.querySelector('#mBtnArchive span').innerText = "الأرشيف";
+                document.querySelector('#mBtnMenu span').innerText = "المزيد";
+
+                document.getElementById('lblPerfIndicators').innerText = "مؤشرات الأداء المباشرة والوضع المالي الفوري للعيادة";
+                document.getElementById('statTotalPatientsLbl').innerText = "إجمالي المرضى";
+                document.getElementById('statPayingPercentLbl').innerText = "نسبة المرضى الدافعين";
+                document.getElementById('statTotalOpsLbl').innerText = "إجمالي العمليات المنفذة";
+                document.getElementById('statTotalRevenueLbl').innerText = "المقبوضات كاش ($)";
+                document.getElementById('statTotalCostsLbl').innerText = "تكلفة المواد والأدوات";
+                document.getElementById('statTotalSalesLbl').innerText = "الفواتير وأجر الإيد";
+                document.getElementById('statNetProfitLbl').innerText = "صافي الأرباح";
+
+                document.getElementById('chartLblMonthly').innerText = "الإحصاء الشهري التفاعلي";
+                document.getElementById('chartLblProcs').innerText = "كثافة توزيع العمليات الطبية";
+                document.getElementById('lblWidgetRxTitle').innerText = "الوصفات والتقارير الطبية الشاملة";
+                document.getElementById('lblWidgetNotesTitle').innerText = "ملاحظات الطبيب";
+                document.getElementById('drStickyNotes').placeholder = "مواعيد طارئة، نواقص من المواد...";
+
+                document.getElementById('lblAddAppTitleInner').innerText = "إنشاء سجل طبي ومالي متكامل للمريض";
+                document.getElementById('lblTableApps').innerText = "أرشيف وإدارة السجلات المركزية";
+                document.getElementById('pName').placeholder = "أدخل اسم المريض بالكامل";
+                document.getElementById('pAge').placeholder = "مثال: 28";
+                document.getElementById('pPhone').placeholder = "70xxxxxx";
+                document.getElementById('pAddress').placeholder = "المدينة - الشارع";
+                document.getElementById('pDentalCondition').placeholder = "مثال: آلام حادة بالرحى السفلي الأيمن عند شرب البارد";
+                document.getElementById('pNotes').placeholder = "أدخل هنا القياسات المستخدمة، الأدوية الموصوفة، أو الملاحظات المعملية...";
+                document.getElementById('pDate').placeholder = "إختر الموعد والوقت بدقة";
+
+                document.getElementById('filterOptAll').innerText = "عرض كل السجلات";
+                document.getElementById('filterOptPaid').innerText = "الخالصين ماليًا بالكامل";
+                document.getElementById('filterOptDebt').innerText = "الذين في ذمتهم ديون مستحقة";
+
+                document.getElementById('lblVisitType').innerText = "نوع الزيارة وحالة الملف الحالي للعيادة:";
                 document.getElementById('pVisitType').options[0].text = "عملية وإجراء علاجي بالعيادة (Active Treatment)";
                 document.getElementById('pVisitType').options[1].text = "استشارة ومعاينة طبية فقط (Consultation Only)";
                 document.getElementById('pVisitType').options[2].text = "فتح ملف طبي للمتابعة لاحقاً (Prospective File)";
@@ -1424,6 +1491,7 @@
                 document.getElementById('rxFinDiscount').placeholder = "حسم $";
                 document.getElementById('rxFinPaid').placeholder = "مدفوع $";
                 document.getElementById('rxFinDebt').placeholder = "دين $";
+                document.getElementById('rxContent').placeholder = "اكتب الأدوية الموصوفة والجرعات أو التعليمات السريرية...";
             }
             
             document.querySelectorAll('label').forEach(lbl => {
@@ -1455,8 +1523,137 @@
                     if (txt === "تكلفة العيادة والمواد ($):") lbl.innerText = "Clinic Materials Cost ($):";
                     if (txt === "حسم للمريض ($):") lbl.innerText = "Patient Discount ($):";
                     if (txt === "المبلغ المدفوع كاش حالياً ($):") lbl.innerText = "Current Cash Paid ($):";
+                } else {
+                    if (txt === "Doctor Full Name:") lbl.innerText = "اسم الدكتور الثلاثي:";
+                    if (txt === "Clinic Phone:") lbl.innerText = "رقم هاتف العيادة:";
+                    if (txt === "Clinic Address:") lbl.innerText = "عنوان العيادة بالتفصيل:";
+                    if (txt === "Clinic Email:") lbl.innerText = "البريد الإلكتروني للعيادة:";
+                    if (txt === "Password:") lbl.innerText = "كلمة المرور:";
+                    if (txt === "Patient Full Name:") lbl.innerText = "اسم المريض الثلاثي:";
+                    if (txt === "Age:") lbl.innerText = "العمر:";
+                    if (txt === "Phone Number:") lbl.innerText = "رقم الهاتف:";
+                    if (txt === "Residential Address:") lbl.innerText = "العنوان السكني بالتفصيل:";
+                    if (txt === "Gender:") lbl.innerText = "الجنس:";
+                    if (txt === "Marital Status:") lbl.innerText = "الحالة الاجتماعية:";
+                    if (txt === "Physiological Condition:") lbl.innerText = "الحالة الفسيولوجية للمتزوجة:";
+                    if (txt === "Chronic Conditions / Medical History:") lbl.innerText = "اختر الأمراض المزمنة أو المشاكل الصحية إن وجدت:";
+                    if (txt === "Chief Dental Complaint:") lbl.innerText = "الحالة المرضية الحالية للأسنان / الشكوى الأساسية للزيارة:";
+                    if (txt === "Selected Surgical Teeth:") lbl.innerText = "الأسنان الجراحية المختارة حالياً للعملية:";
+                    if (txt === "Primary Clinical Procedure:") lbl.innerText = "الإجراء الطبي الأساسي:";
+                    if (txt === "Associated Periodontal Degree:") lbl.innerText = "درجة المعالجة اللثوية المصاحبة:";
+                    if (txt === "Surgical Extraction Path:") lbl.innerText = "مسار جراحة القلع:";
+                    if (txt === "Prosthetic Material Spec:") lbl.innerText = "مادة التركيبات المخبرية الخزفية:";
+                    if (txt === "Appointment Date & Time:") lbl.innerText = "توقيت وجدولة الجلسة الجراحية:";
+                    if (txt === "Clinical Visit Report & Notes:") lbl.innerText = "التقرير والملاحظات السريرية الطبيّة للزيارة:";
+                    if (txt === "Total Fee ($):") lbl.innerText = "المبلغ الكلي ($):";
+                    if (txt === "Lab Outsource Cost ($):") lbl.innerText = "قيمة الأدوات المخبرية / المختبر ($):";
+                    if (txt === "Clinic Materials Cost ($):") lbl.innerText = "تكلفة العيادة والمواد ($):";
+                    if (txt === "Patient Discount ($):") lbl.innerText = "حسم للمريض ($):";
+                    if (txt === "Current Cash Paid ($):") lbl.innerText = "المبلغ المدفوع كاش حالياً ($):";
                 }
             });
+
+            document.querySelectorAll('h4').forEach(h4 => {
+                const text = h4.innerText.trim();
+                if (currentLang === 'en') {
+                    if (text.includes("البيانات الديموغرافية")) h4.innerHTML = `<i class="fa-solid fa-user-tag"></i> Patient Profile & Demographics`;
+                    if (text.includes("التاريخ الطبي")) h4.innerHTML = `<i class="fa-solid fa-heart-pulse"></i> Medical History & Chronic Conditions`;
+                    if (text.includes("خريطة الأسنان")) h4.innerHTML = `<i class="fa-solid fa-tooth"></i> Surgical Dental Chart Notation`;
+                    if (text.includes("مستودع الأشعة")) h4.innerHTML = `<i class="fa-solid fa-images"></i> Radiographs & Clinical Image Matrix`;
+                    if (text.includes("التسوية والمسار")) h4.innerHTML = `<i class="fa-solid fa-money-bill-wave"></i> Invoice Settlement & Financial Path`;
+                } else {
+                    if (text.includes("Patient Profile")) h4.innerHTML = `<i class="fa-solid fa-user-tag"></i> البيانات الديموغرافية والاجتماعية للمريض`;
+                    if (text.includes("Medical History")) h4.innerHTML = `<i class="fa-solid fa-heart-pulse"></i> التاريخ الطبي والحالة الصحية العامة للمريض`;
+                    if (text.includes("Surgical Dental Chart")) h4.innerHTML = `<i class="fa-solid fa-tooth"></i> خريطة الأسنان الجراحية والعمليات المحددة (اضغط لتحديد سن أو أكثر)`;
+                    if (text.includes("Radiographs & Clinical")) h4.innerHTML = `<i class="fa-solid fa-images"></i> مستودع الأشعة والملفات المصاحبة للحالة (X-Rays & Photos Matrix)`;
+                    if (text.includes("Invoice Settlement")) h4.innerHTML = `<i class="fa-solid fa-money-bill-wave"></i> التسوية والمسار المالي للجلسة`;
+                }
+            });
+
+            document.querySelectorAll('.chart-title-lbl').forEach(el => {
+                const txt = el.innerText.trim();
+                if (currentLang === 'en') {
+                    if (txt.includes("الفك العلوي")) el.innerText = "Maxillary Arch (Upper Jaw)";
+                    if (txt.includes("الفك السفلي")) el.innerText = "Mandibular Arch (Lower Jaw)";
+                } else {
+                    if (txt.includes("Maxillary Arch")) el.innerText = "الفك العلوي (Maxillary Arch)";
+                    if (txt.includes("Mandibular Arch")) el.innerText = "الفك السفلي (Mandibular Arch)";
+                }
+            });
+
+            document.querySelectorAll('.clinical-checkbox-label span').forEach(sp => {
+                const txt = sp.innerText.trim();
+                if (currentLang === 'en') {
+                    if (txt === "سكري") sp.innerText = "Diabetes";
+                    if (txt === "ضغط") sp.innerText = "Hypertension";
+                    if (txt === "ربو") sp.innerText = "Asthma";
+                    if (txt === "غدة درقية") sp.innerText = "Thyroid";
+                    if (txt === "التهاب الكبد") sp.innerText = "Hepatitis";
+                    if (txt === "سليم / لا شيء") sp.innerText = "Healthy / Clear";
+                    if (txt === "غير ذلك...") sp.innerText = "Other Conditions...";
+                } else {
+                    if (txt === "Diabetes") sp.innerText = "سكري";
+                    if (txt === "Hypertension") sp.innerText = "ضغط";
+                    if (txt === "Asthma") sp.innerText = "ربو";
+                    if (txt === "Thyroid") sp.innerText = "غدة درقية";
+                    if (txt === "Hepatitis") sp.innerText = "التهاب الكبد";
+                    if (txt === "Healthy / Clear") sp.innerText = "سليم / لا شيء";
+                    if (txt === "Other Conditions...") sp.innerText = "غير ذلك...";
+                }
+            });
+
+            const pGender = document.getElementById('pGender');
+            if(pGender) {
+                pGender.options[0].text = currentLang === 'en' ? "Male" : "ذكر (Male)";
+                pGender.options[1].text = currentLang === 'en' ? "Female" : "أنثى (Female)";
+            }
+            const pMaritalStatus = document.getElementById('pMaritalStatus');
+            if(pMaritalStatus) {
+                pMaritalStatus.options[0].text = currentLang === 'en' ? "Single" : "عازبة";
+                pMaritalStatus.options[1].text = currentLang === 'en' ? "Married" : "متزوجة";
+            }
+            const pPregnancyStatus = document.getElementById('pPregnancyStatus');
+            if(pPregnancyStatus) {
+                pPregnancyStatus.options[0].text = currentLang === 'en' ? "Normal Status" : "غير ذلك";
+                pPregnancyStatus.options[1].text = currentLang === 'en' ? "Pregnant" : "حامل (Pregnant)";
+                pPregnancyStatus.options[2].text = currentLang === 'en' ? "Lactating" : "مرضعة (Lactating)";
+                pPregnancyStatus.options[3].text = currentLang === 'en' ? "Write custom status..." : "أخرى";
+            }
+            const pMainProc = document.getElementById('pMainProc');
+            if(pMainProc) {
+                pMainProc.options[0].text = currentLang === 'en' ? "Scaling & Polishing" : "تنظيف وتلميع أسنان";
+                pMainProc.options[1].text = currentLang === 'en' ? "Root Canal Therapy (RCT)" : "معالجة عصب (Root Canal)";
+                pMainProc.options[2].text = currentLang === 'en' ? "Composite Filling" : "حشوة تجميلية (Composite)";
+                pMainProc.options[3].text = currentLang === 'en' ? "Surgical Extraction" : "قلع (Tooth Extraction)";
+                pMainProc.options[4].text = currentLang === 'en' ? "Crowns & Bridges Fixed" : "تركيب تيجان / جسور";
+                pMainProc.options[5].text = currentLang === 'en' ? "Fiber Post" : "وتر فايبر (Fiber Post)";
+                pMainProc.options[6].text = currentLang === 'en' ? "Metal Cast Post" : "وتد معدن (Metal Post)";
+                pMainProc.options[7].text = currentLang === 'en' ? "Periodontal Surgery" : "جراحة لثة وتجميل";
+            }
+            const subProcCleaning = document.getElementById('subProcCleaning');
+            if(subProcCleaning) {
+                subProcCleaning.options[0].text = currentLang === 'en' ? "Mild Gingivitis Therapy" : "معالجة لثوية بسيطة";
+                subProcCleaning.options[1].text = currentLang === 'en' ? "Moderate Periodontitis" : "معالجة لثوية متوسطة";
+                subProcCleaning.options[2].text = currentLang === 'en' ? "Complex Perio Surgery" : "معالجة لثوية معقدة";
+            }
+            const subProcExtraction = document.getElementById('subProcExtraction');
+            if(subProcExtraction) {
+                subProcExtraction.options[0].text = currentLang === 'en' ? "Simple Mobility Forceps" : "بسيط (Simple)";
+                subProcExtraction.options[1].text = currentLang === 'en' ? "Surgical Bone Flap" : "جراحي (Surgical)";
+            }
+            const subProcFitting = document.getElementById('subProcFitting');
+            if(subProcFitting) {
+                subProcFitting.options[0].text = currentLang === 'en' ? "Porcelain Fused Ceramic" : "سيراميك (Ceramic)";
+                subProcFitting.options[1].text = currentLang === 'en' ? "High Translucent Zirconia" : "زيركون (Zirconia)";
+                subProcFitting.options[2].text = currentLang === 'en' ? "Solid Full Monolithic Zircon" : "فول زيركون (Full Zirconia)";
+                subProcFitting.options[3].text = currentLang === 'en' ? "Lithium Disilicate E-max" : "إيماكس (E-max)";
+            }
+            const archiveFilterSelector = document.getElementById('archiveFilterSelector');
+            if(archiveFilterSelector) {
+                archiveFilterSelector.options[0].text = currentLang === 'en' ? "Show All Central Logs" : "عرض كل السجلات";
+                archiveFilterSelector.options[1].text = currentLang === 'en' ? "Fully Paid Accounts" : "الخالصين ماليًا بالكامل";
+                archiveFilterSelector.options[2].text = currentLang === 'en' ? "Active Pending Debts" : "الذين في ذمتهم ديون مستحقة";
+            }
 
             setSaveButtonState(editingRecordId ? true : false);
             updateThemeToggleUI(isDark ? 'dark' : 'light');
