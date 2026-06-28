@@ -116,39 +116,37 @@
         
         @keyframes smoothSectionUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* 🔥 تم قفل الـ z-index لمنع تداخل نتائج كرت البحث تحت كروت الأرشيف الخضراء */
         .top-bar { display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; margin-bottom: 2rem; background: var(--bg-card); backdrop-filter: var(--glass-blur); padding: 1rem 1.5rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); border: 1px solid var(--border); position: relative; z-index: 1090; }
         .top-bar-right { display: flex; align-items: center; gap: 14px; }
         .search-wrapper { position: relative; width: 320px; }
         .search-input-group { display: flex; align-items: center; gap: 10px; background: var(--bg-app); border: 1px solid var(--border); padding: 8px 14px; border-radius: var(--radius-md); }
         .search-bar { border: none; background: transparent; outline: none; color: var(--text-main); width: 100%; font-family: inherit; }
         
-        /* 🔥 زاوية ظهور كرت البحث فوق الأرشيف 100% واضحة وجغلة */
         .search-results-dropdown { position: absolute; top: 100%; left: 0; right: 0; background: var(--bg-sidebar) !important; border: 2px solid var(--primary); border-radius: var(--radius-md); box-shadow: 0 10px 30px rgba(0,0,0,0.15); z-index: 2500 !important; margin-top: 8px; display: none; max-height: 280px; overflow-y: auto; }
         .search-result-item { padding: 12px 14px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); font-size: 0.85rem; color: var(--text-main); background: var(--bg-sidebar); }
         .search-result-item:hover { background: var(--primary-light) !important; }
-        ./* زر الخطوط الثلاثة الملوكي - يظهر دائماً على كل الشاشات مع تأثير جغل */
-.menu-toggle-btn { 
-    background: var(--bg-sidebar); 
-    border: 1px solid var(--border); 
-    font-size: 1.2rem; 
-    color: var(--primary); 
-    cursor: pointer; 
-    display: flex !important; /* إجبار الظهور على كل الشاشات */
-    align-items: center; 
-    justify-content: center; 
-    width: 44px; 
-    height: 44px; 
-    border-radius: var(--radius-md); 
-    transition: var(--transition); 
-    box-shadow: var(--shadow-sm); 
-}
-.menu-toggle-btn:hover { 
-    background: var(--primary); 
-    color: #ffffff; 
-    box-shadow: 0 6px 15px var(--primary-light); 
-    transform: scale(1.05); 
-}
+
+        .menu-toggle-btn { 
+            background: var(--bg-sidebar); 
+            border: 1px solid var(--border); 
+            font-size: 1.2rem; 
+            color: var(--primary); 
+            cursor: pointer; 
+            display: flex !important; 
+            align-items: center; 
+            justify-content: center; 
+            width: 44px; 
+            height: 44px; 
+            border-radius: var(--radius-md); 
+            transition: var(--transition); 
+            box-shadow: var(--shadow-sm); 
+        }
+        .menu-toggle-btn:hover { 
+            background: var(--primary); 
+            color: #ffffff; 
+            box-shadow: 0 6px 15px var(--primary-light); 
+            transform: scale(1.05); 
+        }
         .card { background-color: var(--bg-card); backdrop-filter: var(--glass-blur); border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-sm); border: 1px solid var(--border); margin-bottom: 2rem; position: relative; z-index: 10; }
         .card-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px; color: var(--primary); border-bottom: 2px solid var(--primary-light); padding-bottom: 1rem; }
         
@@ -295,12 +293,13 @@
 
             <div class="form-group" style="text-align: start;"><label id="lblAuthEmail">البريد الإلكتروني للعيادة:</label><input type="email" id="authEmail" class="form-control" placeholder="doctor@example.com"></div>
             <div class="form-group" style="text-align: start; margin-bottom:2rem;"><label id="lblAuthPass">كلمة المرور:</label><input type="password" id="authPassword" class="form-control" placeholder="••••••••"></div>
+            
             <div style="text-align: left; margin-top: -15px; margin-bottom: 20px;">
-    <span style="font-size:0.8rem; color:var(--primary); cursor:pointer; font-weight:700;" 
-          onclick="showForgotPasswordView()">
-        نسيت كلمة المرور؟
-    </span>
-</div>
+                <span style="font-size:0.8rem; color:var(--primary); cursor:pointer; font-weight:700;" onclick="showForgotPasswordView()">
+                    نسيت كلمة المرور؟
+                </span>
+            </div>
+            
             <button class="btn-action" onclick="submitAuthForm()" id="btnAuthSubmit" style="margin-bottom:1.25rem;"><i class="fa-solid fa-fingerprint"></i> <span>دخول</span></button>
             <span style="font-size:0.85rem; color:var(--text-muted); cursor:pointer; font-weight:700;" onclick="toggleAuthMode()" id="btnAuthRegister">أو إنشاء حساب حساب طبي جديد</span>
         </div>
@@ -449,7 +448,7 @@
                             <label class="clinical-checkbox-label"><input type="checkbox" class="health-chk" value="سكري" onchange="handleHealthStatusSelection(this)"> <span>سكري</span></label>
                             <label class="clinical-checkbox-label"><input type="checkbox" class="health-chk" value="ضغط" onchange="handleHealthStatusSelection(this)"> <span>ضغط</span></label>
                             <label class="clinical-checkbox-label"><input type="checkbox" class="health-chk" value="ربو" onchange="handleHealthStatusSelection(this)"> <span>ربو</span></label>
-                            <label class="clinical-checkbox-label"><input type="checkbox" class="health-chk" value="غدة درقية" onchange="handleHealthStatusSelection(this)"> <span>غدة درقية</span></label>
+                            <label class="clinical-checkbox-label"><input type="checkbox" class="health-chk" value="غدة درقية" onchange="change="handleHealthStatusSelection(this)"> <span>غدة درقية</span></label>
                             <label class="clinical-checkbox-label"><input type="checkbox" class="health-chk" value="التهاب الكبد" onchange="handleHealthStatusSelection(this)"> <span>التهاب الكبد</span></label>
                             <label class="clinical-checkbox-label"><input type="checkbox" id="chkHealthyStatus" value="سليم" onchange="handleHealthyClear(this)"> <span style="color:var(--primary)">سليم / لا شيء</span></label>
                             <label class="clinical-checkbox-label"><input type="checkbox" id="chkOtherStatus" value="غير ذلك" onchange="handleOtherHealthField()"> <span>غير ذلك...</span></label>
@@ -954,90 +953,84 @@
             } catch (error) { console.error(error); }
         }
 
-         async function addPatientRecordCloud() {
-    try {
-        if (!dbClient || !currentUser) return;
-        
-        // جلب البيانات مع وضع بدائل تلقائية في حال تُركت الخانة فارغة لمنع الـ Error
-        const name = document.getElementById('pName').value.trim();
-        const age = document.getElementById('pAge').value.trim() || "-";
-        const phone = document.getElementById('pPhone').value.trim() || "-";
-        const address = document.getElementById('pAddress').value.trim() || "-";
-        const gender = document.getElementById('pGender').value;
-        const date = document.getElementById('pDate').value;
-        const dentalCondition = document.getElementById('pDentalCondition').value.trim() || "-";
-        const notes = document.getElementById('pNotes').value.trim() || "";
-        
-        const total = parseFloat(document.getElementById('totalAmount').value) || 0;
-        const labCost = parseFloat(document.getElementById('labCostAmount').value) || 0;
-        const cost = parseFloat(document.getElementById('costAmount').value) || 0;
-        const discount = parseFloat(document.getElementById('discountAmount').value) || 0;
-        const paid = parseFloat(document.getElementById('paidAmount').value) || 0;
-        
-        // التحقق فقط من الاسم والتاريخ كشرط أساسي، وباقي الخانات اختيارية بالكامل
-        if (!name || !date) {
-            return triggerToast(currentLang === 'en' ? 'Please enter Patient Name and Visit Date!' : 'الرجاء إدخال اسم المريض وتحديد تاريخ الموعد!', 'error');
+        async function addPatientRecordCloud() {
+            try {
+                if (!dbClient || !currentUser) return;
+                
+                const name = document.getElementById('pName').value.trim();
+                const age = document.getElementById('pAge').value.trim() || "-";
+                const phone = document.getElementById('pPhone').value.trim() || "-";
+                const address = document.getElementById('pAddress').value.trim() || "-";
+                const gender = document.getElementById('pGender').value;
+                const date = document.getElementById('pDate').value;
+                const dentalCondition = document.getElementById('pDentalCondition').value.trim() || "-";
+                const notes = document.getElementById('pNotes').value.trim() || "";
+                
+                const total = parseFloat(document.getElementById('totalAmount').value) || 0;
+                const labCost = parseFloat(document.getElementById('labCostAmount').value) || 0;
+                const cost = parseFloat(document.getElementById('costAmount').value) || 0;
+                const discount = parseFloat(document.getElementById('discountAmount').value) || 0;
+                const paid = parseFloat(document.getElementById('paidAmount').value) || 0;
+                
+                if (!name || !date) {
+                    return triggerToast(currentLang === 'en' ? 'Please enter Patient Name and Visit Date!' : 'الرجاء إدخال اسم المريض وتحديد تاريخ الموعد!', 'error');
+                }
+
+                let healthIssues = [];
+                document.querySelectorAll('.health-chk:checked').forEach(c => healthIssues.push(c.value));
+                if(document.getElementById('chkHealthyStatus').checked) healthIssues.push(currentLang === 'en' ? "Healthy / Clear" : "سليم مية بالمية");
+                if(document.getElementById('chkOtherStatus').checked) {
+                    const otherText = document.getElementById('pHealthOtherText').value.trim();
+                    if(otherText) healthIssues.push(otherText);
+                }
+                const healthStatusString = healthIssues.join(' + ') || (currentLang === 'en' ? "Clear" : "سليم");
+
+                let socialStatusString = gender === 'ذكر' ? (currentLang === 'en' ? "Male" : "ذكر") : "أنثى";
+                if(gender === 'أنثى') {
+                    const marital = document.getElementById('pMaritalStatus').value;
+                    if(marital === 'متزوجة') {
+                        const preg = document.getElementById('pPregnancyStatus').value;
+                        const pregOther = document.getElementById('pPregnancyOtherText').value.trim();
+                        socialStatusString = `أنثى / متزوجة / ${preg === 'أخرى' ? pregOther : preg}`;
+                    } else { socialStatusString = "أنثى / عازبة"; }
+                }
+
+                const toothDisplay = document.getElementById('pSelectedToothDisplay').value || (currentLang === 'en' ? "General / Consultation" : "عام / استشارة ومعاينة");
+                const mainProc = document.getElementById('pMainProc').value;
+                const finalProcedureLabel = selectedToothCodes.length > 0 ? `${mainProc} - ${toothDisplay}` : toothDisplay;
+
+                const debt = total - discount - paid;
+                const calculatedDebt = debt < 0 ? 0 : debt;
+                const finalImagesPayload = [imageMatrixUrls.XrayBefore, imageMatrixUrls.XrayAfter, imageMatrixUrls.PhotoBefore, imageMatrixUrls.PhotoAfter].join(',');
+
+                const recordPayload = {
+                    name, phone, date, total, cost, discount, paid, debt: calculatedDebt,
+                    images: finalImagesPayload, user_id: currentUser.id, proc: finalProcedureLabel, 
+                    notes: `[العمر: ${age} | العنوان: ${address} | الحالة الصحية: ${healthStatusString} | الملف الاجتماعي: ${socialStatusString} | الشكوى المرضية: ${dentalCondition} | قيمة الأدوات المخبرية: $${labCost}] \n ${notes}`
+                };
+
+                if (editingRecordId) {
+                    const { error } = await dbClient.from('appointments').update(recordPayload).eq('id', editingRecordId);
+                    if (error) throw error; triggerToast(currentLang === 'en' ? '📝 Record Updated Successfully!' : '📝 تم تحديث سجل المريض بنجاح!'); editingRecordId = null;
+                } else {
+                    const { error } = await dbClient.from('appointments').insert([recordPayload]);
+                    if (error) throw error; triggerToast(currentLang === 'en' ? '✅ Medical Profile Secured!' : '✅ تم حفظ ملف المريض بنجاح!');
+                }
+
+                document.getElementById('pName').value = ''; document.getElementById('pAge').value = ''; document.getElementById('pAddress').value = '';
+                document.getElementById('pDentalCondition').value = ''; document.getElementById('pNotes').value = '';
+                document.getElementById('totalAmount').value = '0'; document.getElementById('labCostAmount').value = '0';
+                document.getElementById('costAmount').value = '0'; document.getElementById('discountAmount').value = '0'; document.getElementById('paidAmount').value = '0';
+                document.getElementById('previewXrayRow').innerHTML = ''; document.getElementById('previewPhotoRow').innerHTML = '';
+                document.querySelectorAll('.health-chk').forEach(c => c.checked = false); document.getElementById('chkHealthyStatus').checked = false;
+                document.getElementById('chkOtherStatus').checked = false; document.getElementById('pHealthOtherText').style.display = 'none';
+                document.querySelectorAll('.tooth-node').forEach(n => n.classList.remove('selected')); selectedToothCodes = [];
+                document.getElementById('pSelectedToothDisplay').value = ""; document.getElementById('pVisitType').value = 'treatment';
+                document.querySelector('.dental-chart-container').style.opacity = '1'; if(datePickerInstance) datePickerInstance.clear();
+                
+                setSaveButtonState(false); setActiveNav('liTabArchive'); fetchCloudData(true);
+            } catch(e) { triggerToast("System Error: " + e.message, 'error'); }
         }
-
-        // تجميع الحالات الصحية
-        let healthIssues = [];
-        document.querySelectorAll('.health-chk:checked').forEach(c => healthIssues.push(c.value));
-        if(document.getElementById('chkHealthyStatus').checked) healthIssues.push(currentLang === 'en' ? "Healthy / Clear" : "سليم مية بالمية");
-        if(document.getElementById('chkOtherStatus').checked) {
-            const otherText = document.getElementById('pHealthOtherText').value.trim();
-            if(otherText) healthIssues.push(otherText);
-        }
-        const healthStatusString = healthIssues.join(' + ') || (currentLang === 'en' ? "Clear" : "سليم");
-
-        // تجميع الملف الاجتماعي
-        let socialStatusString = gender === 'ذكر' ? (currentLang === 'en' ? "Male" : "ذكر") : "أنثى";
-        if(gender === 'أنثى') {
-            const marital = document.getElementById('pMaritalStatus').value;
-            if(marital === 'متزوجة') {
-                const preg = document.getElementById('pPregnancyStatus').value;
-                const pregOther = document.getElementById('pPregnancyOtherText').value.trim();
-                socialStatusString = `أنثى / متزوجة / ${preg === 'أخرى' ? pregOther : preg}`;
-            } else { socialStatusString = "أنثى / عازبة"; }
-        }
-
-        // صياغة الإجراء الطبي مع دعم الأسنان الفارغة (للافتتاح أو الاستشارة)
-        const toothDisplay = document.getElementById('pSelectedToothDisplay').value || (currentLang === 'en' ? "General / Consultation" : "عام / استشارة ومعاينة");
-        const mainProc = document.getElementById('pMainProc').value;
-        const finalProcedureLabel = selectedToothCodes.length > 0 ? `${mainProc} - ${toothDisplay}` : toothDisplay;
-
-        const debt = total - discount - paid;
-        const calculatedDebt = debt < 0 ? 0 : debt;
-        const finalImagesPayload = [imageMatrixUrls.XrayBefore, imageMatrixUrls.XrayAfter, imageMatrixUrls.PhotoBefore, imageMatrixUrls.PhotoAfter].join(',');
-
-        const recordPayload = {
-            name, phone, date, total, cost, discount, paid, debt: calculatedDebt,
-            images: finalImagesPayload, user_id: currentUser.id, proc: finalProcedureLabel, 
-            notes: `[العمر: ${age} | العنوان: ${address} | الحالة الصحية: ${healthStatusString} | الملف الاجتماعي: ${socialStatusString} | الشكوى المرضية: ${dentalCondition} | قيمة الأدوات المخبرية: $${labCost}] \n ${notes}`
-        };
-
-        if (editingRecordId) {
-            const { error } = await dbClient.from('appointments').update(recordPayload).eq('id', editingRecordId);
-            if (error) throw error; triggerToast(currentLang === 'en' ? '📝 Record Updated Successfully!' : '📝 تم تحديث سجل المريض بنجاح!'); editingRecordId = null;
-        } else {
-            const { error } = await dbClient.from('appointments').insert([recordPayload]);
-            if (error) throw error; triggerToast(currentLang === 'en' ? '✅ Medical Profile Secured!' : '✅ تم حفظ ملف المريض بنجاح!');
-        }
-
-        // تصفير آمن ونظيف لكافة الخانات للتحضير للملف التالي
-        document.getElementById('pName').value = ''; document.getElementById('pAge').value = ''; document.getElementById('pAddress').value = '';
-        document.getElementById('pDentalCondition').value = ''; document.getElementById('pNotes').value = '';
-        document.getElementById('totalAmount').value = '0'; document.getElementById('labCostAmount').value = '0';
-        document.getElementById('costAmount').value = '0'; document.getElementById('discountAmount').value = '0'; document.getElementById('paidAmount').value = '0';
-        document.getElementById('previewXrayRow').innerHTML = ''; document.getElementById('previewPhotoRow').innerHTML = '';
-        document.querySelectorAll('.health-chk').forEach(c => c.checked = false); document.getElementById('chkHealthyStatus').checked = false;
-        document.getElementById('chkOtherStatus').checked = false; document.getElementById('pHealthOtherText').style.display = 'none';
-        document.querySelectorAll('.tooth-node').forEach(n => n.classList.remove('selected')); selectedToothCodes = [];
-        document.getElementById('pSelectedToothDisplay').value = ""; document.getElementById('pVisitType').value = 'treatment';
-        document.querySelector('.dental-chart-container').style.opacity = '1'; if(datePickerInstance) datePickerInstance.clear();
-        
-        setSaveButtonState(false); setActiveNav('liTabArchive'); fetchCloudData(true);
-    } catch(e) { triggerToast("System Error: " + e.message, 'error'); }
-}
 
         function initiateEditRecord(id) {
             const rec = records.find(r => r.id === id); if (!rec) return;
@@ -1085,7 +1078,6 @@
             return info;
         }
 
-        // 🔥 تعديل وتطهير دالة الـ renderTable() كاملة لمنع خروج لغات مدموجة
         function renderTable() {
             const tbody = document.getElementById('tableBody'); if (!tbody) return;
             const filterType = document.getElementById('archiveFilterSelector').value;
@@ -1243,7 +1235,6 @@
             }
         }
 
-        // 🔥 تعديل وتطهير دالة الـ updateCounters اللغوية الصارمة لعداد المرضى
         function updateCounters() {
             let cash = 0; let costs = 0; let sales = 0; let ops = 0; let uniquePatients = new Set(); let payingCount = 0;
             let pcounts = { "خلع": 0, "تنظيف": 0, "عصب": 0, "تركيب": 0, "تقويم": 0, "زراعة": 0, "تبييض": 0, "حشوة": 0 };
@@ -1294,7 +1285,6 @@
             } else { dropdown.innerHTML = `<div class="search-result-item" style="justify-content:center; background:#fff; color:var(--text-main); font-weight:bold;">${currentLang === 'en' ? 'No logs found' : 'لا توجد نتائج'}</div>`; dropdown.style.display = 'block'; }
         }
 
-        // 🔥 تعديل وتثبيت لغة زر الحفظ الإجرائي السحابي بدقة
         function setSaveButtonState(isEdit) {
             const txtNode = document.getElementById('btnSaveText');
             if (txtNode) {
@@ -1369,7 +1359,6 @@
 
         function toggleLanguage() { currentLang = currentLang === 'ar' ? 'en' : 'ar'; localStorage.setItem('clinic_lang', currentLang); initDatePicker(); applyLanguageUI(); renderTable(); updateCounters(); }
 
-        // 🔥 الدالة اللغوية الشاملة والمنقّحة 100% لمنع تسريب أي لغة أو حروف مدموجة أمام الحكيم
         function applyLanguageUI() {
             const h = document.getElementById('htmlTag'); const btn = document.getElementById('btnLangToggle'); const isDark = h.getAttribute('data-theme') === 'dark';
             if(currentUser) injectDoctorDynamicIdentity();
@@ -1679,110 +1668,114 @@
             const subBtn = document.getElementById('btnAuthSubmit');
             const regLink = document.getElementById('btnAuthRegister');
             const extra = document.getElementById('signUpDetailsGroup');
-            if(authMode === 'login') {
-                authMode = 'register'; title.innerText = "إنشاء حساب طبي"; desc.innerText = "سجل عيادتك الطبية في السحابة الآمنة"; subBtn.innerHTML = "<i class='fa-solid fa-user-plus'></i> <span>إنشاء الحساب وتفعيل الأمان</span>"; regLink.innerText = "لديك حساب بالفعل؟ تسجيل الدخول"; extra.style.display = 'block';
+            
+            // إعادة إظهار كافة الحقول والتأكد من تهيئتها عند التبديل
+            document.getElementById('lblAuthEmail').parentElement.style.display = 'block';
+            document.getElementById('authPassword').parentElement.style.display = 'block';
+            document.getElementById('authPassword').placeholder = "••••••••";
+            regLink.style.display = 'inline-block';
+
+            if(authMode === 'register' || authMode === 'forgot' || authMode === 'recovery') {
+                authMode = 'login'; title.innerText = "تسجيل الدخول"; desc.innerText = "منظومة العيادة الطبية الذكية"; subBtn.innerHTML = "<i class='fa-solid fa-fingerprint'></i> <span>دخول</span>"; regLink.innerText = "أو إنشاء حساب حساب طبي جديد"; extra.style.display = 'none';
+                subBtn.setAttribute('onclick', 'submitAuthForm()');
             } else {
-                authMode = 'login'; title.innerText = "تسجيل الدخول"; desc.innerText = "منظومة العيادة الطبية الذكية"; subBtn.innerHTML = "<i class='fa-solid fa-fingerprint'></i> <span>دخول</span>"; regLink.innerText = "أو إنشاء حساب طبي جديد"; extra.style.display = 'none';
+                authMode = 'register'; title.innerText = "إنشاء حساب طبي"; desc.innerText = "سجل عيادتك الطبية في السحابة الآمنة"; subBtn.innerHTML = "<i class='fa-solid fa-user-plus'></i> <span>إنشاء الحساب وتفعيل الأمان</span>"; regLink.innerText = "لديك حساب بالفعل؟ تسجيل الدخول"; extra.style.display = 'block';
+                subBtn.setAttribute('onclick', 'submitAuthForm()');
             }
         }
-// دالة لإرسال رابط إعادة تعيين كلمة المرور إلى إيميل الدكتور
-async function handleForgotPassword() {
-    const email = document.getElementById('authEmail').value;
 
-    if (!email) {
-        showToast("الرجاء إدخال البريد الإلكتروني أولاً!", "error");
-        return;
-    }
+        // دالة إرسال رابط إعادة تعيين كلمة المرور إلى إيميل الدكتور
+        async function handleForgotPassword() {
+            const email = document.getElementById('authEmail').value.trim();
 
-    // إظهار مؤشر تحميل (Loading)
-    document.getElementById('btnAuthSubmit').disabled = true;
+            if (!email) {
+                triggerToast("الرجاء إدخال البريد الإلكتروني أولاً!", "error");
+                return;
+            }
 
-    const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: 'https://smartclinic-lb.netlify.app', // رابط عيادتك على Netlify
-    });
+            document.getElementById('btnAuthSubmit').disabled = true;
 
-    document.getElementById('btnAuthSubmit').disabled = false;
+            const { data, error } = await dbClient.auth.resetPasswordForEmail(email, {
+                redirectTo: 'https://smartclinic-lb.netlify.app', 
+            });
 
-    if (error) {
-        showToast("خطأ: " + error.message, "error");
-    } else {
-        showToast("تم إرسال رابط إعادة التعيين إلى بريدك الإلكتروني بنجاح!", "success");
-        // العودة لواجهة الدخول العادية
-        toggleAuthMode(); 
-    }
-}
-// 👇 الِصق هذا الكود تحت نهاية الخطوة الثانية مباشرة 👇
+            document.getElementById('btnAuthSubmit').disabled = false;
 
-// 1. مراقبة الرابط عند فتح الموقع أو تغيره للتحقق إذا كان رابط استعادة
-window.addEventListener('hashchange', () => {
-    checkRecoveryLink();
-});
-window.addEventListener('load', () => {
-    checkRecoveryLink(); // فحص الرابط أيضاً عند تحميل الصفحة لأول مرة
-});
+            if (error) {
+                triggerToast("خطأ: " + error.message, "error");
+            } else {
+                triggerToast("تم إرسال رابط إعادة التعيين إلى بريدك الإلكتروني بنجاح!", "success");
+                authMode = 'forgot';
+                toggleAuthMode(); 
+            }
+        }
 
-function checkRecoveryLink() {
-    const hash = window.location.hash;
-    
-    // إذا كان الرابط يحتوي على نوع التغيير (recovery)
-    if (hash && hash.includes('type=recovery')) {
-        document.getElementById('lblAuthTitle').innerText = "تحديث كلمة المرور";
-        document.getElementById('lblAuthDesc').innerText = "الرجاء إدخال كلمة المرور الجديدة للعيادة";
-        
-        // إخفاء خانة الإيميل وإظهار خانة الباسوورد
-        document.getElementById('lblAuthEmail').parentElement.style.display = 'none';
-        document.getElementById('authPassword').placeholder = "كلمة المرور الجديدة";
-        document.getElementById('authPassword').parentElement.style.display = 'block';
-        
-        // تغيير وظيفة زر الدخول ليصبح زر تحديث
-        const submitBtn = document.getElementById('btnAuthSubmit');
-        submitBtn.innerHTML = '<i class="fa-solid fa-key"></i> <span>تحديث وحفظ</span>';
-        submitBtn.setAttribute('onclick', 'handleUpdatePassword()');
-    }
-}
+        // مراقبة الرابط عند فتح الموقع أو تغيره للتحقق إذا كان رابط استعادة
+        window.addEventListener('hashchange', () => { checkRecoveryLink(); });
+        window.addEventListener('load', () => { checkRecoveryLink(); });
 
-// 2. دالة حفظ كلمة المرور الجديدة في السوبابيز
-async function handleUpdatePassword() {
-    const newPassword = document.getElementById('authPassword').value;
+        function checkRecoveryLink() {
+            const hash = window.location.hash;
+            
+            if (hash && hash.includes('type=recovery')) {
+                authMode = 'recovery';
+                document.getElementById('lblAuthTitle').innerText = "تحديث كلمة المرور";
+                document.getElementById('lblAuthDesc').innerText = "الرجاء إدخال كلمة المرور الجديدة للعيادة";
+                
+                document.getElementById('lblAuthEmail').parentElement.style.display = 'none';
+                document.getElementById('signUpDetailsGroup').style.display = 'none';
+                document.getElementById('authPassword').placeholder = "كلمة المرور الجديدة";
+                document.getElementById('authPassword').parentElement.style.display = 'block';
+                
+                const submitBtn = document.getElementById('btnAuthSubmit');
+                submitBtn.innerHTML = '<i class="fa-solid fa-key"></i> <span>تحديث وحفظ</span>';
+                submitBtn.setAttribute('onclick', 'handleUpdatePassword()');
+                
+                document.getElementById('btnAuthRegister').style.display = 'none';
+            }
+        }
 
-    if (!newPassword || newPassword.length < 6) {
-        showToast("الرجاء إدخال كلمة مرور قوية لا تقل عن 6 أحرف!", "error");
-        return;
-    }
+        // دالة حفظ كلمة المرور الجديدة في السوبابيز
+        async function handleUpdatePassword() {
+            const newPassword = document.getElementById('authPassword').value.trim();
 
-    document.getElementById('btnAuthSubmit').disabled = true;
+            if (!newPassword || newPassword.length < 6) {
+                triggerToast("الرجاء إدخال كلمة مرور قوية لا تقل عن 6 أحرف!", "error");
+                return;
+            }
 
-    const { data, error } = await supabase.auth.updateUser({
-        password: newPassword
-    });
+            document.getElementById('btnAuthSubmit').disabled = true;
 
-    document.getElementById('btnAuthSubmit').disabled = false;
+            const { data, error } = await dbClient.auth.updateUser({
+                password: newPassword
+            });
 
-    if (error) {
-        showToast("فشل تحديث كلمة المرور: " + error.message, "error");
-    } else {
-        showToast("تم تحديث كلمة المرور بنجاح! يمكنك الدخول الآن.", "success");
-        window.location.hash = ''; // تنظيف الرابط
-        setTimeout(() => {
-            window.location.reload(); // إعادة تحميل الصفحة للوضع الطبيعي
-        }, 1500);
-    }
-}
+            document.getElementById('btnAuthSubmit').disabled = false;
 
-// 3. دالة تحويل الواجهة عند الضغط على "نسيت كلمة المرور؟"
-function showForgotPasswordView() {
-    document.getElementById('lblAuthTitle').innerText = "استعادة الحساب";
-    document.getElementById('lblAuthDesc').innerText = "أدخل إيميل العيادة لإرسال رابط تعيين باسوورد جديد";
-    
-    // إخفاء خانة الباسوورد
-    document.getElementById('authPassword').parentElement.style.display = 'none';
-    
-    // تعديل زر الدخول ليعمل كـ إرسال رابط
-    const submitBtn = document.getElementById('btnAuthSubmit');
-    submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span>إرسال رابط الاستعادة</span>';
-    submitBtn.setAttribute('onclick', 'handleForgotPassword()');
-}
-// 👆 نهاية الخطوة الثالثة والأخيرة 👆
+            if (error) {
+                triggerToast("فشل تحديث كلمة المرور: " + error.message, "error");
+            } else {
+                triggerToast("تم تحديث كلمة المرور بنجاح! يمكنك الدخول الآن.", "success");
+                window.location.hash = '';
+                setTimeout(() => { window.location.reload(); }, 1500);
+            }
+        }
+
+        // دالة تحويل الواجهة عند الضغط على "نسيت كلمة المرور؟"
+        function showForgotPasswordView() {
+            authMode = 'forgot';
+            document.getElementById('lblAuthTitle').innerText = "استعادة الحساب";
+            document.getElementById('lblAuthDesc').innerText = "أدخل إيميل العيادة لإرسال رابط تعيين باسوورد جديد";
+            
+            document.getElementById('authPassword').parentElement.style.display = 'none';
+            document.getElementById('signUpDetailsGroup').style.display = 'none';
+            
+            const submitBtn = document.getElementById('btnAuthSubmit');
+            submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span>إرسال رابط الاستعادة</span>';
+            submitBtn.setAttribute('onclick', 'handleForgotPassword()');
+            
+            document.getElementById('btnAuthRegister').innerText = "العودة لتسجيل الدخول";
+        }
 
         async function submitAuthForm() {
             const email = document.getElementById('authEmail').value.trim();
