@@ -1696,7 +1696,7 @@
             document.getElementById('btnAuthSubmit').disabled = true;
 
             const { data, error } = await dbClient.auth.resetPasswordForEmail(email, {
-                redirectTo: 'https://smartclinic-lb.netlify.app', 
+                redirectTo: 'https://smartclinic-lb.github.io/Dentist/', 
             });
 
             document.getElementById('btnAuthSubmit').disabled = false;
