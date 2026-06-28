@@ -295,7 +295,12 @@
 
             <div class="form-group" style="text-align: start;"><label id="lblAuthEmail">البريد الإلكتروني للعيادة:</label><input type="email" id="authEmail" class="form-control" placeholder="doctor@example.com"></div>
             <div class="form-group" style="text-align: start; margin-bottom:2rem;"><label id="lblAuthPass">كلمة المرور:</label><input type="password" id="authPassword" class="form-control" placeholder="••••••••"></div>
-            
+            <div style="text-align: left; margin-top: -15px; margin-bottom: 20px;">
+    <span style="font-size:0.8rem; color:var(--primary); cursor:pointer; font-weight:700;" 
+          onclick="showForgotPasswordView()">
+        نسيت كلمة المرور؟
+    </span>
+</div>
             <button class="btn-action" onclick="submitAuthForm()" id="btnAuthSubmit" style="margin-bottom:1.25rem;"><i class="fa-solid fa-fingerprint"></i> <span>دخول</span></button>
             <span style="font-size:0.85rem; color:var(--text-muted); cursor:pointer; font-weight:700;" onclick="toggleAuthMode()" id="btnAuthRegister">أو إنشاء حساب حساب طبي جديد</span>
         </div>
@@ -1680,6 +1685,104 @@
                 authMode = 'login'; title.innerText = "تسجيل الدخول"; desc.innerText = "منظومة العيادة الطبية الذكية"; subBtn.innerHTML = "<i class='fa-solid fa-fingerprint'></i> <span>دخول</span>"; regLink.innerText = "أو إنشاء حساب طبي جديد"; extra.style.display = 'none';
             }
         }
+// دالة لإرسال رابط إعادة تعيين كلمة المرور إلى إيميل الدكتور
+async function handleForgotPassword() {
+    const email = document.getElementById('authEmail').value;
+
+    if (!email) {
+        showToast("الرجاء إدخال البريد الإلكتروني أولاً!", "error");
+        return;
+    }
+
+    // إظهار مؤشر تحميل (Loading)
+    document.getElementById('btnAuthSubmit').disabled = true;
+
+    const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: 'https://smartclinic-lb.netlify.app', // رابط عيادتك على Netlify
+    });
+
+    document.getElementById('btnAuthSubmit').disabled = false;
+
+    if (error) {
+        showToast("خطأ: " + error.message, "error");
+    } else {
+        showToast("تم إرسال رابط إعادة التعيين إلى بريدك الإلكتروني بنجاح!", "success");
+        // العودة لواجهة الدخول العادية
+        toggleAuthMode(); 
+    }
+}
+// 👇 الِصق هذا الكود تحت نهاية الخطوة الثانية مباشرة 👇
+
+// 1. مراقبة الرابط عند فتح الموقع أو تغيره للتحقق إذا كان رابط استعادة
+window.addEventListener('hashchange', () => {
+    checkRecoveryLink();
+});
+window.addEventListener('load', () => {
+    checkRecoveryLink(); // فحص الرابط أيضاً عند تحميل الصفحة لأول مرة
+});
+
+function checkRecoveryLink() {
+    const hash = window.location.hash;
+    
+    // إذا كان الرابط يحتوي على نوع التغيير (recovery)
+    if (hash && hash.includes('type=recovery')) {
+        document.getElementById('lblAuthTitle').innerText = "تحديث كلمة المرور";
+        document.getElementById('lblAuthDesc').innerText = "الرجاء إدخال كلمة المرور الجديدة للعيادة";
+        
+        // إخفاء خانة الإيميل وإظهار خانة الباسوورد
+        document.getElementById('lblAuthEmail').parentElement.style.display = 'none';
+        document.getElementById('authPassword').placeholder = "كلمة المرور الجديدة";
+        document.getElementById('authPassword').parentElement.style.display = 'block';
+        
+        // تغيير وظيفة زر الدخول ليصبح زر تحديث
+        const submitBtn = document.getElementById('btnAuthSubmit');
+        submitBtn.innerHTML = '<i class="fa-solid fa-key"></i> <span>تحديث وحفظ</span>';
+        submitBtn.setAttribute('onclick', 'handleUpdatePassword()');
+    }
+}
+
+// 2. دالة حفظ كلمة المرور الجديدة في السوبابيز
+async function handleUpdatePassword() {
+    const newPassword = document.getElementById('authPassword').value;
+
+    if (!newPassword || newPassword.length < 6) {
+        showToast("الرجاء إدخال كلمة مرور قوية لا تقل عن 6 أحرف!", "error");
+        return;
+    }
+
+    document.getElementById('btnAuthSubmit').disabled = true;
+
+    const { data, error } = await supabase.auth.updateUser({
+        password: newPassword
+    });
+
+    document.getElementById('btnAuthSubmit').disabled = false;
+
+    if (error) {
+        showToast("فشل تحديث كلمة المرور: " + error.message, "error");
+    } else {
+        showToast("تم تحديث كلمة المرور بنجاح! يمكنك الدخول الآن.", "success");
+        window.location.hash = ''; // تنظيف الرابط
+        setTimeout(() => {
+            window.location.reload(); // إعادة تحميل الصفحة للوضع الطبيعي
+        }, 1500);
+    }
+}
+
+// 3. دالة تحويل الواجهة عند الضغط على "نسيت كلمة المرور؟"
+function showForgotPasswordView() {
+    document.getElementById('lblAuthTitle').innerText = "استعادة الحساب";
+    document.getElementById('lblAuthDesc').innerText = "أدخل إيميل العيادة لإرسال رابط تعيين باسوورد جديد";
+    
+    // إخفاء خانة الباسوورد
+    document.getElementById('authPassword').parentElement.style.display = 'none';
+    
+    // تعديل زر الدخول ليعمل كـ إرسال رابط
+    const submitBtn = document.getElementById('btnAuthSubmit');
+    submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span>إرسال رابط الاستعادة</span>';
+    submitBtn.setAttribute('onclick', 'handleForgotPassword()');
+}
+// 👆 نهاية الخطوة الثالثة والأخيرة 👆
 
         async function submitAuthForm() {
             const email = document.getElementById('authEmail').value.trim();
