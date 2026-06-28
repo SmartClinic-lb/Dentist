@@ -248,7 +248,7 @@
             .search-wrapper { width: 100%; max-width: 100%; }
             .card { padding: 1.25rem !important; border-radius: 14px; margin-bottom: 1.25rem; }
             .stats-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px; }
-            .stat-box { padding: 1rem; border-radius: 8px; }
+            .border-inline-start-color { padding: 1rem; border-radius: 8px; }
             .stat-box h2 { font-size: 1.35rem; }
             .menu-toggle-btn { display: flex; }
         }
@@ -311,10 +311,16 @@
                 <div class="form-group"><label id="lblAuthClinicAddress" style="margin-top:5px;">عنوان العيادة بالتفصيل:</label><input type="text" id="authClinicAddress" class="form-control" placeholder="طرابلس - شارع المئتين"></div>
             </div>
 
-            <div class="form-group" style="text-align: start;"><label id="lblAuthEmail">البريد الإلكتروني للعيادة:</label><input type="email" id="authEmail" class="form-control" placeholder="doctor@example.com"></div>
-            <div class="form-group" style="text-align: start; margin-bottom:2rem;"><label id="lblAuthPass">كلمة المرور:</label><input type="password" id="authPassword" class="form-control" placeholder="••••••••"></div>
+            <!-- 🔒 خانة إدخال رمز التحقق الرقمي OTP الجديدة كلياً المصممة لمنع الـ 404 -->
+            <div class="form-group" id="otpInputGroup" style="display:none; text-align: start;">
+                <label id="lblAuthOtpCode">رمز التحقق الرقمي (OTP):</label>
+                <input type="text" id="authOtpCode" class="form-control" placeholder="123456" maxlength="6" style="text-align:center; font-size:1.5rem; letter-spacing:8px; font-weight:700;">
+            </div>
+
+            <div class="form-group" id="emailInputGroup" style="text-align: start;"><label id="lblAuthEmail">البريد الإلكتروني للعيادة:</label><input type="email" id="authEmail" class="form-control" placeholder="doctor@example.com"></div>
+            <div class="form-group" id="passwordInputGroup" style="text-align: start; margin-bottom:2rem;"><label id="lblAuthPass">كلمة المرور:</label><input type="password" id="authPassword" class="form-control" placeholder="••••••••"></div>
             
-            <div style="text-align: left; margin-top: -15px; margin-bottom: 20px;">
+            <div style="text-align: left; margin-top: -15px; margin-bottom: 20px;" id="forgotPasswordLinkWrapper">
                 <span id="lblForgotPasswordLink" style="font-size:0.8rem; color:var(--primary); cursor:pointer; font-weight:700;" onclick="showForgotPasswordView()">
                     نسيت كلمة المرور؟
                 </span>
@@ -329,8 +335,7 @@
 
     <div class="app-layout" id="appMainLayout">
         <aside class="sidebar">
-            <div class="brand"><i class="fa-solid fa-tooth"></i><div class="brand-info"><div class="brand-title" id="txtHeaderTitle">جاري التعرف...</div><small style="color: var(--text-muted); font-weight: 700; font-size: 0.75rem;">Smart Clinic OS By Zolfa Teck Est
-</small></div></div>
+            <div class="brand"><i class="fa-solid fa-tooth"></i><div class="brand-info"><div class="brand-title" id="txtHeaderTitle">جاري التعرف...</div><small style="color: var(--text-muted); font-weight: 700; font-size: 0.75rem;">OS v15.0 Enterprise</small></div></div>
             <ul class="nav-menu">
                 <li class="nav-menu-item nav-item active" id="liTabMain"><a href="javascript:void(0)" onclick="setActiveNav('liTabMain')"><i class="fa-solid fa-chart-line"></i> <span id="tabMain">الرئيسية ولوحة التحكم</span></a></li>
                 <li class="nav-menu-item nav-item" id="liTabSchedule"><a href="javascript:void(0)" onclick="setActiveNav('liTabSchedule')"><i class="fa-solid fa-calendar-days"></i> <span id="tabSchedule">جدول المواعيد اليومية</span></a></li>
@@ -716,7 +721,7 @@
         let dbClient = null; let monthlyChartInstance = null; let procsChartInstance = null;
         let editingRecordId = null; let currentUser = null;
         let currentLang = 'ar'; let records = []; let datePickerInstance = null;
-        let authMode = 'login';
+        let authMode = 'login'; // login, register, forgot, recovery, verify_signup, verify_recovery
         let currentActiveSystem = 'FDI'; // FDI, UNIVERSAL, PALMER
         let selectedToothCodes = [];
         let currentScheduleDayFilter = 'today'; // today, tomorrow, custom
@@ -741,13 +746,6 @@
             { fdi: "35", universal: "20", palmer: "┌5", area: "ll" }, { fdi: "36", universal: "19", palmer: "┌6", area: "ll" },
             { fdi: "37", universal: "18", palmer: "┌7", area: "ll" }, { fdi: "38", universal: "17", palmer: "┌8", area: "ll" }
         ];
-
-        const TOOTH_SCIENTIFIC_NAMES = {
-            "1": "رحى ثالثة علوية يمنى (ضرس العقل)", "2": "رحى ثانية علوية يمنى", "3": "رحى أولى علوية يمنى", "4": "ضاحك ثاني علوي أيمن", "5": "ضاحك أول علوي أيمن", "6": "ناب علوي أيمن", "7": "قاطعة جانبية علوية يمنى", "8": "قاطعة مركزية علوية يمنى",
-            "9": "قاطعة مركزية علوية يسرى", "10": "قاطعة جانبية علوية يسرى", "11": "ناب علوي أيسر", "12": "ضاحك أول علوي أيسر", "13": "ضاحك ثاني علوي أيسر", "14": "رحى أولى علوية يسرى", "15": "رحى ثانية علوية يسرى", "16": "رحى ثالثة علوية يسرى (ضرس العقل)",
-            "17": "رحى ثالثة سفلية يسرى (ضرس العقل)", "18": "رحى ثانية سفلية يسرى", "19": "رحى أولى سفلية يسرى", "20": "ضاحك ثاني سفلي أيسر", "21": "ضاحك أول سفلي أيسر", "22": "ناب سفلي أيسر", "23": "قاطعة جانبية سفلية يسرى", "24": "قاطعة مركزية سفلية يسرى",
-            "25": "قاطعة مركزية سفلية يمنى", "26": "قاطعة جانبية سفلية يمنى", "27": "ناب سفلي أيمن", "28": "ضاحك أول سفلي أيمن", "29": "ضاحك ثاني سفلي أيمن", "30": "رحى أولى سفلية يمنى", "31": "رحى ثانية سفلية يمنى", "32": "رحى ثالثة سفلية يمنى (ضرس العقل)"
-        };
 
         try { if (window.supabase && typeof window.supabase.createClient === 'function') dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); } catch(e) {}
 
@@ -1567,7 +1565,10 @@
                     <option value="paid">Fully Paid Accounts</option>
                     <option value="debt">Active Pending Debts</option>
                 ` : `
-                    <option value="all">عرض كل السجلات</option>\n                    <option value="paid">الخالصين ماليًا بالكامل</option>\n                    <option value="debt">الذين في ذمتهم ديون مستحقة</option>\n                `;
+                    <option value="all">عرض كل السجلات</option>
+                    <option value="paid">الخالصين ماليًا بالكامل</option>
+                    <option value="debt">الذين في ذمتهم ديون مستحقة</option>
+                `;
                 archiveFilterSelector.value = currentVal;
             }
         }
@@ -1580,7 +1581,7 @@
                 } else {
                     txtNode.innerText = isEdit ? 'تعديل السجل وحفظه' : 'إضافة السجل و حفظه';
                 }
-            } 
+            }
         }
 
         function setActiveNav(activeId) {
@@ -1638,7 +1639,7 @@
                 tableBody.appendChild(tr);
             });
             document.getElementById('profTotalDebt').innerText = `$${accumulatedDebt}`;
-            if (allImagesUrls.length === 0) galleryGrid.innerHTML = `<p style="color:var(--text-muted); font-style:italic; grid-column:1/-1;">${currentLang === 'en' ? 'No diagnostic x-rays or clinical photos saved for this client.' : 'لا يوجد أي صور أشعة (قبل/بعد) محفوظة لهذا المريض.'}</p>`;
+            if (allImagesUrls.length === 0) galleryGrid.innerHTML = `<p style="color:var(--text-muted); font-style:italic; grid-column:1/-1;">${currentLang === 'en' ? 'No diagnostic x-rays or clinical photos saved for this client.' : 'لا يوجد أي صور أشعة (قبل/بعد) محفوظة لهذا مريض.'}</p>`;
             else allImagesUrls.forEach(item => galleryGrid.innerHTML += `<div class="gallery-img-card" onclick="window.open('${item.url}','_blank')"><img src="${item.url}"><div class="gallery-img-label">${item.label}</div></div>`);
         }
 
@@ -1728,7 +1729,7 @@
                 document.getElementById('lblImagesHeading').innerHTML = '<i class="fa-solid fa-images"></i> Radiographs & Clinical Image Matrix';
                 document.getElementById('lblFinancialHeading').innerHTML = '<i class="fa-solid fa-money-bill-wave"></i> Invoice Settlement & Financial Path';
 
-                document.getElementById('lblVisitType').innerText = "Visit Type & File Status:"; // تم إرجاعها هيد هلق بنجاح
+                document.getElementById('lblVisitType').innerText = "Visit Type & File Status:";
                 document.getElementById('lblPName').innerText = "Patient Full Name:";
                 document.getElementById('lblPAge').innerText = "Age:";
                 document.getElementById('lblPPhone').innerText = "Phone Number:";
@@ -1762,7 +1763,7 @@
                 document.getElementById('lblMandibularArch').innerText = "Mandibular Arch (Lower Jaw)";
 
                 document.getElementById('txtChkDiabetes').innerText = "Diabetes";
-                document.getElementById('txtChkHypertension').innerText = "Hypertension"; // تم تصليح الإملاء تماماً هون منعا للكراش
+                document.getElementById('txtChkHypertension').innerText = "Hypertension";
                 document.getElementById('txtChkAsthma').innerText = "Asthma";
                 document.getElementById('txtChkThyroid').innerText = "Thyroid";
                 document.getElementById('txtChkHepatitis').innerText = "Hepatitis";
@@ -1804,6 +1805,8 @@
                 document.getElementById('lblAuthEmail').innerText = "Clinic Security Email:";
                 document.getElementById('lblAuthPass').innerText = "Password:";
                 document.getElementById('lblForgotPasswordLink').innerText = "Forgot Password?";
+                document.getElementById('lblAuthOtpCode').innerText = "One-Time Security Code (OTP):";
+                document.getElementById('authOtpCode').placeholder = "123456";
             } else { 
                 h.dir = 'rtl'; h.lang = 'ar'; if(btn) btn.innerText = '🌐 English'; 
                 document.getElementById('searchBar').placeholder = "البحث عن عملية، تقرير، أو اسم مريض...";
@@ -1862,7 +1865,6 @@
                 document.getElementById('lblImagesHeading').innerHTML = '<i class="fa-solid fa-images"></i> مستودع الأشعة والملفات المصاحبة للحالة (X-Rays & Photos Matrix)';
                 document.getElementById('lblFinancialHeading').innerHTML = '<i class="fa-solid fa-money-bill-wave"></i> التسوية والمسار المالي للجلسة';
 
-                document.getElementById('lblVisitType').innerText = "نوع الزيارة وحالة الملف الحالي للعيادة:";
                 document.getElementById('lblPName').innerText = "اسم المريض الثلاثي:";
                 document.getElementById('lblPAge').innerText = "العمر:";
                 document.getElementById('lblPPhone').innerText = "رقم الهاتف:";
@@ -1888,8 +1890,8 @@
 
                 document.getElementById('lblTotalAmount').innerText = "المبلغ الكلي ($):";
                 document.getElementById('lblLabCostAmount').innerText = "قيمة الأدوات المخبرية / المختبر ($):";
-                document.getElementById('costAmount').innerText = "تكلفة العيادة والمواد ($):";
-                document.getElementById('discountAmount').innerText = "حسم للمريض ($):";
+                document.getElementById('lblCostAmount').innerText = "تكلفة العيادة والمواد ($):";
+                document.getElementById('lblDiscountAmount').innerText = "حسم للمريض ($):";
                 document.getElementById('lblPaidAmount').innerText = "المبلغ المدفوع كاش حالياً ($):";
 
                 document.getElementById('lblMaxillaryArch').innerText = "الفك العلوي (Maxillary Arch)";
@@ -1938,6 +1940,8 @@
                 document.getElementById('lblAuthEmail').innerText = "البريد الإلكتروني للعيادة:";
                 document.getElementById('lblAuthPass').innerText = "كلمة المرور:";
                 document.getElementById('lblForgotPasswordLink').innerText = "نسيت كلمة المرور؟";
+                document.getElementById('lblAuthOtpCode').innerText = "رمز التحقق الرقمي (OTP):";
+                document.getElementById('authOtpCode').placeholder = "123456";
             }
             
             setSaveButtonState(editingRecordId ? true : false);
@@ -1960,18 +1964,81 @@
             const regLink = document.getElementById('btnAuthRegister');
             const extra = document.getElementById('signUpDetailsGroup');
             
-            document.getElementById('lblAuthEmail').parentElement.style.display = 'block';
-            document.getElementById('authPassword').parentElement.style.display = 'block';
-            document.getElementById('authPassword').placeholder = "••••••••";
+            // إعادة ضبط ظهور الحقول القياسية
+            document.getElementById('emailInputGroup').style.display = 'block';
+            document.getElementById('passwordInputGroup').style.display = 'block';
+            document.getElementById('otpInputGroup').style.display = 'none';
+            document.getElementById('forgotPasswordLinkWrapper').style.display = 'block';
             regLink.style.display = 'inline-block';
 
-            if(authMode === 'register' || authMode === 'forgot' || authMode === 'recovery') {
-                authMode = 'login'; title.innerText = currentLang === 'en' ? "Login" : "تسجيل الدخول"; desc.innerText = currentLang === 'en' ? "Smart Clinical Operating System" : "منظومة العيادة الطبية الذكية"; subBtn.innerHTML = "<i class='fa-solid fa-fingerprint'></i> <span id='txtAuthSubmitBtn'>" + (currentLang === 'en' ? 'Login' : 'دخول') + "</span>"; regLink.innerText = currentLang === 'en' ? "Create a professional medical account" : "أو إنشاء حساب حساب طبي جديد"; extra.style.display = 'none';
+            if(authMode === 'register' || authMode === 'forgot' || authMode === 'recovery' || authMode === 'verify_signup' || authMode === 'verify_recovery') {
+                authMode = 'login'; 
+                title.innerText = currentLang === 'en' ? "Login" : "تسجيل الدخول"; 
+                desc.innerText = currentLang === 'en' ? "Smart Clinical Operating System" : "منظومة العيادة الطبية الذكية"; 
+                subBtn.innerHTML = "<i class='fa-solid fa-fingerprint'></i> <span>" + (currentLang === 'en' ? 'Login' : 'دخول') + "</span>"; 
+                regLink.innerText = currentLang === 'en' ? "Create a professional medical account" : "أو إنشاء حساب حساب طبي جديد"; 
+                extra.style.display = 'none';
                 subBtn.setAttribute('onclick', 'submitAuthForm()');
             } else {
-                authMode = 'register'; title.innerText = currentLang === 'en' ? "Register Account" : "إنشاء حساب طبي"; desc.innerText = currentLang === 'en' ? "Secure Cloud Clinical Infrastructure" : "سجل عيادتك الطبية في السحابة الآمنة"; subBtn.innerHTML = "<i class='fa-solid fa-user-plus'></i> <span id='txtAuthSubmitBtn'>" + (currentLang === 'en' ? 'Register & Secure' : 'إنشاء الحساب وتفعيل الأمان') + "</span>"; regLink.innerText = currentLang === 'en' ? "Already registered? Login" : "لديك حساب بالفعل؟ تسجيل الدخول"; extra.style.display = 'block';
+                authMode = 'register'; 
+                title.innerText = currentLang === 'en' ? "Register Account" : "إنشاء حساب طبي"; 
+                desc.innerText = currentLang === 'en' ? "Secure Cloud Clinical Infrastructure" : "سجل عيادتك الطبية في السحابة الآمنة"; 
+                subBtn.innerHTML = "<i class='fa-solid fa-user-plus'></i> <span>" + (currentLang === 'en' ? 'Register & Verify' : 'إنشاء الحساب وتفعيل الأمان') + "</span>"; 
+                regLink.innerText = currentLang === 'en' ? "Already registered? Login" : "لديك حساب بالفعل؟ تسجيل الدخول"; 
+                extra.style.display = 'block';
                 subBtn.setAttribute('onclick', 'submitAuthForm()');
             }
+        }
+
+        // دالة سحرية جديدة: التحقق من كود الـ OTP الرقمي لإنهاء كابوس الـ 404 تماماً
+        async function executeOtpVerificationCloud() {
+            const email = document.getElementById('authEmail').value.trim();
+            const token = document.getElementById('authOtpCode').value.trim();
+
+            if (!token || token.length < 6) {
+                return triggerToast(currentLang === 'en' ? "Please input a valid 6-digit OTP code!" : "الرجاء إدخال رمز تحقق صالح من 6 أرقام!", "error");
+            }
+
+            document.getElementById('btnAuthSubmit').disabled = true;
+            
+            // تحديد نوع الفحص البرمجي حسب حالة الطبيب الحالية
+            const verificationType = (authMode === 'verify_recovery') ? 'recovery' : 'signup';
+
+            const { data, error } = await dbClient.auth.verifyOtp({
+                email,
+                token,
+                type: verificationType
+            });
+
+            document.getElementById('btnAuthSubmit').disabled = false;
+
+            if (error) {
+                triggerToast(currentLang === 'en' ? "Invalid or Expired Code!" : "الرمز المدخل غير صحيح أو انتهت صلاحيته!", "error");
+            } else {
+                triggerToast(currentLang === 'en' ? "Identity Confirmed Successfully!" : "تم تأكيد هويتك الطبية السحابية بنجاح!");
+                if(authMode === 'verify_recovery') {
+                    // إذا كان جاي من نسيت الباسوورد، منخليه فورا يحدث الباسوورد تبعه على نفس الشاشة
+                    authMode = 'recovery';
+                    showPasswordUpdateViewDirectly();
+                }
+            }
+        }
+
+        function showForgotPasswordView() {
+            authMode = 'forgot';
+            document.getElementById('lblAuthTitle').innerText = currentLang === 'en' ? "Recover Account" : "استعادة الحساب";
+            document.getElementById('lblAuthDesc').innerText = currentLang === 'en' ? "Enter email to receive a 6-digit security code" : "أدخل إيميل العيادة لاستلام رمز التحقق المكون من 6 أرقام";
+            
+            document.getElementById('emailInputGroup').style.display = 'block';
+            document.getElementById('passwordInputGroup').style.display = 'none';
+            document.getElementById('signUpDetailsGroup').style.display = 'none';
+            document.getElementById('otpInputGroup').style.display = 'none';
+            
+            const submitBtn = document.getElementById('btnAuthSubmit');
+            submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span>' + (currentLang === 'en' ? 'Send Code' : 'إرسال رمز التحقق') + '</span>';
+            submitBtn.setAttribute('onclick', 'handleForgotPassword()');
+            
+            document.getElementById('btnAuthRegister').innerText = currentLang === 'en' ? "Back to Sign In" : "العودة لتسجيل الدخول";
         }
 
         async function handleForgotPassword() {
@@ -1984,43 +2051,46 @@
 
             document.getElementById('btnAuthSubmit').disabled = true;
 
-            const { data, error } = await dbClient.auth.resetPasswordForEmail(email, {
-                redirectTo: window.location.origin + window.location.pathname, 
-            });
+            const { data, error } = await dbClient.auth.resetPasswordForEmail(email);
 
             document.getElementById('btnAuthSubmit').disabled = false;
 
             if (error) {
                 triggerToast("Error: " + error.message, "error");
             } else {
-                triggerToast(currentLang === 'en' ? "Recovery token dispatched to your inbox!" : "تم إرسال رابط إعادة التعيين إلى بريدك الإلكتروني بنجاح!", "success");
-                authMode = 'forgot';
-                toggleAuthMode(); 
+                triggerToast(currentLang === 'en' ? "Security OTP Code sent to your inbox!" : "تم إرسال رمز الأمان المكون من 6 أرقام إلى بريدك بنجاح!");
+                
+                // الانتقال الفوري لخطوة إدخال الكود لمنع الـ 404 يدوياً
+                authMode = 'verify_recovery';
+                document.getElementById('lblAuthTitle').innerText = currentLang === 'en' ? "Enter OTP Code" : "تأكيد رمز الأمان";
+                document.getElementById('lblAuthDesc').innerText = currentLang === 'en' ? "Type the 6-digit code received in your email" : "أدخل الرمز المكون من 6 أرقام الذي وصلك في الإيميل فوراً";
+                document.getElementById('emailInputGroup').style.display = 'none';
+                document.getElementById('otpInputGroup').style.display = 'block';
+                document.getElementById('forgotPasswordLinkWrapper').style.display = 'none';
+                
+                const submitBtn = document.getElementById('btnAuthSubmit');
+                submitBtn.innerHTML = '<i class="fa-solid fa-shield-check"></i> <span>' + (currentLang === 'en' ? 'Verify Code' : 'تأكيد الرمز والدخول') + '</span>';
+                submitBtn.setAttribute('onclick', 'executeOtpVerificationCloud()');
             }
         }
 
-        window.addEventListener('hashchange', () => { checkRecoveryLink(); });
-        window.addEventListener('load', () => { checkRecoveryLink(); });
-
-        function checkRecoveryLink() {
-            const hash = window.location.hash;
+        function showPasswordUpdateViewDirectly() {
+            document.getElementById('lblAuthTitle').innerText = currentLang === 'en' ? "Update Account Password" : "تحديث كلمة المرور";
+            document.getElementById('lblAuthDesc').innerText = currentLang === 'en' ? "Input your new strong clinical credentials" : "الرجاء إدخال كلمة المرور الجديدة للعيادة";
             
-            if (hash && hash.includes('type=recovery')) {
-                authMode = 'recovery';
-                document.getElementById('lblAuthTitle').innerText = currentLang === 'en' ? "Update Account Password" : "تحديث كلمة المرور";
-                document.getElementById('lblAuthDesc').innerText = currentLang === 'en' ? "Input your new strong clinical credentials" : "الرجاء إدخال كلمة المرور الجديدة للعيادة";
-                
-                document.getElementById('lblAuthEmail').parentElement.style.display = 'none';
-                document.getElementById('signUpDetailsGroup').style.display = 'none';
-                document.getElementById('authPassword').placeholder = currentLang === 'en' ? "New Password" : "كلمة المرور الجديدة";
-                document.getElementById('authPassword').parentElement.style.display = 'block';
-                
-                const submitBtn = document.getElementById('btnAuthSubmit');
-                submitBtn.innerHTML = '<i class="fa-solid fa-key"></i> <span id="txtAuthSubmitBtn">' + (currentLang === 'en' ? 'Update & Save' : 'تحديث وحفظ') + '</span>';
-                submitBtn.setAttribute('onclick', 'handleUpdatePassword()');
-                
-                document.getElementById('btnAuthRegister').style.display = 'none';
-            }
+            document.getElementById('emailInputGroup').style.display = 'none';
+            document.getElementById('signUpDetailsGroup').style.display = 'none';
+            document.getElementById('otpInputGroup').style.display = 'none';
+            document.getElementById('forgotPasswordLinkWrapper').style.display = 'none';
+            
+            document.getElementById('authPassword').placeholder = currentLang === 'en' ? "New Password" : "كلمة المرور الجديدة";
+            document.getElementById('passwordInputGroup').style.display = 'block';
+            
+            const submitBtn = document.getElementById('btnAuthSubmit');
+            submitBtn.innerHTML = '<i class="fa-solid fa-key"></i> <span>' + (currentLang === 'en' ? 'Update & Save' : 'تحديث وحفظ الباسوورد') + '</span>';
+            submitBtn.setAttribute('onclick', 'handleUpdatePassword()');
+            
+            document.getElementById('btnAuthRegister').style.display = 'none';
         }
 
         async function handleUpdatePassword() {
@@ -2042,32 +2112,16 @@
             if (error) {
                 triggerToast("Update Failed: " + error.message, "error");
             } else {
-                triggerToast(currentLang === 'en' ? "Password updated successfully!" : "تم تحديث كلمة المرور بنجاح! يمكنك الدخول الآن.", "success");
-                window.location.hash = '';
-                setTimeout(() => { window.location.reload(); }, 1500);
+                triggerToast(currentLang === 'en' ? "Password updated successfully!" : "تم تحديث كلمة المرور بنجاح! يتم توجيهك الآن...", "success");
+                setTimeout(() => { window.location.reload(); }, 1200);
             }
-        }
-
-        function showForgotPasswordView() {
-            authMode = 'forgot';
-            document.getElementById('lblAuthTitle').innerText = currentLang === 'en' ? "Recover Account" : "استعادة الحساب";
-            document.getElementById('lblAuthDesc').innerText = currentLang === 'en' ? "Enter email to receive password reset link" : "أدخل إيميل العيادة لإرسال رابط تعيين باسوورد جديد";
-            
-            document.getElementById('authPassword').parentElement.style.display = 'none';
-            document.getElementById('signUpDetailsGroup').style.display = 'none';
-            
-            const submitBtn = document.getElementById('btnAuthSubmit');
-            submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span id="txtAuthSubmitBtn">' + (currentLang === 'en' ? 'Dispatch Link' : 'إرسال رابط الاستعادة') + '</span>';
-            submitBtn.setAttribute('onclick', 'handleForgotPassword()');
-            
-            document.getElementById('btnAuthRegister').innerText = currentLang === 'en' ? "Back to Sign In" : "العودة لتسجيل الدخول";
         }
 
         async function submitAuthForm() {
             const email = document.getElementById('authEmail').value.trim();
             const password = document.getElementById('authPassword').value.trim();
             if(!email || !password) return triggerToast(currentLang === 'en' ? "Please input credentials!" : "الرجاء إدخال البريد الإلكتروني وكلمة المرور", "error");
-            if(!dbClient) return triggerToast("Supabase configuration mismatch.", "error");
+            if(!dbClient) return triggerToast("Supabase client error.", "error");
 
             if(authMode === 'register') {
                 const fullName = document.getElementById('authFullName').value.trim();
@@ -2075,16 +2129,37 @@
                 const clinicAddress = document.getElementById('authClinicAddress').value.trim();
                 if(!fullName) return triggerToast(currentLang === 'en' ? "Please insert physician full name!" : "الرجاء إدخال اسم الدكتور الثلاثي", "error");
                 
+                document.getElementById('btnAuthSubmit').disabled = true;
                 const { data, error } = await dbClient.auth.signUp({
                     email, password,
                     options: { 
-                        data: { full_name: fullName, clinic_phone: clinicPhone, clinic_address: clinicAddress },
-                        redirectTo: window.location.origin + window.location.pathname
+                        data: { full_name: fullName, clinic_phone: clinicPhone, clinic_address: clinicAddress }
                     }
                 });
-                if(error) triggerToast(error.message, "error");
-                else triggerToast(currentLang === 'en' ? "Account built successfully!" : "تم إنشاء الحساب بنجاح!");
+                document.getElementById('btnAuthSubmit').disabled = false;
+
+                if(error) {
+                    triggerToast(error.message, "error");
+                } else {
+                    triggerToast(currentLang === 'en' ? "Registration initiated! Check your email for OTP code." : "تم بدء التسجيل السحابي! تفقد بريدك لاستلام كود التحقق الرقمي.");
+                    
+                    // تحويل شاشة التسجيل فوراً لطلب كود الـ OTP بدلاً من الإيميل التقليدي الخربان
+                    authMode = 'verify_signup';
+                    document.getElementById('lblAuthTitle').innerText = currentLang === 'en' ? "Enter Registration OTP" : "تأكيد الحساب الطبي";
+                    document.getElementById('lblAuthDesc').innerText = currentLang === 'en' ? "Type the 6-digit verification code sent to your email" : "أدخل الرمز المكون من 6 أرقام لتفعيل ملفك الطبي السحابي فوراً";
+                    
+                    document.getElementById('signUpDetailsGroup').style.display = 'none';
+                    document.getElementById('emailInputGroup').style.display = 'none';
+                    document.getElementById('passwordInputGroup').style.display = 'none';
+                    document.getElementById('forgotPasswordLinkWrapper').style.display = 'none';
+                    document.getElementById('otpInputGroup').style.display = 'block';
+                    
+                    const submitBtn = document.getElementById('btnAuthSubmit');
+                    submitBtn.innerHTML = '<i class="fa-solid fa-user-check"></i> <span>' + (currentLang === 'en' ? 'Activate Account' : 'تفعيل الحساب والدخول تلقائياً') + '</span>';
+                    submitBtn.setAttribute('onclick', 'executeOtpVerificationCloud()');
+                }
             } else {
+                // تسجيل الدخول العادي بالباسورد
                 const { data, error } = await dbClient.auth.signInWithPassword({ email, password });
                 if(error) triggerToast(error.message, "error");
                 else triggerToast(currentLang === 'en' ? "Welcome back, Doctor!" : "مرحباً بك مجدداً دكتور!");
