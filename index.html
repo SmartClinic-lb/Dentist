@@ -258,7 +258,7 @@
         @media print {
             @page {
                 size: A4 portrait;
-                margin: 0mm !important; /* إلغاء ترويسة وتاريخ المتصفح نهائياً من برنت الحكيم */
+                margin: 0mm !important;
             }
             body * { visibility: hidden; }
             #printRxContainer, #printRxContainer * { visibility: visible; }
@@ -306,21 +306,21 @@
             <p style="color: var(--text-muted); font-size:0.85rem; margin-bottom:2rem;" id="lblAuthDesc">منظومة العيادة الطبية الذكية</p>
             
             <div id="signUpDetailsGroup" style="display:none; text-align: start; margin-bottom: 12px;">
-                <div class="form-group"><label>اسم الدكتور الثلاثي:</label><input type="text" id="authFullName" class="form-control" placeholder="د. ريان غمرواي"></div>
-                <div class="form-group"><label style="margin-top:5px;">رقم هاتف العيادة:</label><input type="text" id="authClinicPhone" class="form-control" placeholder="+961 70 xxxxxx"></div>
-                <div class="form-group"><label style="margin-top:5px;">عنوان العيادة بالتفصيل:</label><input type="text" id="authClinicAddress" class="form-control" placeholder="طرابلس - شارع المئتين"></div>
+                <div class="form-group"><label id="lblAuthDoctorName">اسم الدكتور الثلاثي:</label><input type="text" id="authFullName" class="form-control" placeholder="د. ريان غمرواي"></div>
+                <div class="form-group"><label id="lblAuthClinicPhone" style="margin-top:5px;">رقم هاتف العيادة:</label><input type="text" id="authClinicPhone" class="form-control" placeholder="+961 70 xxxxxx"></div>
+                <div class="form-group"><label id="lblAuthClinicAddress" style="margin-top:5px;">عنوان العيادة بالتفصيل:</label><input type="text" id="authClinicAddress" class="form-control" placeholder="طرابلس - شارع المئتين"></div>
             </div>
 
             <div class="form-group" style="text-align: start;"><label id="lblAuthEmail">البريد الإلكتروني للعيادة:</label><input type="email" id="authEmail" class="form-control" placeholder="doctor@example.com"></div>
             <div class="form-group" style="text-align: start; margin-bottom:2rem;"><label id="lblAuthPass">كلمة المرور:</label><input type="password" id="authPassword" class="form-control" placeholder="••••••••"></div>
             
             <div style="text-align: left; margin-top: -15px; margin-bottom: 20px;">
-                <span style="font-size:0.8rem; color:var(--primary); cursor:pointer; font-weight:700;" onclick="showForgotPasswordView()">
+                <span id="lblForgotPasswordLink" style="font-size:0.8rem; color:var(--primary); cursor:pointer; font-weight:700;" onclick="showForgotPasswordView()">
                     نسيت كلمة المرور؟
                 </span>
             </div>
             
-            <button class="btn-action" onclick="submitAuthForm()" id="btnAuthSubmit" style="margin-bottom:1.25rem;"><i class="fa-solid fa-fingerprint"></i> <span>دخول</span></button>
+            <button class="btn-action" onclick="submitAuthForm()" id="btnAuthSubmit" style="margin-bottom:1.25rem;"><i class="fa-solid fa-fingerprint"></i> <span id="txtAuthSubmitBtn">دخول</span></button>
             <span style="font-size:0.85rem; color:var(--text-muted); cursor:pointer; font-weight:700;" onclick="toggleAuthMode()" id="btnAuthRegister">أو إنشاء حساب حساب طبي جديد</span>
         </div>
     </div>
@@ -344,11 +344,11 @@
         </aside>
 
         <div class="mobile-bottom-nav">
-            <button class="mobile-nav-btn active" id="mBtnMain" onclick="setActiveNav('liTabMain')"><i class="fa-solid fa-chart-line"></i><span>الرئيسية</span></button>
-            <button class="mobile-nav-btn" id="mBtnSchedule" onclick="setActiveNav('liTabSchedule')"><i class="fa-solid fa-calendar-days"></i><span>المواعيد</span></button>
-            <button class="mobile-nav-btn" id="mBtnApp" onclick="setActiveNav('liTabApp')"><i class="fa-solid fa-folder-plus"></i><span>إضافة سجل</span></button>
-            <button class="mobile-nav-btn" id="mBtnArchive" onclick="setActiveNav('liTabArchive')"><i class="fa-solid fa-server"></i><span>الأرشيف</span></button>
-            <button class="mobile-nav-btn" id="mBtnMenu" onclick="toggleSidebarMenu()"><i class="fa-solid fa-bars"></i><span>المزيد</span></button>
+            <button class="mobile-nav-btn active" id="mBtnMain" onclick="setActiveNav('liTabMain')"><i class="fa-solid fa-chart-line"></i><span id="txtMobMain">الرئيسية</span></button>
+            <button class="mobile-nav-btn" id="mBtnSchedule" onclick="setActiveNav('liTabSchedule')"><i class="fa-solid fa-calendar-days"></i><span id="txtMobSched">المواعيد</span></button>
+            <button class="mobile-nav-btn" id="mBtnApp" onclick="setActiveNav('liTabApp')"><i class="fa-solid fa-folder-plus"></i><span id="txtMobAdd">إضافة سجل</span></button>
+            <button class="mobile-nav-btn" id="mBtnArchive" onclick="setActiveNav('liTabArchive')"><i class="fa-solid fa-server"></i><span id="txtMobArch">الأرشيف</span></button>
+            <button class="mobile-nav-btn" id="mBtnMenu" onclick="toggleSidebarMenu()"><i class="fa-solid fa-bars"></i><span id="txtMobMore">المزيد</span></button>
         </div>
 
         <main class="main-content">
@@ -402,7 +402,7 @@
                                 </div>
 
                                 <textarea id="rxContent" class="form-control" rows="3" style="padding:10px 14px;" placeholder="اكتب الأدوية الموصوفة والجرعات أو التعليمات السريرية..."></textarea>
-                                <button class="btn-action" style="padding:11px;" onclick="printDoctorPrescription()"><i class="fa-solid fa-print"></i> طباعة روشتّة فورية</button>
+                                <button class="btn-action" id="btnPrintRx" style="padding:11px;" onclick="printDoctorPrescription()"><i class="fa-solid fa-print"></i> <span>طباعة روشتّة فورية</span></button>
                             </div>
                             <div class="premium-widget-card">
                                 <div class="widget-header"><i class="fa-solid fa-thumbtack"></i> <span id="lblWidgetNotesTitle">ملاحظات الطبيب</span></div>
@@ -413,7 +413,6 @@
                 </div>
             </section>
 
-            <!-- 📅 قسم جدول المواعيد الملوكي المستقل المضاف حديثاً بناءً على طلب الحكيم -->
             <section id="secSchedule" class="page-section">
                 <div class="card">
                     <div class="table-filter-header">
@@ -444,7 +443,7 @@
                 <div class="card">
                     <h3 class="card-title"><i class="fa-solid fa-square-plus"></i> <span id="lblAddAppTitleInner">إنشاء سجل طبي ومالي متكامل للمريض</span></h3>
                     
-                    <h4 class="chart-title-lbl" style="text-align:start; margin-bottom:10px;"><i class="fa-solid fa-sliders"></i> حالة الجلسة والتصنيف الطبي للملف</h4>
+                    <h4 class="chart-title-lbl" id="lblSessionHeading" style="text-align:start; margin-bottom:10px;"><i class="fa-solid fa-sliders"></i> حالة الجلسة والتصنيف الطبي للملف</h4>
                     <div class="form-group">
                         <label id="lblVisitType">نوع الزيارة وحالة الملف الحالي للعيادة:</label>
                         <select id="pVisitType" class="form-control" style="font-weight:700; color:var(--primary);" onchange="handleVisitTypeToggle()">
@@ -454,15 +453,15 @@
                         </select>
                     </div>
 
-                    <h4 class="chart-title-lbl" style="text-align:start; margin-top:1.5rem; margin-bottom:10px;"><i class="fa-solid fa-user-tag"></i> البيانات الديموغرافية والاجتماعية للمريض</h4>
+                    <h4 class="chart-title-lbl" id="lblDemographicsHeading" style="text-align:start; margin-top:1.5rem; margin-bottom:10px;"><i class="fa-solid fa-user-tag"></i> البيانات الديموغرافية والاجتماعية للمريض</h4>
                     <div class="form-grid-layout">
-                        <div class="form-group"><label>اسم المريض الثلاثي:</label><input type="text" id="pName" class="form-control" placeholder="أدخل اسم المريض بالكامل"></div>
-                        <div class="form-group"><label>العمر:</label><input type="number" id="pAge" class="form-control" placeholder="مثال: 28"></div>
-                        <div class="form-group"><label>رقم الهاتف:</label><input type="text" id="pPhone" class="form-control" placeholder="70xxxxxx"></div>
-                        <div class="form-group"><label>العنوان السكني بالتفصيل:</label><input type="text" id="pAddress" class="form-control" placeholder="المدينة - الشارع"></div>
+                        <div class="form-group"><label id="lblPName">اسم المريض الثلاثي:</label><input type="text" id="pName" class="form-control" placeholder="أدخل اسم المريض بالكامل"></div>
+                        <div class="form-group"><label id="lblPAge">العمر:</label><input type="number" id="pAge" class="form-control" placeholder="مثال: 28"></div>
+                        <div class="form-group"><label id="lblPPhone">رقم الهاتف:</label><input type="text" id="pPhone" class="form-control" placeholder="70xxxxxx"></div>
+                        <div class="form-group"><label id="lblPAddress">العنوان السكني بالتفصيل:</label><input type="text" id="pAddress" class="form-control" placeholder="المدينة - الشارع"></div>
                         
                         <div class="form-group">
-                            <label>الجنس:</label>
+                            <label id="lblPGender">الجنس:</label>
                             <select id="pGender" class="form-control" onchange="handleGenderConditionals()">
                                 <option value="ذكر">ذكر (Male)</option>
                                 <option value="أنثى">أنثى (Female)</option>
@@ -472,14 +471,14 @@
 
                     <div class="form-grid-layout" id="femaleConditionalsRow" style="display:none; background: var(--primary-light); padding:15px; border-radius:var(--radius-md); border:1px dashed var(--primary);">
                         <div class="form-group">
-                            <label>الحالة الاجتماعية:</label>
+                            <label id="lblPMarital">الحالة الاجتماعية:</label>
                             <select id="pMaritalStatus" class="form-control" onchange="handleMaritalConditionals()">
                                 <option value="عازبة">عازبة</option>
                                 <option value="متزوجة">متزوجة</option>
                             </select>
                         </div>
                         <div class="form-group" id="marriedConditionalsGroup" style="display:none;">
-                            <label>الحالة الفسيولوجية للمتزوجة:</label>
+                            <label id="lblPPregnancy">الحالة الفسيولوجية للمتزوجة:</label>
                             <select id="pPregnancyStatus" class="form-control" onchange="handlePregnancyOtherField()">
                                 <option value="غير ذلك">طبيعي / غير ذلك</option>
                                 <option value="حامل">حامل (Pregnant)</option>
@@ -490,27 +489,27 @@
                         </div>
                     </div>
 
-                    <h4 class="chart-title-lbl" style="text-align:start; margin-top:1.5rem; margin-bottom:10px;"><i class="fa-solid fa-heart-pulse"></i> التاريخ الطبي والحالة الصحية العامة للمريض</h4>
+                    <h4 class="chart-title-lbl" id="lblMedicalHistoryHeading" style="text-align:start; margin-top:1.5rem; margin-bottom:10px;"><i class="fa-solid fa-heart-pulse"></i> التاريخ الطبي والحالة الصحية العامة للمريض</h4>
                     <div class="form-group">
-                        <label>اختر الأمراض المزمنة أو المشاكل الصحية إن وجدت:</label>
+                        <label id="lblPHealth">اختر الأمراض المزمنة أو المشاكل الصحية إن وجدت:</label>
                         <div class="clinical-checkbox-grid">
-                            <label class="clinical-checkbox-label"><input type="checkbox" class="health-chk" value="سكري" onchange="handleHealthStatusSelection(this)"> <span>سكري</span></label>
-                            <label class="clinical-checkbox-label"><input type="checkbox" class="health-chk" value="ضغط" onchange="handleHealthStatusSelection(this)"> <span>ضغط</span></label>
-                            <label class="clinical-checkbox-label"><input type="checkbox" class="health-chk" value="ربو" onchange="handleHealthStatusSelection(this)"> <span>ربو</span></label>
-                            <label class="clinical-checkbox-label"><input type="checkbox" class="health-chk" value="غدة درقية" onchange="handleHealthStatusSelection(this)"> <span>غدة درقية</span></label>
-                            <label class="clinical-checkbox-label"><input type="checkbox" class="health-chk" value="التهاب الكبد" onchange="handleHealthStatusSelection(this)"> <span>التهاب الكبد</span></label>
-                            <label class="clinical-checkbox-label"><input type="checkbox" id="chkHealthyStatus" value="سليم" onchange="handleHealthyClear(this)"> <span style="color:var(--primary)">سليم / لا شيء</span></label>
-                            <label class="clinical-checkbox-label"><input type="checkbox" id="chkOtherStatus" value="غير ذلك" onchange="handleOtherHealthField()"> <span>غير ذلك...</span></label>
+                            <label class="clinical-checkbox-label"><input type="checkbox" class="health-chk" value="سكري" onchange="handleHealthStatusSelection(this)"> <span id="txtChkDiabetes">سكري</span></label>
+                            <label class="clinical-checkbox-label"><input type="checkbox" class="health-chk" value="ضغط" onchange="handleHealthStatusSelection(this)"> <span id="txtChkHypertension">ضغط</span></label>
+                            <label class="clinical-checkbox-label"><input type="checkbox" class="health-chk" value="ربو" onchange="handleHealthStatusSelection(this)"> <span id="txtChkAsthma">ربو</span></label>
+                            <label class="clinical-checkbox-label"><input type="checkbox" class="health-chk" value="غدة درقية" onchange="handleHealthStatusSelection(this)"> <span id="txtChkThyroid">غدة درقية</span></label>
+                            <label class="clinical-checkbox-label"><input type="checkbox" class="health-chk" value="التهاب الكبد" onchange="handleHealthStatusSelection(this)"> <span id="txtChkHepatitis">التهاب الكبد</span></label>
+                            <label class="clinical-checkbox-label"><input type="checkbox" id="chkHealthyStatus" value="سليم" onchange="handleHealthyClear(this)"> <span id="txtChkHealthy" style="color:var(--primary)">سليم / لا شيء</span></label>
+                            <label class="clinical-checkbox-label"><input type="checkbox" id="chkOtherStatus" value="غير ذلك" onchange="handleOtherHealthField()"> <span id="txtChkOther">غير ذلك...</span></label>
                         </div>
                         <input type="text" id="pHealthOtherText" class="form-control" style="display:none; margin-top:10px;" placeholder="ادخل المشكلة الصحية أو نوع المرض بالتفصيل...">
                     </div>
                     
                     <div class="form-group">
-                        <label>الحالة المرضية الحالية للأسنان / الشكوى الأساسية للزيارة:</label>
+                        <label id="lblPComplaint">الحالة المرضية الحالية للأسنان / الشكوى الأساسية للزيارة:</label>
                         <input type="text" id="pDentalCondition" class="form-control" placeholder="مثال: آلام حادة بالرحى السفلي الأيمن عند شرب البارد">
                     </div>
 
-                    <h4 class="chart-title-lbl" style="text-align:start; margin-top:1.5rem; margin-bottom:5px;"><i class="fa-solid fa-tooth"></i> خريطة الأسنان الجراحية والعمليات المحددة (اضغط لتحديد سن أو أكثر)</h4>
+                    <h4 class="chart-title-lbl" id="lblChartHeading" style="text-align:start; margin-top:1.5rem; margin-bottom:5px;"><i class="fa-solid fa-tooth"></i> خريطة الأسنان الجراحية والعمليات المحددة (اضغط لتحديد سن أو أكثر)</h4>
                     
                     <div class="notation-switcher-wrapper">
                         <button type="button" class="notation-btn active" id="btnFdi" onclick="switchDentalSystem('FDI')">FDI / ISO 3950</button>
@@ -519,7 +518,7 @@
                     </div>
 
                     <div class="dental-chart-container">
-                        <div class="chart-title-lbl" style="color:var(--text-muted)">الفك العلوي (Maxillary Arch)</div>
+                        <div class="chart-title-lbl" id="lblMaxillaryArch" style="color:var(--text-muted)">الفك العلوي (Maxillary Arch)</div>
                         <div class="chart-quadrant-row">
                             <div class="chart-quadrant ur" id="quadUR"></div>
                             <div class="chart-quadrant ul" id="quadUL"></div>
@@ -529,16 +528,16 @@
                             <div class="chart-quadrant lr" id="quadLR"></div>
                             <div class="chart-quadrant ll" id="quadLL"></div>
                         </div>
-                        <div class="chart-title-lbl" style="color:var(--text-muted); margin-top:5px;">الفك السفلي (Mandibular Arch)</div>
+                        <div class="chart-title-lbl" id="lblMandibularArch" style="color:var(--text-muted); margin-top:5px;">الفك السفلي (Mandibular Arch)</div>
                     </div>
 
                     <div class="form-grid-layout" style="margin-top: 1.5rem;">
                         <div class="form-group">
-                            <label>الأسنان الجراحية المختارة حالياً للعملية:</label>
+                            <label id="lblPSelectedTeeth">الأسنان الجراحية المختارة حالياً للعملية:</label>
                             <input type="text" id="pSelectedToothDisplay" class="form-control" style="font-weight:700; color:var(--primary); background:var(--bg-sidebar)" placeholder="اضغط على سن أو أكثر من اللوحة العلوية..." readonly>
                         </div>
                         <div class="form-group">
-                            <label>الإجراء الطبي الأساسي:</label>
+                            <label id="lblPMainProc">الإجراء الطبي الأساسي:</label>
                             <select id="pMainProc" class="form-control" onchange="handleProcedureSubfields()">
                                 <option value="تنظيف">تنظيف وتلميع أسنان</option>
                                 <option value="معالجة عصب">معالجة عصب (Root Canal)</option>
@@ -552,7 +551,7 @@
                         </div>
                         
                         <div class="form-group" id="subProcCleaningGroup">
-                            <label>درجة المعالجة اللثوية المصاحبة:</label>
+                            <label id="lblPSubCleaning">درجة المعالجة اللثوية المصاحبة:</label>
                             <select id="subProcCleaning" class="form-control">
                                 <option value="بسيطة">معالجة لثوية بسيطة</option>
                                 <option value="متوسطة">معالجة لثوية متوسطة</option>
@@ -560,14 +559,14 @@
                             </select>
                         </div>
                         <div class="form-group" id="subProcExtractionGroup" style="display:none;">
-                            <label>مسار جراحة القلع:</label>
+                            <label id="lblPSubExtraction">مسار جراحة القلع:</label>
                             <select id="subProcExtraction" class="form-control">
                                 <option value="بسيط">بسيط (Simple)</option>
                                 <option value="جراحي">جراحي (Surgical)</option>
                             </select>
                         </div>
                         <div class="form-group" id="subProcFittingGroup" style="display:none;">
-                            <label>مادة التركيبات المخبرية الخزفية:</label>
+                            <label id="lblPSubFitting">مادة التركيبات المخبرية الخزفية:</label>
                             <select id="subProcFitting" class="form-control">
                                 <option value="سيراميك">سيراميك (Ceramic)</option>
                                 <option value="زيركون">زيركون (Zirconia)</option>
@@ -579,52 +578,52 @@
 
                     <div class="form-grid-layout">
                         <div class="form-group" style="grid-column: 1 / -1;">
-                            <label>توقيت وجدولة الجلسة الجراحية:</label>
+                            <label id="lblPDate">توقيت وجدولة الجلسة الجراحية:</label>
                             <input type="text" id="pDate" class="form-control" placeholder="إختر الموعد والوقت بدقة" readonly>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label>التقرير والملاحظات السريرية الطبيّة للزيارة:</label>
+                        <label id="lblPNotes">التقرير والملاحظات السريرية الطبيّة للزيارة:</label>
                         <textarea id="pNotes" class="form-control" rows="3" placeholder="أدخل هنا القياسات المستخدمة، الأدوية الموصوفة، أو الملاحظات المعملية..."></textarea>
                     </div>
 
-                    <h4 class="chart-title-lbl" style="text-align:start; margin-top:1.5rem; margin-bottom:10px;"><i class="fa-solid fa-images"></i> مستودع الأشعة والملفات المصاحبة للحالة (X-Rays & Photos Matrix)</h4>
+                    <h4 class="chart-title-lbl" id="lblImagesHeading" style="text-align:start; margin-top:1.5rem; margin-bottom:10px;"><i class="fa-solid fa-images"></i> مستودع الأشعة والملفات المصاحبة للحالة (X-Rays & Photos Matrix)</h4>
                     <div class="form-grid-layout" style="background:var(--bg-sidebar); padding:15px; border-radius:var(--radius-lg); border:1px dashed var(--border);">
                         <div class="form-group">
-                            <label style="color:var(--accent)"><i class="fa-solid fa-radiation"></i> صور أشعة شعاعية (Radiographic X-Rays):</label>
+                            <label id="lblXrayHeading" style="color:var(--accent)"><i class="fa-solid fa-radiation"></i> صور أشعة شعاعية (Radiographic X-Rays):</label>
                             <div style="display:flex; gap:10px; margin-top:5px;">
                                 <label class="form-control" style="cursor:pointer; text-align:center; padding:10px; font-weight:700; background:var(--bg-app); border-color:var(--accent); font-size:0.8rem;">
-                                    قبل العلاج (Before)<input type="file" id="imgXrayBefore" accept="image/*" style="display:none;" onchange="previewImageMatrix('XrayBefore')">
+                                    <span id="txtXrayBefore">قبل العلاج (Before)</span><input type="file" id="imgXrayBefore" accept="image/*" style="display:none;" onchange="previewImageMatrix('XrayBefore')">
                                 </label>
                                 <label class="form-control" style="cursor:pointer; text-align:center; padding:10px; font-weight:700; background:var(--bg-app); border-color:var(--accent); font-size:0.8rem;">
-                                    بعد العلاج (After)<input type="file" id="imgXrayAfter" accept="image/*" style="display:none;" onchange="previewImageMatrix('XrayAfter')">
+                                    <span id="txtXrayAfter">بعد العلاج (After)</span><input type="file" id="imgXrayAfter" accept="image/*" style="display:none;" onchange="previewImageMatrix('XrayAfter')">
                                 </label>
                             </div>
                             <div id="previewXrayRow" style="display:flex; gap:10px; margin-top:8px;"></div>
                         </div>
 
                         <div class="form-group">
-                            <label style="color:var(--primary)"><i class="fa-solid fa-camera-retro"></i> صور ضوئية سريرية (Clinical Photos):</label>
+                            <label id="lblPhotoHeading" style="color:var(--primary)"><i class="fa-solid fa-camera-retro"></i> صور ضوئية سريرية (Clinical Photos):</label>
                             <div style="display:flex; gap:10px; margin-top:5px;">
                                 <label class="form-control" style="cursor:pointer; text-align:center; padding:10px; font-weight:700; background:var(--bg-app); border-color:var(--primary); font-size:0.8rem;">
-                                    قبل العلاج (Before)<input type="file" id="imgPhotoBefore" accept="image/*" style="display:none;" onchange="previewImageMatrix('PhotoBefore')">
+                                    <span id="txtPhotoBefore">قبل العلاج (Before)</span><input type="file" id="imgPhotoBefore" accept="image/*" style="display:none;" onchange="previewImageMatrix('PhotoBefore')">
                                 </label>
                                 <label class="form-control" style="cursor:pointer; text-align:center; padding:10px; font-weight:700; background:var(--bg-app); border-color:var(--primary); font-size:0.8rem;">
-                                    بعد العلاج (After)<input type="file" id="imgPhotoAfter" accept="image/*" style="display:none;" onchange="previewImageMatrix('PhotoAfter')">
+                                    <span id="txtPhotoAfter">بعد العلاج (After)</span><input type="file" id="imgPhotoAfter" accept="image/*" style="display:none;" onchange="previewImageMatrix('PhotoAfter')">
                                 </label>
                             </div>
                             <div id="previewPhotoRow" style="display:flex; gap:10px; margin-top:8px;"></div>
                         </div>
                     </div>
 
-                    <h4 class="chart-title-lbl" style="text-align:start; margin-top:1.5rem; margin-bottom:10px;"><i class="fa-solid fa-money-bill-wave"></i> التسوية والمسار المالي للجلسة</h4>
+                    <h4 class="chart-title-lbl" id="lblFinancialHeading" style="text-align:start; margin-top:1.5rem; margin-bottom:10px;"><i class="fa-solid fa-money-bill-wave"></i> التسوية والمسار المالي للجلسة</h4>
                     <div class="form-grid-layout" style="border-top: 1px dashed var(--border); padding-top: 1.25rem;">
-                        <div class="form-group"><label>المبلغ الكلي ($):</label><input type="number" id="totalAmount" class="form-control" value="0"></div>
-                        <div class="form-group"><label style="color:var(--accent)">قيمة الأدوات المخبرية / المختبر ($):</label><input type="number" id="labCostAmount" class="form-control" value="0"></div>
-                        <div class="form-group"><label>تكلفة العيادة والمواد ($):</label><input type="number" id="costAmount" class="form-control" value="0"></div>
-                        <div class="form-group"><label>حسم للمريض ($):</label><input type="number" id="discountAmount" class="form-control" value="0"></div>
-                        <div class="form-group"><label style="color:var(--primary)">المبلغ المدفوع كاش حالياً ($):</label><input type="number" id="paidAmount" class="form-control" value="0"></div>
+                        <div class="form-group"><label id="lblTotalAmount">المبلغ الكلي ($):</label><input type="number" id="totalAmount" class="form-control" value="0"></div>
+                        <div class="form-group"><label id="lblLabCostAmount" style="color:var(--accent)">قيمة الأدوات المخبرية / المختبر ($):</label><input type="number" id="labCostAmount" class="form-control" value="0"></div>
+                        <div class="form-group"><label id="lblCostAmount">تكلفة العيادة والمواد ($):</label><input type="number" id="costAmount" class="form-control" value="0"></div>
+                        <div class="form-group"><label id="lblDiscountAmount">حسم للمريض ($):</label><input type="number" id="discountAmount" class="form-control" value="0"></div>
+                        <div class="form-group"><label id="lblPaidAmount" style="color:var(--primary)">المبلغ المدفوع كاش حالياً ($):</label><input type="number" id="paidAmount" class="form-control" value="0"></div>
                     </div>
                     <button class="btn-action" id="btnSaveApp" onclick="addPatientRecordCloud()"><i class="fa-solid fa-cloud-arrow-up"></i> <span id="btnSaveText">إضافة السجل و حفظه</span></button>
                 </div>
@@ -660,11 +659,11 @@
 
             <section id="secPatientProfile" class="page-section">
                 <div class="card">
-                    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--primary-light); padding-bottom:1rem; margin-bottom:2rem;"><h3 style="font-weight:700; color:var(--primary); margin:0;"><i class="fa-solid fa-id-card-clip"></i> <span id="profPatientTitleName">الملف الطبي الكامل للمريض</span></h3><button class="sys-btn" onclick="setActiveNav('liTabArchive')" style="padding:8px 16px;"><i class="fa-solid fa-arrow-turn-right"></i> العودة للأرشيف</button></div>
-                    <div class="form-grid-layout" style="margin-bottom:2.5rem; background:var(--bg-app); padding:25px; border-radius:var(--radius-md);"><div><small style="color:var(--text-muted); font-weight:700;">اسم المريض:</small><h3 id="profName" style="font-weight:700; margin-top:4px;">-</h3></div><div><small style="color:var(--text-muted); font-weight:700;">رقم الهاتف:</small><h3 id="profPhone" style="font-weight:600; margin-top:4px; color:var(--accent);">-</h3></div><div><small style="color:var(--text-muted); font-weight:700;">مجموع ديون المريض المستحقة:</small><h3 id="profTotalDebt" style="font-weight:700; margin-top:4px; color:#ef4444;">$0</h3></div></div>
-                    <h4 style="font-weight:700; margin-bottom:1rem;"><i class="fa-solid fa-clock-rotate-left"></i> التاريخ الطبي وجدول زيارات المريض السابقة</h4>
-                    <div class="table-container" style="margin-bottom:2.5rem;"><table class="custom-table"><thead><tr style="background:var(--bg-app);"><th>تاريخ الزيارة</th><th>الإجراء الطبي المنفذ وملاحظات الدكتور</th><th>الكلي ($)</th><th>المختبر ($)</th><th>المدفوع ($)</th><th>الدين ($)</th></tr></thead><tbody id="profVisVisitsTableBody"></tbody></table></div>
-                    <h4 style="font-weight:700; margin-bottom:0.5rem;"><i class="fa-solid fa-camera-retro"></i> ألبوم الأشعة والمستندات المصاحبة للحالة الطبية</h4>
+                    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--primary-light); padding-bottom:1rem; margin-bottom:2rem;"><h3 style="font-weight:700; color:var(--primary); margin:0;"><i class="fa-solid fa-id-card-clip"></i> <span id="profPatientTitleName">الملف الطبي الكامل للمريض</span></h3><button class="sys-btn" id="btnProfReturn" onclick="setActiveNav('liTabArchive')" style="padding:8px 16px;"><i class="fa-solid fa-arrow-turn-right"></i> العودة للأرشيف</button></div>
+                    <div class="form-grid-layout" style="margin-bottom:2.5rem; background:var(--bg-app); padding:25px; border-radius:var(--radius-md);"><div><small id="lblProfPatientNameTitle" style="color:var(--text-muted); font-weight:700;">اسم المريض:</small><h3 id="profName" style="font-weight:700; margin-top:4px;">-</h3></div><div><small id="lblProfPatientPhoneTitle" style="color:var(--text-muted); font-weight:700;">رقم الهاتف:</small><h3 id="profPhone" style="font-weight:600; margin-top:4px; color:var(--accent);">-</h3></div><div><small id="lblProfPatientDebtTitle" style="color:var(--text-muted); font-weight:700;">مجموع ديون المريض المستحقة:</small><h3 id="profTotalDebt" style="font-weight:700; margin-top:4px; color:#ef4444;">$0</h3></div></div>
+                    <h4 id="lblProfHistoryHeading" style="font-weight:700; margin-bottom:1rem;"><i class="fa-solid fa-clock-rotate-left"></i> التاريخ الطبي وجدول زيارات المريض السابقة</h4>
+                    <div class="table-container" style="margin-bottom:2.5rem;"><table class="custom-table"><thead><tr style="background:var(--bg-app);"><th id="thProfDate">تاريخ الزيارة</th><th id="thProfProc">الإجراء الطبي المنفذ وملاحظات الدكتور</th><th id="thProfTotal">الكلي ($)</th><th id="thProfLab">المختبر ($)</th><th id="thProfPaid">المدفوع ($)</th><th id="thProfDebt">الدين ($)</th></tr></thead><tbody id="profVisVisitsTableBody"></tbody></table></div>
+                    <h4 id="lblProfGalleryHeading" style="font-weight:700; margin-bottom:0.5rem;"><i class="fa-solid fa-camera-retro"></i> ألبوم الأشعة والمستندات المصاحبة للحالة الطبية</h4>
                     <div class="patient-gallery-grid" id="profGalleryGrid"></div>
                 </div>
             </section>
@@ -675,8 +674,8 @@
         <div class="print-header-grid">
             <div class="print-header-right">
                 <h1 id="printRxDrName">جاري التعرف...</h1>
-                <p>طب وجراحة الفم والأسنان</p>
-                <small style="font-weight:600; color:#475569;">زراعة وتجميل الأسنان بروفيشونال</small>
+                <p id="printRxDrSub">طب وجراحة الفم والأسنان</p>
+                <small id="printRxDrBadge" style="font-weight:600; color:#475569;">زراعة وتجميل الأسنان بروفيشونال</small>
             </div>
             <div class="print-header-left">
                 <p id="printRxAddress"><i class="fa-solid fa-location-dot"></i> طرابلس - لبنان</p>
@@ -686,21 +685,21 @@
         
         <div class="print-meta-box">
             <div>
-                <p><strong>اسم المريض الكريم:</strong> <span id="printRxPatient">-</span></p>
-                <p style="margin-top:5px;"><strong>العمر / الجنس:</strong> <span id="printRxAgeGender">-</span></p>
+                <p><strong id="lblPrintPatientName">اسم المريض الكريم:</strong> <span id="printRxPatient">-</span></p>
+                <p style="margin-top:5px;"><strong id="lblPrintAgeGender">العمر / الجنس:</strong> <span id="printRxAgeGender">-</span></p>
             </div>
             <div style="text-align: left;">
-                <p><strong>التاريخ والوقت:</strong> <span id="printRxDate">-</span></p>
-                <p style="margin-top:5px;"><strong>الحالة الصحية العامة:</strong> <span id="printRxHealthStatus">-</span></p>
+                <p><strong id="lblPrintDate">التاريخ والوقت:</strong> <span id="printRxDate">-</span></p>
+                <p style="margin-top:5px;"><strong id="lblPrintHealth">الحالة الصحية العامة:</strong> <span id="printRxHealthStatus">-</span></p>
             </div>
         </div>
 
         <table class="print-table">
             <thead>
                 <tr>
-                    <th style="width:35%;">الأسنان / التسمية العلمية المعتمدة</th>
-                    <th style="width:45%;">الإجراء الطبي والعملية المنفذة</th>
-                    <th style="width:20%;">القيمة المالية ($)</th>
+                    <th style="width:35%;" id="thPrintTeeth">الأسنان / التسمية العلمية المعتمدة</th>
+                    <th style="width:45%;" id="thPrintProc">الإجراء الطبي والعملية المنفذة</th>
+                    <th style="width:20%;" id="thPrintCost">القيمة المالية ($)</th>
                 </tr>
             </thead>
             <tbody>
@@ -717,13 +716,13 @@
 
         <div class="print-footer-grid">
             <div class="print-financial-summary">
-                <div class="print-financial-row"><span>المبلغ الكلي للإجراء:</span><span id="printRxSumTotal">-</span></div>
-                <div class="print-financial-row"><span>الحسم الممنوح:</span><span id="printRxSumDiscount">-</span></div>
-                <div class="print-financial-row"><span>المبلغ المدفوع كاش حالياً:</span><span id="printRxSumPaid">-</span></div>
-                <div class="print-financial-row"><span>الدين المتبقي بذمة المريض:</span><span id="printRxSumDebt">-</span></div>
+                <div class="print-financial-row"><span id="lblPrintSumTotal">المبلغ الكلي للإجراء:</span><span id="printRxSumTotal">-</span></div>
+                <div class="print-financial-row"><span id="lblPrintSumDiscount">الحسم الممنوح:</span><span id="printRxSumDiscount">-</span></div>
+                <div class="print-financial-row"><span id="lblPrintSumPaid">المبلغ المدفوع كاش حالياً:</span><span id="printRxSumPaid">-</span></div>
+                <div class="print-financial-row"><span id="lblPrintSumDebt">الدين المتبقي بذمة المريض:</span><span id="printRxSumDebt">-</span></div>
             </div>
             <div class="print-signature-space">
-                <p>توقيع وخاتم الطبيب المعالج 🖋️</p>
+                <p id="lblPrintSignature">توقيع وخاتم الطبيب المعالج 🖋️</p>
                 <div id="printRxSignName" style="margin-top:40px; color:#475569; font-size:0.9rem;">-</div>
             </div>
         </div>
@@ -849,7 +848,7 @@
             document.querySelectorAll('.notation-btn').forEach(btn => btn.classList.remove('active'));
             if(systemCode === 'FDI') document.getElementById('btnFdi').classList.add('active');
             if(systemCode === 'UNIVERSAL') document.getElementById('btnUniversal').classList.add('active');
-            if(systemCode === 'Palmer') document.getElementById('btnPalmer').classList.add('active');
+            if(systemCode === 'PALMER') document.getElementById('btnPalmer').classList.add('active');
             
             ADULT_TEETH_DATA.forEach(tooth => {
                 const node = document.querySelector(`#tooth-${tooth.fdi} .tooth-lbl-txt`);
@@ -1007,19 +1006,26 @@
             } catch (error) { console.error(error); }
         }
 
-        // دالة مضافة لترجمة نصوص العمليات الطبية القادمة من الداتا بيز لحظياً منعاً للتسريب
         function translateProcedureText(procText) {
             if (currentLang !== 'en') return procText;
             let text = procText;
-            text = text.replace("تنظيف وتلميع أسنان", "Scaling & Polishing");
-            text = text.replace("معالجة عصب (Root Canal)", "Root Canal Therapy (RCT)");
-            text = text.replace("حشوة تجميلية (Composite)", "Composite Filling");
-            text = text.replace("قلع (Tooth Extraction)", "Surgical Extraction");
-            text = text.replace("تركيب تيجان / جسور", "Crowns & Bridges Fixed");
-            text = text.replace("وتر فايبر (Fiber Post)", "Fiber Post");
-            text = text.replace("وتد معدن (Metal Post)", "Metal Cast Post");
-            text = text.replace("جراحة لثة وتجميل", "Periodontal Surgery");
-            text = text.replace("عام / استشارة ومعاينة", "General / Consultation");
+            text = text.replace(/تنظيف وتلميع أسنان/g, "Scaling & Polishing");
+            text = text.replace(/معالجة عصب/g, "Root Canal Therapy");
+            text = text.replace(/حشوة تجميلية/g, "Composite Filling");
+            text = text.replace(/قلع/g, "Tooth Extraction");
+            text = text.replace(/تركيب تيجان \/ جسور/g, "Crowns & Bridges Fixed");
+            text = text.replace(/وتر فايبر/g, "Fiber Post");
+            text = text.replace(/وتد معدن/g, "Metal Post");
+            text = text.replace(/جراحة لثة وتجميل/g, "Periodontal Surgery");
+            text = text.replace(/عام \/ استشارة ومعاينة/g, "General / Consultation");
+            text = text.replace(/بسيط/g, "Simple");
+            text = text.replace(/جراحي/g, "Surgical");
+            text = text.replace(/تنظيف/g, "Scaling");
+            text = text.replace(/تركيب/g, "Fitting");
+            text = text.replace(/أسنان رقم/g, "Teeth No.");
+            text = text.replace(/متوسطة/g, "Moderate");
+            text = text.replace(/بسيطة/g, "Mild");
+            text = text.replace(/معقدة/g, "Complex");
             return text;
         }
 
@@ -1163,6 +1169,13 @@
                     const tr = document.createElement('tr'); let patientCell = ''; let detailsCell = '';
                     const cInfo = parseClinicalNotesString(v.notes);
                     
+                    let healthText = cInfo.health;
+                    let socialText = cInfo.social;
+                    if (currentLang === 'en') {
+                        healthText = healthText.replace(/سليم مية بالمية/g, "Healthy / Clear").replace(/سليم/g, "Healthy").replace(/سكري/g, "Diabetes").replace(/ضغط/g, "Hypertension").replace(/ربو/g, "Asthma").replace(/غدة درقية/g, "Thyroid").replace(/التهاب الكبد/g, "Hepatitis");
+                        socialText = socialText.replace(/ذكر/g, "Male").replace(/أنثى/g, "Female").replace(/متزوجة/g, "Married").replace(/عازبة/g, "Single").replace(/مرضعة/g, "Lactating").replace(/حامل/g, "Pregnant").replace(/غير ذلك/g, "Other");
+                    }
+
                     if (index === 0) {
                         const ageLbl = currentLang === 'en' ? 'Age' : 'العمر';
                         const yrsLbl = currentLang === 'en' ? 'yrs' : 'سنة';
@@ -1176,8 +1189,8 @@
                         </td>`;
                         detailsCell = `<td rowspan="${totalVisVisits}" style="border-inline-end: 1px solid var(--border); background: var(--bg-app); vertical-align: middle; font-size:0.8rem; font-weight:600; color:var(--text-sidebar);">
                             <div><strong>${ageLbl}:</strong> ${cInfo.age} ${yrsLbl}</div>
-                            <div><strong>${healthLbl}:</strong> <span style="color:var(--accent)">${cInfo.health}</span></div>
-                            <div style="margin-top:4px; font-size:10px; color:var(--text-muted);"><strong>${socialLbl}:</strong> ${cInfo.social.split('/').slice(1).join('/') || '-'}</div>
+                            <div><strong>${healthLbl}:</strong> <span style="color:var(--accent)">${healthText}</span></div>
+                            <div style="margin-top:4px; font-size:10px; color:var(--text-muted);"><strong>${socialLbl}:</strong> ${socialText.split('/').slice(1).join('/') || '-'}</div>
                             <div style="margin-top:4px; font-size:11px;"><strong>${addressLbl}:</strong> ${cInfo.address}</div>
                         </td>`;
                     }
@@ -1219,7 +1232,6 @@
             });
         }
 
-        // 📅 دالات معالجة وبناء جدول المواعيد السحابي الجديد لحظة بلحظة وبسلاسة تامة
         function filterScheduleByDay(dayType) {
             currentScheduleDayFilter = dayType;
             document.getElementById('btnSchedToday').style.background = dayType === 'today' ? 'var(--primary-light)' : '';
@@ -1259,7 +1271,6 @@
                 const tr = document.createElement('tr');
                 const timePart = v.date.split(' ')[1] || v.date;
                 const rescheduleLabel = currentLang === 'en' ? 'Reschedule' : 'إعادة جدولة الموعد';
-                const cInfo = parseClinicalNotesString(v.notes);
 
                 tr.innerHTML = `
                     <td style="font-weight:700;"><i class="fa-solid fa-user-clock" style="margin-inline-end:6px; color:var(--primary);"></i>${v.name}</td>
@@ -1408,7 +1419,6 @@
                 Chart.defaults.font.family = "'Cairo', sans-serif"; Chart.defaults.color = getComputedStyle(document.body).getPropertyValue('--text-muted');
                 const ctx1 = document.getElementById('monthlyDonutChart').getContext('2d');
                 
-                // ترجمة نصوص ومسميات الكارتات التفاعلية والتشارت حسب لغة السيستم
                 const label1 = currentLang === 'en' ? 'Patients' : 'مرضى';
                 const label2 = currentLang === 'en' ? 'Operations' : 'عمليات';
                 const label3 = currentLang === 'en' ? 'Cash $' : 'كاش $';
@@ -1489,21 +1499,23 @@
                 if(v.images) {
                     v.images.split(',').forEach((url, i) => {
                         if(url && url.trim()) {
-                            let label = "صورة شعاعية (قبل)";
-                            if(i === 1) label = "صورة شعاعية (بعد)";
-                            if(i === 2) label = "صورة ضوئية (قبل)";
-                            if(i === 3) label = "صورة ضوئية (بعد)";
+                            let label = currentLang === 'en' ? "X-Ray (Before)" : "صورة شعاعية (قبل)";
+                            if(i === 1) label = currentLang === 'en' ? "X-Ray (After)" : "صورة شعاعية (بعد)";
+                            if(i === 2) label = currentLang === 'en' ? "Photo (Before)" : "صورة ضوئية (قبل)";
+                            if(i === 3) label = currentLang === 'en' ? "Photo (After)" : "صورة ضوئية (بعد)";
                             allImagesUrls.push({ url: url.trim(), label });
                         }
                     });
                 }
                 const cInfo = parseClinicalNotesString(v.notes);
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td style="font-weight:600; color:var(--accent);">${v.date}</td><td><span style="background:var(--primary-light); color:var(--primary); padding:4px 8px; border-radius:6px; font-weight:700">${translateProcedureText(v.proc)}</span><div class="clinical-blockquote-notes"><strong>💡 تقرير الزيارة:</strong> ${cInfo.cleanNotes}</div></td><td>$${v.total}</td><td style="color:var(--accent); font-weight:600;">$${cInfo.lab}</td><td style="color:#22c55e;">$${v.paid}</td><td style="font-weight:700; color:#ef4444;">$${v.debt}</td>`;
+                
+                let reportLabel = currentLang === 'en' ? "💡 Visit Report:" : "💡 تقرير الزيارة:";
+                tr.innerHTML = `<td style="font-weight:600; color:var(--accent);">${v.date}</td><td><span style="background:var(--primary-light); color:var(--primary); padding:4px 8px; border-radius:6px; font-weight:700">${translateProcedureText(v.proc)}</span><div class="clinical-blockquote-notes"><strong>${reportLabel}</strong> ${cInfo.cleanNotes}</div></td><td>$${v.total}</td><td style="color:var(--accent); font-weight:600;">$${cInfo.lab}</td><td style="color:#22c55e;">$${v.paid}</td><td style="font-weight:700; color:#ef4444;">$${v.debt}</td>`;
                 tableBody.appendChild(tr);
             });
             document.getElementById('profTotalDebt').innerText = `$${accumulatedDebt}`;
-            if (allImagesUrls.length === 0) galleryGrid.innerHTML = `<p style="color:var(--text-muted); font-style:italic; grid-column:1/-1;">لا يوجد أي صور أشعة (قبل/بعد) محفوظة لهذا المريض.</p>`;
+            if (allImagesUrls.length === 0) galleryGrid.innerHTML = `<p style="color:var(--text-muted); font-style:italic; grid-column:1/-1;">${currentLang === 'en' ? 'No diagnostic x-rays or clinical photos saved for this client.' : 'لا يوجد أي صور أشعة (قبل/بعد) محفوظة لهذا المريض.'}</p>`;
             else allImagesUrls.forEach(item => galleryGrid.innerHTML += `<div class="gallery-img-card" onclick="window.open('${item.url}','_blank')"><img src="${item.url}"><div class="gallery-img-label">${item.label}</div></div>`);
         }
 
@@ -1521,15 +1533,17 @@
         function applyLanguageUI() {
             const h = document.getElementById('htmlTag'); const btn = document.getElementById('btnLangToggle'); const isDark = h.getAttribute('data-theme') === 'dark';
             if(currentUser) injectDoctorDynamicIdentity();
+            
             if(currentLang === 'en') {
-                h.dir = 'ltr'; h.lang = 'en'; if(btn) btn.innerText = '🌐 العربية';
+                h.dir = 'ltr'; h.lang = 'en'; if(btn) btn.innerText = '🌐 Arabic';
                 document.getElementById('searchBar').placeholder = "Search central clinical logs...";
+                document.getElementById('pSelectedToothDisplay').placeholder = "Click on one or more teeth from the chart upper board...";
+                
                 document.getElementById('tabMain').innerText = "Dashboard";
                 document.getElementById('tabSchedule').innerText = "Daily Appointments";
                 document.getElementById('lblAddAppTitle').innerText = "New Record";
                 document.getElementById('tabPatients').innerText = "Clinical Archive";
                 
-                // ترجمة ترويسة الجدول والجدول الفرعي الجديد
                 document.getElementById('lblScheduleTitle').innerText = "Daily Appointments & Session Management";
                 document.getElementById('btnSchedToday').innerText = "Today";
                 document.getElementById('btnSchedTomorrow').innerText = "Tomorrow";
@@ -1550,11 +1564,11 @@
                 document.getElementById('thAppActions').innerText = "Action";
                 
                 document.getElementById('lblLogoutText').innerText = "Logout";
-                document.querySelector('#mBtnMain span').innerText = "Home";
-                document.querySelector('#mBtnSchedule span').innerText = "Schedule";
-                document.querySelector('#mBtnApp span').innerText = "New Entry";
-                document.querySelector('#mBtnArchive span').innerText = "Archive";
-                document.querySelector('#mBtnMenu span').innerText = "More";
+                document.getElementById('txtMobMain').innerText = "Home";
+                document.getElementById('txtMobSched').innerText = "Schedule";
+                document.getElementById('txtMobAdd').innerText = "New Entry";
+                document.getElementById('txtMobArch').innerText = "Archive";
+                document.getElementById('txtMobMore').innerText = "More";
 
                 document.getElementById('lblPerfIndicators').innerText = "Live Performance Indicators & Financial Status";
                 document.getElementById('statTotalPatientsLbl').innerText = "Total Registered Patients";
@@ -1570,6 +1584,7 @@
                 document.getElementById('lblWidgetRxTitle').innerText = "Quick Medical Prescription (Rx)";
                 document.getElementById('lblWidgetNotesTitle').innerText = "Doctor's Personal Sticky Notes";
                 document.getElementById('drStickyNotes').placeholder = "Urgent appointments, material shortages...";
+                document.getElementById('btnPrintRx').querySelector('span').innerText = "Print Prescription Form";
                 
                 document.getElementById('lblAddAppTitleInner').innerText = "Comprehensive Medical & Financial Patient Intake";
                 document.getElementById('lblTableApps').innerText = "Central Records Archive & Management";
@@ -1581,8 +1596,8 @@
                 document.getElementById('pNotes').placeholder = "Enter precise technical measurements, custom prescriptions, or lab specs...";
                 document.getElementById('pDate').placeholder = "Select exact appointment date and time";
 
-                document.getElementById('filterOptAll').innerText = "Show All Central Records";
-                document.getElementById('filterOptPaid').innerText = "Fully Settled Invoices";
+                document.getElementById('filterOptAll').innerText = "Show All Central Central Records";
+                document.getElementById('filterOptPaid').innerText = "Fully Settled Central Records";
                 document.getElementById('filterOptDebt').innerText = "Patients with Pending Debts";
 
                 document.getElementById('lblVisitType').innerText = "Visit Type & File Status:";
@@ -1600,9 +1615,94 @@
                 document.getElementById('rxFinPaid').placeholder = "Paid $";
                 document.getElementById('rxFinDebt').placeholder = "Debt $";
                 document.getElementById('rxContent').placeholder = "Type medications or clinical instructions here...";
+
+                document.getElementById('lblSessionHeading').innerHTML = '<i class="fa-solid fa-sliders"></i> Session Status & File Classification';
+                document.getElementById('lblDemographicsHeading').innerHTML = '<i class="fa-solid fa-user-tag"></i> Patient Profile & Demographics';
+                document.getElementById('lblMedicalHistoryHeading').innerHTML = '<i class="fa-solid fa-heart-pulse"></i> Medical History & Chronic Conditions';
+                document.getElementById('lblChartHeading').innerHTML = '<i class="fa-solid fa-tooth"></i> Surgical Dental Chart Notation';
+                document.getElementById('lblImagesHeading').innerHTML = '<i class="fa-solid fa-images"></i> Radiographs & Clinical Image Matrix';
+                document.getElementById('lblFinancialHeading').innerHTML = '<i class="fa-solid fa-money-bill-wave"></i> Invoice Settlement & Financial Path';
+
+                document.getElementById('lblPName').innerText = "Patient Full Name:";
+                document.getElementById('lblPAge').innerText = "Age:";
+                document.getElementById('lblPPhone').innerText = "Phone Number:";
+                document.getElementById('lblPAddress').innerText = "Residential Address:";
+                document.getElementById('lblPGender').innerText = "Gender:";
+                document.getElementById('lblPMarital').innerText = "Marital Status:";
+                document.getElementById('lblPPregnancy').innerText = "Physiological Condition:";
+                document.getElementById('lblPHealth').innerText = "Chronic Conditions / Medical History:";
+                document.getElementById('lblPComplaint').innerText = "Chief Dental Complaint:";
+                document.getElementById('lblPSelectedTeeth').innerText = "Selected Surgical Teeth:";
+                document.getElementById('lblPMainProc').innerText = "Primary Clinical Procedure:";
+                document.getElementById('lblPSubCleaning').innerText = "Associated Periodontal Degree:";
+                document.getElementById('lblPSubExtraction').innerText = "Surgical Extraction Path:";
+                document.getElementById('lblPSubFitting').innerText = "Prosthetic Material Spec:";
+                document.getElementById('lblPDate').innerText = "Appointment Date & Time:";
+                document.getElementById('lblPNotes').innerText = "Clinical Visit Report & Notes:";
+                document.getElementById('lblXrayHeading').innerHTML = '<i class="fa-solid fa-radiation"></i> Radiographic X-Rays:';
+                document.getElementById('lblPhotoHeading').innerHTML = '<i class="fa-solid fa-camera-retro"></i> Clinical Photos:';
+                document.getElementById('txtXrayBefore').innerText = "Before";
+                document.getElementById('txtXrayAfter').innerText = "After";
+                document.getElementById('txtPhotoBefore').innerText = "Before";
+                document.getElementById('txtPhotoAfter').innerText = "After";
+
+                document.getElementById('lblTotalAmount').innerText = "Total Fee ($):";
+                document.getElementById('lblLabCostAmount').innerText = "Lab Outsource Cost ($):";
+                document.getElementById('lblCostAmount').innerText = "Clinic Materials Cost ($):";
+                document.getElementById('lblDiscountAmount').innerText = "Patient Discount ($):";
+                document.getElementById('lblPaidAmount').innerText = "Current Cash Paid ($):";
+
+                document.getElementById('lblMaxillaryArch').innerText = "Maxillary Arch (Upper Jaw)";
+                document.getElementById('lblMandibularArch').innerText = "Mandibular Arch (Lower Jaw)";
+
+                document.getElementById('txtChkDiabetes').innerText = "Diabetes";
+                document.getElementById('txtChkHypertension').innerText = "Hypertension";
+                document.getElementById('txtChkAsthma').innerText = "Asthma";
+                document.getElementById('txtChkThyroid').innerText = "Thyroid";
+                document.getElementById('txtChkHepatitis').innerText = "Hepatitis";
+                document.getElementById('txtChkHealthy').innerText = "Healthy / Clear";
+                document.getElementById('txtChkOther').innerText = "Other Conditions...";
+
+                document.getElementById('profPatientTitleName').innerText = "Comprehensive Medical Record Portal";
+                document.getElementById('btnProfReturn').innerText = "Return to central archive";
+                document.getElementById('lblProfPatientNameTitle').innerText = "Patient Identity:";
+                document.getElementById('lblProfPatientPhoneTitle').innerText = "Phone Number:";
+                document.getElementById('lblProfPatientDebtTitle').innerText = "Total Accumulated Outstanding Debt:";
+                document.getElementById('lblProfHistoryHeading').innerText = "Clinical Visit History Logs";
+                document.getElementById('lblProfGalleryHeading').innerText = "Central Diagnostics Image Album";
+                document.getElementById('thProfDate').innerText = "Visit Date";
+                document.getElementById('thProfProc').innerText = "Executed Procedure & Notes";
+                document.getElementById('thProfTotal').innerText = "Total Fee";
+                document.getElementById('thProfLab').innerText = "Lab Fee";
+                document.getElementById('thProfPaid').innerText = "Paid Cash";
+                document.getElementById('thProfDebt').innerText = "Debt Amount";
+
+                document.getElementById('printRxDrSub').innerText = "Oral & Maxillofacial Surgery";
+                document.getElementById('printRxDrBadge').innerText = "Professional Implantology & Dental Esthetics";
+                document.getElementById('lblPrintPatientName').innerText = "Patient Name:";
+                document.getElementById('lblPrintAgeGender').innerText = "Age / Gender:";
+                document.getElementById('lblPrintDate').innerText = "Date / Time:";
+                document.getElementById('lblPrintHealth').innerText = "Systemic Health Status:";
+                document.getElementById('thPrintTeeth').innerText = "Teeth / Scientific FDI Notation";
+                document.getElementById('thPrintProc').innerText = "Executed Surgical Procedure";
+                document.getElementById('thPrintCost').innerText = "Fee Value ($)";
+                document.getElementById('lblPrintSumTotal').innerText = "Total Invoiced Fee:";
+                document.getElementById('lblPrintSumDiscount').innerText = "Granted Discount:";
+                document.getElementById('lblPrintSumPaid').innerText = "Current Cash Paid:";
+                document.getElementById('lblPrintSumDebt').innerText = "Outstanding Balance Due:";
+                document.getElementById('lblPrintSignature').innerText = "Attending Physician Signature & Stamp 🖋️";
+
+                document.getElementById('lblAuthDoctorName').innerText = "Doctor Full Name:";
+                document.getElementById('lblAuthClinicPhone').innerText = "Clinic Phone:";
+                document.getElementById('lblAuthClinicAddress').innerText = "Detailed Clinic Address:";
+                document.getElementById('lblAuthEmail').innerText = "Clinic Security Email:";
+                document.getElementById('lblAuthPass').innerText = "Password:";
+                document.getElementById('lblForgotPasswordLink').innerText = "Forgot Password?";
             } else { 
                 h.dir = 'rtl'; h.lang = 'ar'; if(btn) btn.innerText = '🌐 English'; 
                 document.getElementById('searchBar').placeholder = "البحث عن عملية، تقرير، أو اسم مريض...";
+                document.getElementById('pSelectedToothDisplay').placeholder = "اضغط على سن أو أكثر من اللوحة العلوية...";
+                
                 document.getElementById('tabMain').innerText = "الرئيسية ولوحة التحكم";
                 document.getElementById('tabSchedule').innerText = "جدول المواعيد اليومية";
                 document.getElementById('lblAddAppTitle').innerText = "إضافة سجل وموعد جديد";
@@ -1617,11 +1717,11 @@
                 document.getElementById('thSchedActions').innerText = "إدارة وجدولة الموعد السحابي";
 
                 document.getElementById('lblLogoutText').innerText = "تسجيل الخروج";
-                document.querySelector('#mBtnMain span').innerText = "الرئيسية";
-                document.querySelector('#mBtnSchedule span').innerText = "المواعيد";
-                document.querySelector('#mBtnApp span').innerText = "إضافة سجل";
-                document.querySelector('#mBtnArchive span').innerText = "الأرشيف";
-                document.querySelector('#mBtnMenu span').innerText = "المزيد";
+                document.getElementById('txtMobMain').innerText = "الرئيسية";
+                document.getElementById('txtMobSched').innerText = "المواعيد";
+                document.getElementById('txtMobAdd').innerText = "إضافة سجل";
+                document.getElementById('txtMobArch').innerText = "الأرشيف";
+                document.getElementById('txtMobMore').innerText = "المزيد";
 
                 document.getElementById('lblPerfIndicators').innerText = "مؤشرات الأداء المباشرة والوضع المالي الفوري للعيادة";
                 document.getElementById('statTotalPatientsLbl').innerText = "إجمالي المرضى";
@@ -1637,6 +1737,7 @@
                 document.getElementById('lblWidgetRxTitle').innerText = "الوصفات والتقارير الطبية الشاملة";
                 document.getElementById('lblWidgetNotesTitle').innerText = "ملاحظات الطبيب";
                 document.getElementById('drStickyNotes').placeholder = "مواعيد طارئة، نواقص من المواد...";
+                document.getElementById('btnPrintRx').querySelector('span').innerText = "طباعة روشتّة فورية";
 
                 document.getElementById('lblAddAppTitleInner').innerText = "إنشاء سجل طبي ومالي متكامل للمريض";
                 document.getElementById('lblTableApps').innerText = "أرشيف وإدارة السجلات المركزية";
@@ -1667,169 +1768,91 @@
                 document.getElementById('rxFinPaid').placeholder = "مدفوع $";
                 document.getElementById('rxFinDebt').placeholder = "دين $";
                 document.getElementById('rxContent').placeholder = "اكتب الأدوية الموصوفة والجرعات أو التعليمات السريرية...";
+
+                document.getElementById('lblSessionHeading').innerHTML = '<i class="fa-solid fa-sliders"></i> حالة الجلسة والتصنيف الطبي للملف';
+                document.getElementById('lblDemographicsHeading').innerHTML = '<i class="fa-solid fa-user-tag"></i> البيانات الديموغرافية والاجتماعية للمريض';
+                document.getElementById('lblMedicalHistoryHeading').innerHTML = '<i class="fa-solid fa-heart-pulse"></i> التاريخ الطبي والحالة الصحية العامة للمريض';
+                document.getElementById('lblChartHeading').innerHTML = '<i class="fa-solid fa-tooth"></i> خريطة الأسنان الجراحية والعمليات المحددة (اضغط لتحديد سن أو أكثر)';
+                document.getElementById('lblImagesHeading').innerHTML = '<i class="fa-solid fa-images"></i> مستودع الأشعة والملفات المصاحبة للحالة (X-Rays & Photos Matrix)';
+                document.getElementById('lblFinancialHeading').innerHTML = '<i class="fa-solid fa-money-bill-wave"></i> التسوية والمسار المالي للجلسة';
+
+                document.getElementById('lblPName').innerText = "اسم المريض الثلاثي:";
+                document.getElementById('lblPAge').innerText = "العمر:";
+                document.getElementById('lblPPhone').innerText = "رقم الهاتف:";
+                document.getElementById('lblPAddress').innerText = "العنوان السكني بالتفصيل:";
+                document.getElementById('lblPGender').innerText = "الجنس:";
+                document.getElementById('lblPMarital').innerText = "الحالة الاجتماعية:";
+                document.getElementById('lblPPregnancy').innerText = "الحالة الفسيولوجية للمتزوجة:";
+                document.getElementById('lblPHealth').innerText = "اختر الأمراض المزمنة أو المشاكل الصحية إن وجدت:";
+                document.getElementById('lblPComplaint').innerText = "الحالة المرضية الحالية للأسنان / الشكوى الأساسية للزيارة:";
+                document.getElementById('lblPSelectedTeeth').innerText = "الأسنان الجراحية المختارة حالياً للعملية:";
+                document.getElementById('lblPMainProc').innerText = "الإجراء الطبي الأساسي:";
+                document.getElementById('lblPSubCleaning').innerText = "درجة المعالجة اللثوية المصاحبة:";
+                document.getElementById('lblPSubExtraction').innerText = "مسار جراحة القلع:";
+                document.getElementById('lblPSubFitting').innerText = "مادة التركيبات المخبرية الخزفية:";
+                document.getElementById('lblPDate').innerText = "توقيت وجدولة الجلسة الجراحية:";
+                document.getElementById('lblPNotes').innerText = "التقرير والملاحظات السريرية الطبيّة للزيارة:";
+                document.getElementById('lblXrayHeading').innerHTML = '<i class="fa-solid fa-radiation"></i> صور أشعة شعاعية (Radiographic X-Rays):';
+                document.getElementById('lblPhotoHeading').innerHTML = '<i class="fa-solid fa-camera-retro"></i> صور ضوئية سريرية (Clinical Photos):';
+                document.getElementById('txtXrayBefore').innerText = "قبل العلاج (Before)";
+                document.getElementById('txtXrayAfter').innerText = "بعد العلاج (After)";
+                document.getElementById('txtPhotoBefore').innerText = "قبل العلاج (Before)";
+                document.getElementById('txtPhotoAfter').innerText = "بعد العلاج (After)";
+
+                document.getElementById('lblTotalAmount').innerText = "المبلغ الكلي ($):";
+                document.getElementById('lblLabCostAmount').innerText = "قيمة الأدوات المخبرية / المختبر ($):";
+                document.getElementById('lblCostAmount').innerText = "تكلفة العيادة والمواد ($):";
+                document.getElementById('lblDiscountAmount').innerText = "حسم للمريض ($):";
+                document.getElementById('lblPaidAmount').innerText = "المبلغ المدفوع كاش حالياً ($):";
+
+                document.getElementById('lblMaxillaryArch').innerText = "الفك العلوي (Maxillary Arch)";
+                document.getElementById('lblMandibularArch').innerText = "الفك السفلي (Mandibular Arch)";
+
+                document.getElementById('txtChkDiabetes').innerText = "سكري";
+                document.getElementById('txtChkHypertension').innerText = "ضغط";
+                document.getElementById('txtChkAsthma').innerText = "ربو";
+                document.getElementById('txtChkThyroid').innerText = "غدة درقية";
+                document.getElementById('txtChkHepatitis').innerText = "التهاب الكبد";
+                document.getElementById('txtChkHealthy').innerText = "سليم / لا شيء";
+                document.getElementById('txtChkOther').innerText = "غير ذلك...";
+
+                document.getElementById('profPatientTitleName').innerText = "الملف الطبي الكامل للمريض";
+                document.getElementById('btnProfReturn').innerText = "العودة للأرشيف";
+                document.getElementById('lblProfPatientNameTitle').innerText = "اسم المريض:";
+                document.getElementById('lblProfPatientPhoneTitle').innerText = "رقم الهاتف:";
+                document.getElementById('lblProfPatientDebtTitle').innerText = "مجموع ديون المريض المستحقة:";
+                document.getElementById('lblProfHistoryHeading').innerText = "التاريخ الطبي وجدول زيارات المريض السابقة";
+                document.getElementById('lblProfGalleryHeading').innerText = "ألبوم الأشعة والمستندات المصاحبة للحالة الطبية";
+                document.getElementById('thProfDate').innerText = "تاريخ الزيارة";
+                document.getElementById('thProfProc').innerText = "الإجراء الطبي المنفذ وملاحظات الدكتور";
+                document.getElementById('thProfTotal').innerText = "الكلي ($)";
+                document.getElementById('thProfLab').innerText = "المختبر ($)";
+                document.getElementById('thProfPaid').innerText = "المدفوع ($)";
+                document.getElementById('thProfDebt').innerText = "الدين ($)";
+
+                document.getElementById('printRxDrSub').innerText = "طب وجراحة الفم والأسنان";
+                document.getElementById('printRxDrBadge').innerText = "زراعة وتجميل الأسنان بروفيشونال";
+                document.getElementById('lblPrintPatientName').innerText = "اسم المريض الكريم:";
+                document.getElementById('lblPrintAgeGender').innerText = "العمر / الجنس:";
+                document.getElementById('lblPrintDate').innerText = "التاريخ والوقت:";
+                document.getElementById('lblPrintHealth').innerText = "الحالة الصحية العامة:";
+                document.getElementById('thPrintTeeth').innerText = "الأسنان / التسمية العلمية المعتمدة";
+                document.getElementById('thPrintProc').innerText = "الإجراء الطبي والعملية المنفذة";
+                document.getElementById('thPrintCost').innerText = "القيمة المالية ($)";
+                document.getElementById('lblPrintSumTotal').innerText = "المبلغ الكلي للإجراء:";
+                document.getElementById('lblPrintSumDiscount').innerText = "الحسم الممنوح:";
+                document.getElementById('lblPrintSumPaid').innerText = "المبلغ المدفوع كاش حالياً:";
+                document.getElementById('lblPrintSumDebt').innerText = "الدين المتبقي بذمة المريض:";
+                document.getElementById('lblPrintSignature').innerText = "توقيع وخاتم الطبيب المعالج 🖋️";
+
+                document.getElementById('lblAuthDoctorName').innerText = "اسم الدكتور الثلاثي:";
+                document.getElementById('lblAuthClinicPhone').innerText = "رقم هاتف العيادة:";
+                document.getElementById('lblAuthClinicAddress').innerText = "عنوان العيادة بالتفصيل:";
+                document.getElementById('lblAuthEmail').innerText = "البريد الإلكتروني للعيادة:";
+                document.getElementById('lblAuthPass').innerText = "كلمة المرور:";
+                document.getElementById('lblForgotPasswordLink').innerText = "نسيت كلمة المرور؟";
             }
             
-            document.querySelectorAll('label').forEach(lbl => {
-                const txt = lbl.innerText.trim();
-                if (currentLang === 'en') {
-                    if (txt === "اسم الدكتور الثلاثي:") lbl.innerText = "Doctor Full Name:";
-                    if (txt === "رقم هاتف العيادة:") lbl.innerText = "Clinic Phone:";
-                    if (txt === "عنوان العيادة بالتفصيل:") lbl.innerText = "Clinic Address:";
-                    if (txt === "البريد الإلكتروني للعيادة:") lbl.innerText = "Clinic Email:";
-                    if (txt === "كلمة المرور:") lbl.innerText = "Password:";
-                    if (txt === "اسم المريض الثلاثي:") lbl.innerText = "Patient Full Name:";
-                    if (txt === "العمر:") lbl.innerText = "Age:";
-                    if (txt === "رقم الهاتف:") lbl.innerText = "Phone Number:";
-                    if (txt === "العنوان السكني بالتفصيل:") lbl.innerText = "Residential Address:";
-                    if (txt === "الجنس:") lbl.innerText = "Gender:";
-                    if (txt === "الحالة الاجتماعية:") lbl.innerText = "Marital Status:";
-                    if (txt === "الحالة الفسيولوجية للمتزوجة:") lbl.innerText = "Physiological Condition:";
-                    if (txt === "اختر الأمراض المزمنة أو المشاكل الصحية إن وجدت:") lbl.innerText = "Chronic Conditions / Medical History:";
-                    if (txt === "الحالة المرضية الحالية للأسنان / الشكوى الأساسية للزيارة:") lbl.innerText = "Chief Dental Complaint:";
-                    if (txt === "الأسنان الجراحية المختارة حالياً للعملية:") lbl.innerText = "Selected Surgical Teeth:";
-                    if (txt === "الإجراء الطبي الأساسي:") lbl.innerText = "Primary Clinical Procedure:";
-                    if (txt === "درجة المعالجة اللثوية المصاحبة:") lbl.innerText = "Associated Periodontal Degree:";
-                    if (txt === "مسار جراحة القلع:") lbl.innerText = "Surgical Extraction Path:";
-                    if (txt === "مادة التركيبات المخبرية الخزفية:") lbl.innerText = "Prosthetic Material Spec:";
-                    if (txt === "توقيت وجدولة الجلسة الجراحية:") lbl.innerText = "Appointment Date & Time:";
-                    if (txt === "التقرير والملاحظات السريرية الطبيّة للزيارة:") lbl.innerText = "Clinical Visit Report & Notes:";
-                    if (txt === "المبلغ الكلي ($):") lbl.innerText = "Total Fee ($):";
-                    if (txt === "قيمة الأدوات المخبرية / المختبر ($):") lbl.innerText = "Lab Outsource Cost ($):";
-                    if (txt === "تكلفة العيادة والمواد ($):") lbl.innerText = "Clinic Materials Cost ($):";
-                    if (txt === "حسم للمريض ($):") lbl.innerText = "Patient Discount ($):";
-                    if (txt === "المبلغ المدفوع كاش حالياً ($):") lbl.innerText = "Current Cash Paid ($):";
-                } else {
-                    if (txt === "Doctor Full Name:") lbl.innerText = "اسم الدكتور الثلاثي:";
-                    if (txt === "Clinic Phone:") lbl.innerText = "رقم هاتف العيادة:";
-                    if (txt === "Clinic Address:") lbl.innerText = "عنوان العيادة بالتفصيل:";
-                    if (txt === "Clinic Email:") lbl.innerText = "البريد الإلكتروني للعيادة:";
-                    if (txt === "Password:") lbl.innerText = "كلمة المرور:";
-                    if (txt === "Patient Full Name:") lbl.innerText = "اسم المريض الثلاثي:";
-                    if (txt === "Age:") lbl.innerText = "العمر:";
-                    if (txt === "Phone Number:") lbl.innerText = "رقم الهاتف:";
-                    if (txt === "Residential Address:") lbl.innerText = "العنوان السكني بالتفصيل:";
-                    if (txt === "Gender:") lbl.innerText = "الجنس:";
-                    if (txt === "Marital Status:") lbl.innerText = "الحالة الاجتماعية:";
-                    if (txt === "Physiological Condition:") lbl.innerText = "الحالة الفسيولوجية للمتزوجة:";
-                    if (txt === "Chronic Conditions / Medical History:") lbl.innerText = "اختر الأمراض المزمنة أو المشاكل الصحية إن وجدت:";
-                    if (txt === "Chief Dental Complaint:") lbl.innerText = "الحالة المرضية الحالية للأسنان / الشكوى الأساسية للزيارة:";
-                    if (txt === "Selected Surgical Teeth:") lbl.innerText = "الأسنان الجراحية المختارة حالياً للعملية:";
-                    if (txt === "Primary Clinical Procedure:") lbl.innerText = "الإجراء الطبي الأساسي:";
-                    if (txt === "Associated Periodontal Degree:") lbl.innerText = "درجة المعالجة اللثوية المصاحبة:";
-                    if (txt === "Surgical Extraction Path:") lbl.innerText = "مسار جراحة القلع:";
-                    if (txt === "Prosthetic Material Spec:") lbl.innerText = "مادة التركيبات المخبرية الخزفية:";
-                    if (txt === "Appointment Date & Time:") lbl.innerText = "توقيت وجدولة الجلسة الجراحية:";
-                    if (txt === "Clinical Visit Report & Notes:") lbl.innerText = "التقرير والملاحظات السريرية الطبيّة للزيارة:";
-                    if (txt === "Total Fee ($):") lbl.innerText = "المبلغ الكلي ($):";
-                    if (txt === "Lab Outsource Cost ($):") lbl.innerText = "قيمة الأدوات المخبرية / المختبر ($):";
-                    if (txt === "Clinic Materials Cost ($):") lbl.innerText = "تكلفة العيادة والمواد ($):";
-                    if (txt === "Patient Discount ($):") lbl.innerText = "حسم للمريض ($):";
-                    if (txt === "Current Cash Paid ($):") lbl.innerText = "المبلغ المدفوع كاش حالياً ($):";
-                }
-            });
-
-            document.querySelectorAll('h4').forEach(h4 => {
-                const text = h4.innerText.trim();
-                if (currentLang === 'en') {
-                    if (text.includes("البيانات الديموغرافية")) h4.innerHTML = `<i class="fa-solid fa-user-tag"></i> Patient Profile & Demographics`;
-                    if (text.includes("التاريخ الطبي")) h4.innerHTML = `<i class="fa-solid fa-heart-pulse"></i> Medical History & Chronic Conditions`;
-                    if (text.includes("خريطة الأسنان")) h4.innerHTML = `<i class="fa-solid fa-tooth"></i> Surgical Dental Chart Notation`;
-                    if (text.includes("مستودع الأشعة")) h4.innerHTML = `<i class="fa-solid fa-images"></i> Radiographs & Clinical Image Matrix`;
-                    if (text.includes("التسوية والمسار")) h4.innerHTML = `<i class="fa-solid fa-money-bill-wave"></i> Invoice Settlement & Financial Path`;
-                } else {
-                    if (text.includes("Patient Profile")) h4.innerHTML = `<i class="fa-solid fa-user-tag"></i> البيانات الديموغرافية والاجتماعية للمريض`;
-                    if (text.includes("Medical History")) h4.innerHTML = `<i class="fa-solid fa-heart-pulse"></i> التاريخ الطبي والحالة الصحية العامة للمريض`;
-                    if (text.includes("Surgical Dental Chart")) h4.innerHTML = `<i class="fa-solid fa-tooth"></i> خريطة الأسنان الجراحية والعمليات المحددة (اضغط لتحديد سن أو أكثر)`;
-                    if (text.includes("Radiographs & Clinical")) h4.innerHTML = `<i class="fa-solid fa-images"></i> مستودع الأشعة والملفات المصاحبة للحالة (X-Rays & Photos Matrix)`;
-                    if (text.includes("Invoice Settlement")) h4.innerHTML = `<i class="fa-solid fa-money-bill-wave"></i> التسوية والمسار المالي للجلسة`;
-                }
-            });
-
-            document.querySelectorAll('.chart-title-lbl').forEach(el => {
-                const txt = el.innerText.trim();
-                if (currentLang === 'en') {
-                    if (txt.includes("الفك العلوي")) el.innerText = "Maxillary Arch (Upper Jaw)";
-                    if (txt.includes("الفك السفلي")) el.innerText = "Mandibular Arch (Lower Jaw)";
-                } else {
-                    if (txt.includes("Maxillary Arch")) el.innerText = "الفك العلوي (Maxillary Arch)";
-                    if (txt.includes("Mandibular Arch")) el.innerText = "الفك السفلي (Mandibular Arch)";
-                }
-            });
-
-            document.querySelectorAll('.clinical-checkbox-label span').forEach(sp => {
-                const txt = sp.innerText.trim();
-                if (currentLang === 'en') {
-                    if (txt === "سكري") sp.innerText = "Diabetes";
-                    if (txt === "ضغط") sp.innerText = "Hypertension";
-                    if (txt === "ربو") sp.innerText = "Asthma";
-                    if (txt === "غدة درقية") sp.innerText = "Thyroid";
-                    if (txt === "التهاب الكبد") sp.innerText = "Hepatitis";
-                    if (txt === "سليم / لا شيء") sp.innerText = "Healthy / Clear";
-                    if (txt === "غير ذلك...") sp.innerText = "Other Conditions...";
-                } else {
-                    if (txt === "Diabetes") sp.innerText = "سكري";
-                    if (txt === "Hypertension") sp.innerText = "ضغط";
-                    if (txt === "Asthma") sp.innerText = "ربو";
-                    if (txt === "Thyroid") sp.innerText = "غدة درقية";
-                    if (txt === "Hepatitis") sp.innerText = "التهاب الكبد";
-                    if (txt === "Healthy / Clear") sp.innerText = "سليم / لا شيء";
-                    if (txt === "Other Conditions...") sp.innerText = "غير ذلك...";
-                }
-            });
-
-            const pGender = document.getElementById('pGender');
-            if(pGender) {
-                pGender.options[0].text = currentLang === 'en' ? "Male" : "ذكر (Male)";
-                pGender.options[1].text = currentLang === 'en' ? "Female" : "أنثى (Female)";
-            }
-            const pMaritalStatus = document.getElementById('pMaritalStatus');
-            if(pMaritalStatus) {
-                pMaritalStatus.options[0].text = currentLang === 'en' ? "Single" : "عازبة";
-                pMaritalStatus.options[1].text = currentLang === 'en' ? "Married" : "متزوجة";
-            }
-            const pPregnancyStatus = document.getElementById('pPregnancyStatus');
-            if(pPregnancyStatus) {
-                pPregnancyStatus.options[0].text = currentLang === 'en' ? "Normal Status" : "غير ذلك";
-                pPregnancyStatus.options[1].text = currentLang === 'en' ? "Pregnant" : "حامل (Pregnant)";
-                pPregnancyStatus.options[2].text = currentLang === 'en' ? "Lactating" : "مرضعة (Lactating)";
-                pPregnancyStatus.options[3].text = currentLang === 'en' ? "Write custom status..." : "أخرى";
-            }
-            const pMainProc = document.getElementById('pMainProc');
-            if(pMainProc) {
-                pMainProc.options[0].text = currentLang === 'en' ? "Scaling & Polishing" : "تنظيف وتلميع أسنان";
-                pMainProc.options[1].text = currentLang === 'en' ? "Root Canal Therapy (RCT)" : "معالجة عصب (Root Canal)";
-                pMainProc.options[2].text = currentLang === 'en' ? "Composite Filling" : "حشوة تجميلية (Composite)";
-                pMainProc.options[3].text = currentLang === 'en' ? "Surgical Extraction" : "قلع (Tooth Extraction)";
-                pMainProc.options[4].text = currentLang === 'en' ? "Crowns & Bridges Fixed" : "تركيب تيجان / جسور";
-                pMainProc.options[5].text = currentLang === 'en' ? "Fiber Post" : "وتر فايبر (Fiber Post)";
-                pMainProc.options[6].text = currentLang === 'en' ? "Metal Cast Post" : "وتد معدن (Metal Post)";
-                pMainProc.options[7].text = currentLang === 'en' ? "Periodontal Surgery" : "جراحة لثة وتجميل";
-            }
-            const subProcCleaning = document.getElementById('subProcCleaning');
-            if(subProcCleaning) {
-                subProcCleaning.options[0].text = currentLang === 'en' ? "Mild Gingivitis Therapy" : "معالجة لثوية بسيطة";
-                subProcCleaning.options[1].text = currentLang === 'en' ? "Moderate Periodontitis" : "معالجة لثوية متوسطة";
-                subProcCleaning.options[2].text = currentLang === 'en' ? "Complex Perio Surgery" : "معالجة لثوية معقدة";
-            }
-            const subProcExtraction = document.getElementById('subProcExtraction');
-            if(subProcExtraction) {
-                subProcExtraction.options[0].text = currentLang === 'en' ? "Simple Mobility Forceps" : "بسيط (Simple)";
-                subProcExtraction.options[1].text = currentLang === 'en' ? "Surgical Bone Flap" : "جراحي (Surgical)";
-            }
-            const subProcFitting = document.getElementById('subProcFitting');
-            if(subProcFitting) {
-                subProcFitting.options[0].text = currentLang === 'en' ? "Porcelain Fused Ceramic" : "سيراميك (Ceramic)";
-                subProcFitting.options[1].text = currentLang === 'en' ? "High Translucent Zirconia" : "زيركون (Zirconia)";
-                subProcFitting.options[2].text = currentLang === 'en' ? "Solid Full Monolithic Zircon" : "فول زيركون (Full Zirconia)";
-                subProcFitting.options[3].text = currentLang === 'en' ? "Lithium Disilicate E-max" : "إيماكس (E-max)";
-            }
-            const archiveFilterSelector = document.getElementById('archiveFilterSelector');
-            if(archiveFilterSelector) {
-                archiveFilterSelector.options[0].text = currentLang === 'en' ? "Show All Central Logs" : "عرض كل السجلات";
-                archiveFilterSelector.options[1].text = currentLang === 'en' ? "Fully Paid Accounts" : "الخالصين ماليًا بالكامل";
-                archiveFilterSelector.options[2].text = currentLang === 'en' ? "Active Pending Debts" : "الذين في ذمتهم ديون مستحقة";
-            }
-
             setSaveButtonState(editingRecordId ? true : false);
             updateThemeToggleUI(isDark ? 'dark' : 'light');
         }
@@ -1856,10 +1879,10 @@
             regLink.style.display = 'inline-block';
 
             if(authMode === 'register' || authMode === 'forgot' || authMode === 'recovery') {
-                authMode = 'login'; title.innerText = "تسجيل الدخول"; desc.innerText = "منظومة العيادة الطبية الذكية"; subBtn.innerHTML = "<i class='fa-solid fa-fingerprint'></i> <span>دخول</span>"; regLink.innerText = "أو إنشاء حساب حساب طبي جديد"; extra.style.display = 'none';
+                authMode = 'login'; title.innerText = currentLang === 'en' ? "Login" : "تسجيل الدخول"; desc.innerText = currentLang === 'en' ? "Smart Clinical Operating System" : "منظومة العيادة الطبية الذكية"; subBtn.innerHTML = "<i class='fa-solid fa-fingerprint'></i> <span id='txtAuthSubmitBtn'>" + (currentLang === 'en' ? 'Login' : 'دخول') + "</span>"; regLink.innerText = currentLang === 'en' ? "Create a professional medical account" : "أو إنشاء حساب حساب طبي جديد"; extra.style.display = 'none';
                 subBtn.setAttribute('onclick', 'submitAuthForm()');
             } else {
-                authMode = 'register'; title.innerText = "إنشاء حساب طبي"; desc.innerText = "سجل عيادتك الطبية في السحابة الآمنة"; subBtn.innerHTML = "<i class='fa-solid fa-user-plus'></i> <span>إنشاء الحساب وتفعيل الأمان</span>"; regLink.innerText = "لديك حساب بالفعل؟ تسجيل الدخول"; extra.style.display = 'block';
+                authMode = 'register'; title.innerText = currentLang === 'en' ? "Register Account" : "إنشاء حساب طبي"; desc.innerText = currentLang === 'en' ? "Secure Cloud Clinical Infrastructure" : "سجل عيادتك الطبية في السحابة الآمنة"; subBtn.innerHTML = "<i class='fa-solid fa-user-plus'></i> <span id='txtAuthSubmitBtn'>" + (currentLang === 'en' ? 'Register & Secure' : 'إنشاء الحساب وتفعيل الأمان') + "</span>"; regLink.innerText = currentLang === 'en' ? "Already registered? Login" : "لديك حساب بالفعل؟ تسجيل الدخول"; extra.style.display = 'block';
                 subBtn.setAttribute('onclick', 'submitAuthForm()');
             }
         }
@@ -1868,7 +1891,7 @@
             const email = document.getElementById('authEmail').value.trim();
 
             if (!email) {
-                triggerToast("الرجاء إدخال البريد الإلكتروني أولاً!", "error");
+                triggerToast(currentLang === 'en' ? "Please type email address first!" : "الرجاء إدخال البريد الإلكتروني أولاً!", "error");
                 return;
             }
 
@@ -1881,9 +1904,9 @@
             document.getElementById('btnAuthSubmit').disabled = false;
 
             if (error) {
-                triggerToast("خطأ: " + error.message, "error");
+                triggerToast("Error: " + error.message, "error");
             } else {
-                triggerToast("تم إرسال رابط إعادة التعيين إلى بريدك الإلكتروني بنجاح!", "success");
+                triggerToast(currentLang === 'en' ? "Recovery token dispatched to your inbox!" : "تم إرسال رابط إعادة التعيين إلى بريدك الإلكتروني بنجاح!", "success");
                 authMode = 'forgot';
                 toggleAuthMode(); 
             }
@@ -1897,16 +1920,16 @@
             
             if (hash && hash.includes('type=recovery')) {
                 authMode = 'recovery';
-                document.getElementById('lblAuthTitle').innerText = "تحديث كلمة المرور";
-                document.getElementById('lblAuthDesc').innerText = "الرجاء إدخال كلمة المرور الجديدة للعيادة";
+                document.getElementById('lblAuthTitle').innerText = currentLang === 'en' ? "Update Account Password" : "تحديث كلمة المرور";
+                document.getElementById('lblAuthDesc').innerText = currentLang === 'en' ? "Input your new strong clinical credentials" : "الرجاء إدخال كلمة المرور الجديدة للعيادة";
                 
                 document.getElementById('lblAuthEmail').parentElement.style.display = 'none';
                 document.getElementById('signUpDetailsGroup').style.display = 'none';
-                document.getElementById('authPassword').placeholder = "كلمة المرور الجديدة";
+                document.getElementById('authPassword').placeholder = currentLang === 'en' ? "New Password" : "كلمة المرور الجديدة";
                 document.getElementById('authPassword').parentElement.style.display = 'block';
                 
                 const submitBtn = document.getElementById('btnAuthSubmit');
-                submitBtn.innerHTML = '<i class="fa-solid fa-key"></i> <span>تحديث وحفظ</span>';
+                submitBtn.innerHTML = '<i class="fa-solid fa-key"></i> <span id="txtAuthSubmitBtn">' + (currentLang === 'en' ? 'Update & Save' : 'تحديث وحفظ') + '</span>';
                 submitBtn.setAttribute('onclick', 'handleUpdatePassword()');
                 
                 document.getElementById('btnAuthRegister').style.display = 'none';
@@ -1917,7 +1940,7 @@
             const newPassword = document.getElementById('authPassword').value.trim();
 
             if (!newPassword || newPassword.length < 6) {
-                triggerToast("الرجاء إدخال كلمة مرور قوية لا تقل عن 6 أحرف!", "error");
+                triggerToast(currentLang === 'en' ? "Password cannot be less than 6 digits!" : "الرجاء إدخال كلمة مرور قوية لا تقل عن 6 أحرف!", "error");
                 return;
             }
 
@@ -1930,9 +1953,9 @@
             document.getElementById('btnAuthSubmit').disabled = false;
 
             if (error) {
-                triggerToast("فشل تحديث كلمة المرور: " + error.message, "error");
+                triggerToast("Update Failed: " + error.message, "error");
             } else {
-                triggerToast("تم تحديث كلمة المرور بنجاح! يمكنك الدخول الآن.", "success");
+                triggerToast(currentLang === 'en' ? "Password updated successfully!" : "تم تحديث كلمة المرور بنجاح! يمكنك الدخول الآن.", "success");
                 window.location.hash = '';
                 setTimeout(() => { window.location.reload(); }, 1500);
             }
@@ -1940,30 +1963,30 @@
 
         function showForgotPasswordView() {
             authMode = 'forgot';
-            document.getElementById('lblAuthTitle').innerText = "استعادة الحساب";
-            document.getElementById('lblAuthDesc').innerText = "أدخل إيميل العيادة لإرسال رابط تعيين باسوورد جديد";
+            document.getElementById('lblAuthTitle').innerText = currentLang === 'en' ? "Recover Account" : "استعادة الحساب";
+            document.getElementById('lblAuthDesc').innerText = currentLang === 'en' ? "Enter email to receive password reset link" : "أدخل إيميل العيادة لإرسال رابط تعيين باسوورد جديد";
             
             document.getElementById('authPassword').parentElement.style.display = 'none';
             document.getElementById('signUpDetailsGroup').style.display = 'none';
             
             const submitBtn = document.getElementById('btnAuthSubmit');
-            submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span>إرسال رابط الاستعادة</span>';
+            submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span id="txtAuthSubmitBtn">' + (currentLang === 'en' ? 'Dispatch Link' : 'إرسال رابط الاستعادة') + '</span>';
             submitBtn.setAttribute('onclick', 'handleForgotPassword()');
             
-            document.getElementById('btnAuthRegister').innerText = "العودة لتسجيل الدخول";
+            document.getElementById('btnAuthRegister').innerText = currentLang === 'en' ? "Back to Sign In" : "العودة لتسجيل الدخول";
         }
 
         async function submitAuthForm() {
             const email = document.getElementById('authEmail').value.trim();
             const password = document.getElementById('authPassword').value.trim();
-            if(!email || !password) return triggerToast("الرجاء إدخال البريد الإلكتروني وكلمة المرور", "error");
-            if(!dbClient) return triggerToast("Supabase client is not configured correctly.", "error");
+            if(!email || !password) return triggerToast(currentLang === 'en' ? "Please input credentials!" : "الرجاء إدخال البريد الإلكتروني وكلمة المرور", "error");
+            if(!dbClient) return triggerToast("Supabase configuration mismatch.", "error");
 
             if(authMode === 'register') {
                 const fullName = document.getElementById('authFullName').value.trim();
                 const clinicPhone = document.getElementById('authClinicPhone').value.trim();
                 const clinicAddress = document.getElementById('authClinicAddress').value.trim();
-                if(!fullName) return triggerToast("الرجاء إدخال اسم الدكتور الثلاثي", "error");
+                if(!fullName) return triggerToast(currentLang === 'en' ? "Please insert physician full name!" : "الرجاء إدخال اسم الدكتور الثلاثي", "error");
                 
                 const { data, error } = await dbClient.auth.signUp({
                     email, password,
@@ -1973,16 +1996,16 @@
                     }
                 });
                 if(error) triggerToast(error.message, "error");
-                else triggerToast("تم إنشاء الحساب بنجاح!");
+                else triggerToast(currentLang === 'en' ? "Account built successfully!" : "تم إنشاء الحساب بنجاح!");
             } else {
                 const { data, error } = await dbClient.auth.signInWithPassword({ email, password });
                 if(error) triggerToast(error.message, "error");
-                else triggerToast("مرحباً بك مجدداً دكتور!");
+                else triggerToast(currentLang === 'en' ? "Welcome back, Doctor!" : "مرحباً بك مجدداً دكتور!");
             }
         }
 
         async function handleLogout() {
-            if(dbClient) { await dbClient.auth.signOut(); triggerToast("تم تسجيل الخروج بأمان."); }
+            if(dbClient) { await dbClient.auth.signOut(); triggerToast(currentLang === 'en' ? "Logged out securely." : "تم تسجيل الخروج بأمان."); }
         }
     </script>
 </body>
