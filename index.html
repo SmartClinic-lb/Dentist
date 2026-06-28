@@ -539,39 +539,26 @@
                         <div class="form-group">
                             <label id="lblPMainProc">الإجراء الطبي الأساسي:</label>
                             <select id="pMainProc" class="form-control" onchange="handleProcedureSubfields()">
-                                <option value="تنظيف">تنظيف وتلميع أسنان</option>
-                                <option value="معالجة عصب">معالجة عصب (Root Canal)</option>
-                                <option value="حشوة تجميلية">حشوة تجميلية (Composite)</option>
-                                <option value="قلع">قلع (Tooth Extraction)</option>
-                                <option value="تركيب">تركيب تيجان / جسور</option>
-                                <option value="وتر فايبر">وتر فايبر (Fiber Post)</option>
-                                <option value="وتد معدن">وتد معدن (Metal Post)</option>
-                                <option value="جراحة لثة">جراحة لثة وتجميل</option>
+                                <!-- هول رح ينبنوا ديناميكياً بالجافاسكريبت منعاً للتسريب الجغِل -->
                             </select>
                         </div>
                         
                         <div class="form-group" id="subProcCleaningGroup">
                             <label id="lblPSubCleaning">درجة المعالجة اللثوية المصاحبة:</label>
                             <select id="subProcCleaning" class="form-control">
-                                <option value="بسيطة">معالجة لثوية بسيطة</option>
-                                <option value="متوسطة">معالجة لثوية متوسطة</option>
-                                <option value="معقدة">معالجة لثوية معقدة</option>
+                                <!-- هول رح ينبنوا ديناميكياً بالجافاسكريبت منعاً للتسريب الجغِل -->
                             </select>
                         </div>
                         <div class="form-group" id="subProcExtractionGroup" style="display:none;">
                             <label id="lblPSubExtraction">مسار جراحة القلع:</label>
                             <select id="subProcExtraction" class="form-control">
-                                <option value="بسيط">بسيط (Simple)</option>
-                                <option value="جراحي">جراحي (Surgical)</option>
+                                <!-- هول رح ينبنوا ديناميكياً بالجافاسكريبت منعاً للتسريب الجغِل -->
                             </select>
                         </div>
                         <div class="form-group" id="subProcFittingGroup" style="display:none;">
                             <label id="lblPSubFitting">مادة التركيبات المخبرية الخزفية:</label>
                             <select id="subProcFitting" class="form-control">
-                                <option value="سيراميك">سيراميك (Ceramic)</option>
-                                <option value="زيركون">زيركون (Zirconia)</option>
-                                <option value="فول زيركون">فول زيركون (Full Zirconia)</option>
-                                <option value="emax">إيماكس (E-max)</option>
+                                <!-- هول رح ينبنوا ديناميكياً بالجافاسكريبت منعاً للتسريب الجغِل -->
                             </select>
                         </div>
                     </div>
@@ -956,7 +943,7 @@
                         const { data: urlData } = dbClient.storage.from('patient-photos').getPublicUrl(fileName);
                         if(urlData) imageMatrixUrls[categoryKey] = urlData.publicUrl;
                     }
-                }
+                } 
             };
             reader.readAsDataURL(file);
         }
@@ -1449,6 +1436,141 @@
             } else { dropdown.innerHTML = `<div class="search-result-item" style="justify-content:center; background:#fff; color:var(--text-main); font-weight:bold;">${currentLang === 'en' ? 'No logs found' : 'لا توجد نتائج'}</div>`; dropdown.style.display = 'block'; }
         }
 
+        // دالة مخصصة لتحديث حقول الاختيار الفرعية ديناميكياً 100% ومنع تسرب أي لغة
+        function refreshSelectDropdownsUI() {
+            const pMainProc = document.getElementById('pMainProc');
+            if(pMainProc) {
+                const currentVal = pMainProc.value || "تنظيف";
+                pMainProc.innerHTML = currentLang === 'en' ? `
+                    <option value="تنظيف">Scaling & Polishing</option>
+                    <option value="معالجة عصب">Root Canal Therapy (RCT)</option>
+                    <option value="حشوة تجميلية">Composite Filling</option>
+                    <option value="قلع">Tooth Extraction</option>
+                    <option value="تركيب">Crowns & Bridges Fixed</option>
+                    <option value="وتر فايبر">Fiber Post</option>
+                    <option value="وتد معدن">Metal Post</option>
+                    <option value="جراحة لثة">Periodontal Surgery</option>
+                ` : `
+                    <option value="تنظيف">تنظيف وتلميع أسنان</option>
+                    <option value="معالجة عصب">معالجة عصب (Root Canal)</option>
+                    <option value="حشوة تجميلية">حشوة تجميلية (Composite)</option>
+                    <option value="قلع">قلع (Tooth Extraction)</option>
+                    <option value="تركيب">تركيب تيجان / جسور</option>
+                    <option value="وتر فايبر">وتر فايبر (Fiber Post)</option>
+                    <option value="وتد معدن">وتد معدن (Metal Post)</option>
+                    <option value="جراحة لثة">جراحة لثة وتجميل</option>
+                `;
+                pMainProc.value = currentVal;
+            }
+
+            const subProcCleaning = document.getElementById('subProcCleaning');
+            if(subProcCleaning) {
+                const currentVal = subProcCleaning.value || "بسيطة";
+                subProcCleaning.innerHTML = currentLang === 'en' ? `
+                    <option value="بسيطة">Mild Gingivitis Therapy</option>
+                    <option value="متوسطة">Moderate Periodontitis</option>
+                    <option value="معقدة">Complex Perio Surgery</option>
+                ` : `
+                    <option value="بسيطة">معالجة لثوية بسيطة</option>
+                    <option value="متوسطة">معالجة لثوية متوسطة</option>
+                    <option value="معقدة">معالجة لثوية معقدة</option>
+                `;
+                subProcCleaning.value = currentVal;
+            }
+
+            const subProcExtraction = document.getElementById('subProcExtraction');
+            if(subProcExtraction) {
+                const currentVal = subProcExtraction.value || "بسيط";
+                subProcExtraction.innerHTML = currentLang === 'en' ? `
+                    <option value="بسيط">Simple Mobility Forceps</option>
+                    <option value="جراحي">Surgical Bone Flap</option>
+                ` : `
+                    <option value="بسيط">بسيط (Simple)</option>
+                    <option value="جراحي">جراحي (Surgical)</option>
+                `;
+                subProcExtraction.value = currentVal;
+            }
+
+            const subProcFitting = document.getElementById('subProcFitting');
+            if(subProcFitting) {
+                const currentVal = subProcFitting.value || "سيراميك";
+                subProcFitting.innerHTML = currentLang === 'en' ? `
+                    <option value="سيراميك">Porcelain Fused Ceramic</option>
+                    <option value="زيركون">High Translucent Zirconia</option>
+                    <option value="فول زيركون">Solid Full Monolithic Zircon</option>
+                    <option value="emax">Lithium Disilicate E-max</option>
+                ` : `
+                    <option value="سيراميك">سيراميك (Ceramic)</option>
+                    <option value="زيركون">زيركون (Zirconia)</option>
+                    <option value="فول زيركون">فول زيركون (Full Zirconia)</option>
+                    <option value="emax">إيماكس (E-max)</option>
+                `;
+                subProcFitting.value = currentVal;
+            }
+
+            const pVisitType = document.getElementById('pVisitType');
+            if(pVisitType) {
+                const currentVal = pVisitType.value || "treatment";
+                pVisitType.innerHTML = currentLang === 'en' ? `
+                    <option value="treatment">Active Treatment / Clinical Procedure</option>
+                    <option value="consultation">Consultation / Check-up Only</option>
+                    <option value="followup">Prospective File for Future Follow-up</option>
+                ` : `
+                    <option value="treatment">عملية وإجراء علاجي بالعيادة (Active Treatment)</option>
+                    <option value="consultation">استشارة ومعاينة طبية فقط (Consultation Only)</option>
+                    <option value="followup">فتح ملف طبي للمتابعة لاحقاً (Prospective File)</option>
+                `;
+                pVisitType.value = currentVal;
+            }
+
+            const pGender = document.getElementById('pGender');
+            if(pGender) {
+                const currentVal = pGender.value || "ذكر";
+                pGender.innerHTML = currentLang === 'en' ? `
+                    <option value="ذكر">Male</option>
+                    <option value="أنثى">Female</option>
+                ` : `
+                    <option value="ذكر">ذكر (Male)</option>
+                    <option value="أنثى">أنثى (Female)</option>
+                `;
+                pGender.value = currentVal;
+            }
+
+            const pMaritalStatus = document.getElementById('pMaritalStatus');
+            if(pMaritalStatus) {
+                const currentVal = pMaritalStatus.value || "عازبة";
+                pMaritalStatus.innerHTML = currentLang === 'en' ? `
+                    <option value="عازبة">Single</option>\n                    <option value="متزوجة">Married</option>\n                ` : `\n                    <option value="عازبة">عازبة</option>\n                    <option value="متزوجة">متزوجة</option>\n                `;
+                pMaritalStatus.value = currentVal;
+            }
+
+            const pPregnancyStatus = document.getElementById('pPregnancyStatus');
+            if(pPregnancyStatus) {
+                const currentVal = pPregnancyStatus.value || "غير ذلك";
+                pPregnancyStatus.innerHTML = currentLang === 'en' ? `
+                    <option value="غير ذلك">Normal Status</option>
+                    <option value="حامل">Pregnant</option>
+                    <option value="مرضعة">Lactating</option>
+                    <option value="أخرى">Write custom status...</option>
+                ` : `
+                    <option value="غير ذلك">غير ذلك</option>
+                    <option value="حامل">حامل (Pregnant)</option>
+                    <option value="مرضعة">مرضعة (Lactating)</option>
+                    <option value="أخرى">أخرى</option>
+                `;
+                pPregnancyStatus.value = currentVal;
+            }
+
+            const archiveFilterSelector = document.getElementById('archiveFilterSelector');
+            if(archiveFilterSelector) {
+                const currentVal = archiveFilterSelector.value || "all";
+                archiveFilterSelector.innerHTML = currentLang === 'en' ? `
+                    <option value="all">Show All Central Logs</option>
+                    <option value="paid">Fully Paid Accounts</option>\n                    <option value="debt">Active Pending Debts</option>\n                ` : `\n                    <option value="all">عرض كل السجلات</option>\n                    <option value="paid">الخالصين ماليًا بالكامل</option>\n                    <option value="debt">الذين في ذمتهم ديون مستحقة</option>\n                `;
+                archiveFilterSelector.value = currentVal;
+            }
+        }
+
         function setSaveButtonState(isEdit) {
             const txtNode = document.getElementById('btnSaveText');
             if (txtNode) {
@@ -1525,7 +1647,7 @@
         
         function updateThemeToggleUI(theme) {
             const btnIcon = document.querySelector('#btnThemeToggle i'); const btnText = document.getElementById('lblThemeText');
-            if (btnIcon && btnText) { if (theme === 'dark') { btnIcon.className = 'fa-solid fa-sun'; btnText.innerText = currentLang === 'ar' ? 'الوضع النهارى' : 'Light Mode'; } else { btnIcon.className = 'fa-solid fa-moon'; btnText.innerText = currentLang === 'ar' ? 'الوضع الليلي' : 'Dark Mode'; } }
+            if (btnIcon && btnText) { if (theme === 'dark') { btnIcon.className = 'fa-solid fa-sun'; btnText.innerText = currentLang === 'ar' ? 'الوضع النهارى' : 'Light Mode'; } else { btnIcon.className = 'fa-solid fa-moon'; btnText.innerText = currentLang === 'ar' ? 'الوضع الليلي' : 'Dark Mode'; } } 
         }
 
         function toggleLanguage() { currentLang = currentLang === 'ar' ? 'en' : 'ar'; localStorage.setItem('clinic_lang', currentLang); initDatePicker(); applyLanguageUI(); renderTable(); renderSchedule(); updateCounters(); }
@@ -1534,6 +1656,9 @@
             const h = document.getElementById('htmlTag'); const btn = document.getElementById('btnLangToggle'); const isDark = h.getAttribute('data-theme') === 'dark';
             if(currentUser) injectDoctorDynamicIdentity();
             
+            // تحديث محتوى القوائم المنسدلة ديناميكياً لحظة التغيير لمنع تسريب الحروف العربية
+            refreshSelectDropdownsUI();
+
             if(currentLang === 'en') {
                 h.dir = 'ltr'; h.lang = 'en'; if(btn) btn.innerText = '🌐 Arabic';
                 document.getElementById('searchBar').placeholder = "Search central clinical logs...";
@@ -1595,26 +1720,6 @@
                 document.getElementById('pDentalCondition').placeholder = "e.g. Sharp pain in lower right molar upon cold drinks...";
                 document.getElementById('pNotes').placeholder = "Enter precise technical measurements, custom prescriptions, or lab specs...";
                 document.getElementById('pDate').placeholder = "Select exact appointment date and time";
-
-                document.getElementById('filterOptAll').innerText = "Show All Central Central Records";
-                document.getElementById('filterOptPaid').innerText = "Fully Settled Central Records";
-                document.getElementById('filterOptDebt').innerText = "Patients with Pending Debts";
-
-                document.getElementById('lblVisitType').innerText = "Visit Type & File Status:";
-                document.getElementById('pVisitType').options[0].text = "Active Treatment / Clinical Procedure";
-                document.getElementById('pVisitType').options[1].text = "Consultation / Check-up Only";
-                document.getElementById('pVisitType').options[2].text = "Prospective File for Future Follow-up";
-
-                document.getElementById('rxPatientName').placeholder = "Patient Full Name";
-                document.getElementById('rxAgeGender').placeholder = "Age / Gender (e.g., 28 yrs / Male)";
-                document.getElementById('rxHealth').placeholder = "Medical Conditions (e.g., Clear)";
-                document.getElementById('rxTeeth').placeholder = "Teeth (e.g., FDI: 46)";
-                document.getElementById('rxProcTitle').placeholder = "Procedure Type";
-                document.getElementById('rxFinTotal').placeholder = "Total $";
-                document.getElementById('rxFinDiscount').placeholder = "Disc $";
-                document.getElementById('rxFinPaid').placeholder = "Paid $";
-                document.getElementById('rxFinDebt').placeholder = "Debt $";
-                document.getElementById('rxContent').placeholder = "Type medications or clinical instructions here...";
 
                 document.getElementById('lblSessionHeading').innerHTML = '<i class="fa-solid fa-sliders"></i> Session Status & File Classification';
                 document.getElementById('lblDemographicsHeading').innerHTML = '<i class="fa-solid fa-user-tag"></i> Patient Profile & Demographics';
@@ -1749,26 +1854,6 @@
                 document.getElementById('pNotes').placeholder = "أدخل هنا القياسات المستخدمة، الأدوية الموصوفة، أو الملاحظات المعملية...";
                 document.getElementById('pDate').placeholder = "إختر الموعد والوقت بدقة";
 
-                document.getElementById('filterOptAll').innerText = "عرض كل السجلات";
-                document.getElementById('filterOptPaid').innerText = "الخالصين ماليًا بالكامل";
-                document.getElementById('filterOptDebt').innerText = "الذين في ذمتهم ديون مستحقة";
-
-                document.getElementById('lblVisitType').innerText = "نوع الزيارة وحالة الملف الحالي للعيادة:";
-                document.getElementById('pVisitType').options[0].text = "عملية وإجراء علاجي بالعيادة (Active Treatment)";
-                document.getElementById('pVisitType').options[1].text = "استشارة ومعاينة طبية فقط (Consultation Only)";
-                document.getElementById('pVisitType').options[2].text = "فتح ملف طبي للمتابعة لاحقاً (Prospective File)";
-
-                document.getElementById('rxPatientName').placeholder = "اسم المريض الثلاثي";
-                document.getElementById('rxAgeGender').placeholder = "العمر / الجنس (مثال: 25 سنة / أنثى)";
-                document.getElementById('rxHealth').placeholder = "الحالة الصحية (مثال: سليم)";
-                document.getElementById('rxTeeth').placeholder = "الأسنان (مثال: FDI: 46)";
-                document.getElementById('rxProcTitle').placeholder = "نوع الإجراء الجراحي";
-                document.getElementById('rxFinTotal').placeholder = "الكلي $";
-                document.getElementById('rxFinDiscount').placeholder = "حسم $";
-                document.getElementById('rxFinPaid').placeholder = "مدفوع $";
-                document.getElementById('rxFinDebt').placeholder = "دين $";
-                document.getElementById('rxContent').placeholder = "اكتب الأدوية الموصوفة والجرعات أو التعليمات السريرية...";
-
                 document.getElementById('lblSessionHeading').innerHTML = '<i class="fa-solid fa-sliders"></i> حالة الجلسة والتصنيف الطبي للملف';
                 document.getElementById('lblDemographicsHeading').innerHTML = '<i class="fa-solid fa-user-tag"></i> البيانات الديموغرافية والاجتماعية للمريض';
                 document.getElementById('lblMedicalHistoryHeading').innerHTML = '<i class="fa-solid fa-heart-pulse"></i> التاريخ الطبي والحالة الصحية العامة للمريض';
@@ -1836,11 +1921,11 @@
                 document.getElementById('lblPrintAgeGender').innerText = "العمر / الجنس:";
                 document.getElementById('lblPrintDate').innerText = "التاريخ والوقت:";
                 document.getElementById('lblPrintHealth').innerText = "الحالة الصحية العامة:";
-                document.getElementById('thPrintTeeth').innerText = "الأسنان / التسمية العلمية المعتمدة";
+                document.getElementById('thPrintTeeth').innerText = "الأسنان / Tالتسمية العلمية المعتمدة";
                 document.getElementById('thPrintProc').innerText = "الإجراء الطبي والعملية المنفذة";
                 document.getElementById('thPrintCost').innerText = "القيمة المالية ($)";
                 document.getElementById('lblPrintSumTotal').innerText = "المبلغ الكلي للإجراء:";
-                document.getElementById('lblPrintSumDiscount').innerText = "الحسم الممنوح:";
+                document.getElementById('lblPrintSumDiscount').innerText = "الحسم Mالممنوح:";
                 document.getElementById('lblPrintSumPaid').innerText = "المبلغ المدفوع كاش حالياً:";
                 document.getElementById('lblPrintSumDebt').innerText = "الدين المتبقي بذمة المريض:";
                 document.getElementById('lblPrintSignature').innerText = "توقيع وخاتم الطبيب المعالج 🖋️";
@@ -2001,7 +2086,7 @@
                 const { data, error } = await dbClient.auth.signInWithPassword({ email, password });
                 if(error) triggerToast(error.message, "error");
                 else triggerToast(currentLang === 'en' ? "Welcome back, Doctor!" : "مرحباً بك مجدداً دكتور!");
-            }
+            } 
         }
 
         async function handleLogout() {
