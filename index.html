@@ -127,8 +127,28 @@
         .search-results-dropdown { position: absolute; top: 100%; left: 0; right: 0; background: var(--bg-sidebar) !important; border: 2px solid var(--primary); border-radius: var(--radius-md); box-shadow: 0 10px 30px rgba(0,0,0,0.15); z-index: 2500 !important; margin-top: 8px; display: none; max-height: 280px; overflow-y: auto; }
         .search-result-item { padding: 12px 14px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); font-size: 0.85rem; color: var(--text-main); background: var(--bg-sidebar); }
         .search-result-item:hover { background: var(--primary-light) !important; }
-        .menu-toggle-btn { background: transparent; border: none; font-size: 1.25rem; color: var(--text-main); cursor: pointer; display: none; }
-
+        ./* زر الخطوط الثلاثة الملوكي - يظهر دائماً على كل الشاشات مع تأثير جغل */
+.menu-toggle-btn { 
+    background: var(--bg-sidebar); 
+    border: 1px solid var(--border); 
+    font-size: 1.2rem; 
+    color: var(--primary); 
+    cursor: pointer; 
+    display: flex !important; /* إجبار الظهور على كل الشاشات */
+    align-items: center; 
+    justify-content: center; 
+    width: 44px; 
+    height: 44px; 
+    border-radius: var(--radius-md); 
+    transition: var(--transition); 
+    box-shadow: var(--shadow-sm); 
+}
+.menu-toggle-btn:hover { 
+    background: var(--primary); 
+    color: #ffffff; 
+    box-shadow: 0 6px 15px var(--primary-light); 
+    transform: scale(1.05); 
+}
         .card { background-color: var(--bg-card); backdrop-filter: var(--glass-blur); border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-sm); border: 1px solid var(--border); margin-bottom: 2rem; position: relative; z-index: 10; }
         .card-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px; color: var(--primary); border-bottom: 2px solid var(--primary-light); padding-bottom: 1rem; }
         
@@ -928,111 +948,90 @@
             } catch (error) { console.error(error); }
         }
 
-        async function addPatientRecordCloud() {
-            try {
-                if (!dbClient || !currentUser) return;
-                const name = document.getElementById('pName').value.trim();
-                const age = document.getElementById('pAge').value.trim();
-                const gender = document.getElementById('pGender').value;
-                const address = document.getElementById('pAddress').value.trim();
-                const phone = document.getElementById('pPhone').value.trim() || "غير مسجل";
-                const date = document.getElementById('pDate').value;
-                const dentalCondition = document.getElementById('pDentalCondition').value.trim();
-                const notes = document.getElementById('pNotes').value.trim();
-                const total = parseFloat(document.getElementById('totalAmount').value) || 0;
-                const labCost = parseFloat(document.getElementById('labCostAmount').value) || 0;
-                const cost = parseFloat(document.getElementById('costAmount').value) || 0;
-                const discount = parseFloat(document.getElementById('discountAmount').value) || 0;
-                const paid = parseFloat(document.getElementById('paidAmount').value) || 0;
-                
-                const visitType = document.getElementById('pVisitType').value;
-
-                if (!name || !date) {
-                    return triggerToast(currentLang === 'en' ? 'Please enter patient name and select visit date!' : 'الرجاء إدخال اسم المريض وتحديد تاريخ الموعد!', 'error');
-                }
-
-                if (visitType === 'treatment' && selectedToothCodes.length === 0) {
-                    return triggerToast(currentLang === 'en' ? 'Please select at least one tooth from the chart for active treatments!' : 'الرجاء تحديد سن أو أكثر من الخريطة للعمليات الإجرائية الطبية الحالية!', 'error');
-                }
-
-                let healthIssues = [];
-                document.querySelectorAll('.health-chk:checked').forEach(c => healthIssues.push(c.value));
-                if(document.getElementById('chkHealthyStatus').checked) healthIssues.push("سليم مية بالمية");
-                if(document.getElementById('chkOtherStatus').checked) {
-                    const otherText = document.getElementById('pHealthOtherText').value.trim();
-                    if(otherText) healthIssues.push(`أخرى: ${otherText}`);
-                }
-                const healthStatusString = healthIssues.join(' + ') || "سليم";
-
-                let socialStatusString = "ذكر";
-                if(gender === 'أنثى') {
-                    const marital = document.getElementById('pMaritalStatus').value;
-                    if(marital === 'متزوجة') {
-                        const preg = document.getElementById('pPregnancyStatus').value;
-                        const pregOther = document.getElementById('pPregnancyOtherText').value.trim();
-                        socialStatusString = `أنثى / متزوجة / ${preg === 'أخرى' ? pregOther : preg}`;
-                    } else {
-                        socialStatusString = "أنثى / عازبة";
-                    }
-                }
-
-                let finalProcedureLabel = "";
-                if (visitType === 'consultation') {
-                    finalProcedureLabel = currentLang === 'en' ? "Consultation Only" : "استشارة ومعاينة طبية فقط";
-                } else if (visitType === 'followup') {
-                    finalProcedureLabel = currentLang === 'en' ? "Prospective / Follow-up File" : "فتح ملف طبي للمتابعة لاحقاً";
-                } else {
-                    const mainProc = document.getElementById('pMainProc').value;
-                    let subProcDetail = "";
-                    if(mainProc === 'تنظيف') subProcDetail = ` (${document.getElementById('subProcCleaning').value})`;
-                    if(mainProc === 'قلع') subProcDetail = ` (${document.getElementById('subProcExtraction').value})`;
-                    if(mainProc === 'تركيب') subProcDetail = ` (${document.getElementById('subProcFitting').value})`;
-                    finalProcedureLabel = `${mainProc}${subProcDetail} - أسنان رقم [ ${selectedToothCodes.join(', ')} ]`;
-                }
-
-                const debt = total - discount - paid;
-                const calculatedDebt = debt < 0 ? 0 : debt;
-                const finalImagesPayload = [imageMatrixUrls.XrayBefore, imageMatrixUrls.XrayAfter, imageMatrixUrls.PhotoBefore, imageMatrixUrls.PhotoAfter].join(',');
-
-                const recordPayload = {
-                    name, phone, date, total, cost, discount, paid, debt: calculatedDebt,
-                    images: finalImagesPayload, user_id: currentUser.id,
-                    proc: finalProcedureLabel, 
-                    notes: `[العمر: ${age} | العنوان: ${address} | الحالة الصحية: ${healthStatusString} | الملف الاجتماعي: ${socialStatusString} | الشكوى المرضية: ${dentalCondition} | قيمة الأدوات المخبرية: $${labCost}] \n ${notes}`
-                };
-
-                if (editingRecordId) {
-                    const { error } = await dbClient.from('appointments').update(recordPayload).eq('id', editingRecordId);
-                    if (error) throw error; triggerToast(currentLang === 'en' ? '📝 Clinical Record Updated!' : '📝 تم تحديث سجل المريض وحفظه!'); editingRecordId = null;
-                } else {
-                    const { error } = await dbClient.from('appointments').insert([recordPayload]);
-                    if (error) throw error; triggerToast(currentLang === 'en' ? '✅ Patient Record Secured!' : '✅ تم إضافة سجل المريض وحفظه بنجاح!');
-                }
-
-                document.getElementById('pName').value = ''; document.getElementById('pAge').value = ''; document.getElementById('pAddress').value = '';
-                document.getElementById('pDentalCondition').value = ''; document.getElementById('pNotes').value = '';
-                document.getElementById('totalAmount').value = '0'; document.getElementById('labCostAmount').value = '0';
-                document.getElementById('costAmount').value = '0'; document.getElementById('discountAmount').value = '0'; document.getElementById('paidAmount').value = '0';
-                document.getElementById('previewXrayRow').innerHTML = ''; document.getElementById('previewPhotoRow').innerHTML = '';
-                document.querySelectorAll('.health-chk').forEach(c => c.checked = false); document.getElementById('chkHealthyStatus').checked = false;
-                document.getElementById('chkOtherStatus').checked = false; document.getElementById('pHealthOtherText').style.display = 'none';
-                document.querySelectorAll('.tooth-node').forEach(n => n.classList.remove('selected')); selectedToothCodes = [];
-                document.getElementById('pSelectedToothDisplay').value = "";
-                document.getElementById('pVisitType').value = 'treatment';
-                
-                document.getElementById('rxPatientName').value = ''; document.getElementById('rxAgeGender').value = '';
-                document.getElementById('rxHealth').value = ''; document.getElementById('rxTeeth').value = '';
-                document.getElementById('rxProcTitle').value = ''; document.getElementById('rxFinTotal').value = '';
-                document.getElementById('rxFinDiscount').value = ''; document.getElementById('rxFinPaid').value = '';
-                document.getElementById('rxFinDebt').value = ''; document.getElementById('rxContent').value = '';
-
-                const chartContainer = document.querySelector('.dental-chart-container');
-                if(chartContainer) chartContainer.style.opacity = '1';
-                
-                if(datePickerInstance) datePickerInstance.clear();
-                setSaveButtonState(false); setActiveNav('liTabArchive'); fetchCloudData(true);
-            } catch(e) { triggerToast("Error: " + e.message, 'error'); }
+         async function addPatientRecordCloud() {
+    try {
+        if (!dbClient || !currentUser) return;
+        
+        // جلب البيانات مع وضع بدائل تلقائية في حال تُركت الخانة فارغة لمنع الـ Error
+        const name = document.getElementById('pName').value.trim();
+        const age = document.getElementById('pAge').value.trim() || "-";
+        const phone = document.getElementById('pPhone').value.trim() || "-";
+        const address = document.getElementById('pAddress').value.trim() || "-";
+        const gender = document.getElementById('pGender').value;
+        const date = document.getElementById('pDate').value;
+        const dentalCondition = document.getElementById('pDentalCondition').value.trim() || "-";
+        const notes = document.getElementById('pNotes').value.trim() || "";
+        
+        const total = parseFloat(document.getElementById('totalAmount').value) || 0;
+        const labCost = parseFloat(document.getElementById('labCostAmount').value) || 0;
+        const cost = parseFloat(document.getElementById('costAmount').value) || 0;
+        const discount = parseFloat(document.getElementById('discountAmount').value) || 0;
+        const paid = parseFloat(document.getElementById('paidAmount').value) || 0;
+        
+        // التحقق فقط من الاسم والتاريخ كشرط أساسي، وباقي الخانات اختيارية بالكامل
+        if (!name || !date) {
+            return triggerToast(currentLang === 'en' ? 'Please enter Patient Name and Visit Date!' : 'الرجاء إدخال اسم المريض وتحديد تاريخ الموعد!', 'error');
         }
+
+        // تجميع الحالات الصحية
+        let healthIssues = [];
+        document.querySelectorAll('.health-chk:checked').forEach(c => healthIssues.push(c.value));
+        if(document.getElementById('chkHealthyStatus').checked) healthIssues.push(currentLang === 'en' ? "Healthy / Clear" : "سليم مية بالمية");
+        if(document.getElementById('chkOtherStatus').checked) {
+            const otherText = document.getElementById('pHealthOtherText').value.trim();
+            if(otherText) healthIssues.push(otherText);
+        }
+        const healthStatusString = healthIssues.join(' + ') || (currentLang === 'en' ? "Clear" : "سليم");
+
+        // تجميع الملف الاجتماعي
+        let socialStatusString = gender === 'ذكر' ? (currentLang === 'en' ? "Male" : "ذكر") : "أنثى";
+        if(gender === 'أنثى') {
+            const marital = document.getElementById('pMaritalStatus').value;
+            if(marital === 'متزوجة') {
+                const preg = document.getElementById('pPregnancyStatus').value;
+                const pregOther = document.getElementById('pPregnancyOtherText').value.trim();
+                socialStatusString = `أنثى / متزوجة / ${preg === 'أخرى' ? pregOther : preg}`;
+            } else { socialStatusString = "أنثى / عازبة"; }
+        }
+
+        // صياغة الإجراء الطبي مع دعم الأسنان الفارغة (للافتتاح أو الاستشارة)
+        const toothDisplay = document.getElementById('pSelectedToothDisplay').value || (currentLang === 'en' ? "General / Consultation" : "عام / استشارة ومعاينة");
+        const mainProc = document.getElementById('pMainProc').value;
+        const finalProcedureLabel = selectedToothCodes.length > 0 ? `${mainProc} - ${toothDisplay}` : toothDisplay;
+
+        const debt = total - discount - paid;
+        const calculatedDebt = debt < 0 ? 0 : debt;
+        const finalImagesPayload = [imageMatrixUrls.XrayBefore, imageMatrixUrls.XrayAfter, imageMatrixUrls.PhotoBefore, imageMatrixUrls.PhotoAfter].join(',');
+
+        const recordPayload = {
+            name, phone, date, total, cost, discount, paid, debt: calculatedDebt,
+            images: finalImagesPayload, user_id: currentUser.id, proc: finalProcedureLabel, 
+            notes: `[العمر: ${age} | العنوان: ${address} | الحالة الصحية: ${healthStatusString} | الملف الاجتماعي: ${socialStatusString} | الشكوى المرضية: ${dentalCondition} | قيمة الأدوات المخبرية: $${labCost}] \n ${notes}`
+        };
+
+        if (editingRecordId) {
+            const { error } = await dbClient.from('appointments').update(recordPayload).eq('id', editingRecordId);
+            if (error) throw error; triggerToast(currentLang === 'en' ? '📝 Record Updated Successfully!' : '📝 تم تحديث سجل المريض بنجاح!'); editingRecordId = null;
+        } else {
+            const { error } = await dbClient.from('appointments').insert([recordPayload]);
+            if (error) throw error; triggerToast(currentLang === 'en' ? '✅ Medical Profile Secured!' : '✅ تم حفظ ملف المريض بنجاح!');
+        }
+
+        // تصفير آمن ونظيف لكافة الخانات للتحضير للملف التالي
+        document.getElementById('pName').value = ''; document.getElementById('pAge').value = ''; document.getElementById('pAddress').value = '';
+        document.getElementById('pDentalCondition').value = ''; document.getElementById('pNotes').value = '';
+        document.getElementById('totalAmount').value = '0'; document.getElementById('labCostAmount').value = '0';
+        document.getElementById('costAmount').value = '0'; document.getElementById('discountAmount').value = '0'; document.getElementById('paidAmount').value = '0';
+        document.getElementById('previewXrayRow').innerHTML = ''; document.getElementById('previewPhotoRow').innerHTML = '';
+        document.querySelectorAll('.health-chk').forEach(c => c.checked = false); document.getElementById('chkHealthyStatus').checked = false;
+        document.getElementById('chkOtherStatus').checked = false; document.getElementById('pHealthOtherText').style.display = 'none';
+        document.querySelectorAll('.tooth-node').forEach(n => n.classList.remove('selected')); selectedToothCodes = [];
+        document.getElementById('pSelectedToothDisplay').value = ""; document.getElementById('pVisitType').value = 'treatment';
+        document.querySelector('.dental-chart-container').style.opacity = '1'; if(datePickerInstance) datePickerInstance.clear();
+        
+        setSaveButtonState(false); setActiveNav('liTabArchive'); fetchCloudData(true);
+    } catch(e) { triggerToast("System Error: " + e.message, 'error'); }
+}
 
         function initiateEditRecord(id) {
             const rec = records.find(r => r.id === id); if (!rec) return;
