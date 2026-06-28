@@ -192,6 +192,7 @@
 
         .table-filter-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; gap: 1rem; flex-wrap: wrap; }
         .table-container { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius-md); border: 1px solid var(--border); background: var(--bg-card); box-shadow: var(--shadow-sm); }
+        .table-container::-webkit-scrollbar { display: none; }
         .custom-table { width: 100%; border-collapse: collapse; text-align: start; min-width: 1200px; table-layout: fixed; }
         .custom-table th { background-color: var(--primary-light); color: var(--primary); padding: 16px 12px; font-weight: 700; border-bottom: 2px solid var(--border); font-size: 0.85rem; white-space: nowrap; }
         .custom-table td { padding: 14px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; font-size: 0.9rem; line-height: 1.6; word-wrap: break-word; overflow: hidden; color: var(--text-main); }
@@ -220,17 +221,17 @@
         .gallery-img-label { font-size: 0.75rem; font-weight: 700; text-align: center; padding: 4px; background: var(--border); color: var(--text-main); }
 
         .mobile-bottom-nav {
-            display: none; position: fixed; bottom: 0; left: 0; right: 0; height: 64px;
+            display: none; position: fixed; bottom: 0; left: 0; right: 0; height: 68px;
             background: var(--bg-sidebar); border-top: 1px solid var(--border);
-            box-shadow: 0 -4px 12px rgba(0,0,0,0.03); z-index: 1040; justify-content: space-around; align-items: center;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.05); z-index: 1040; justify-content: space-around; align-items: center;
             padding-bottom: env(safe-area-inset-bottom);
         }
         .mobile-nav-btn {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            color: var(--text-muted); text-decoration: none; font-size: 0.75rem; font-weight: 700; gap: 3px;
-            background: none; border: none; cursor: pointer; width: 60px; transition: var(--transition);
+            color: var(--text-muted); text-decoration: none; font-size: 0.75rem; font-weight: 700; gap: 4px;
+            background: none; border: none; cursor: pointer; width: 55px; transition: var(--transition);
         }
-        .mobile-nav-btn i { font-size: 1.2rem; }
+        .mobile-nav-btn i { font-size: 1.3rem; }
         .mobile-nav-btn.active { color: var(--primary); }
 
         .sidebar-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(4px); z-index: 1035; display: none; }
@@ -239,39 +240,58 @@
         @media (max-width: 992px) {
             .sidebar { transform: translateX(100%); width: 280px !important; z-index: 1060; }
             html[dir="ltr"] .sidebar { transform: translateX(-100%); }
-            .main-content { margin-right: 0 !important; margin-left: 0 !important; padding: 15px !important; padding-bottom: 90px !important; }
+            .main-content { margin-right: 0 !important; margin-left: 0 !important; padding: 12px !important; padding-bottom: 95px !important; }
             html.sidebar-mobile-open .sidebar { transform: translateX(0) !important; }
             html.sidebar-mobile-open .sidebar-overlay { display: block !important; }
-            .top-bar { flex-direction: column-reverse; padding: 12px !important; gap: 12px; }
+            .top-bar { flex-direction: column-reverse; padding: 12px !important; gap: 12px; border-radius: 12px; }
             .top-bar-right { width: 100%; justify-content: space-between; }
             .search-wrapper { width: 100%; max-width: 100%; }
-            .card { padding: 1.25rem !important; border-radius: 16px; }
+            .card { padding: 1.25rem !important; border-radius: 14px; margin-bottom: 1.25rem; }
             .stats-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px; }
-            .stat-box { padding: 1.25rem; }
-            .stat-box h2 { font-size: 1.4rem; }
-            .menu-toggle-btn { display: block; }
+            .stat-box { padding: 1rem; border-radius: 8px; }
+            .stat-box h2 { font-size: 1.35rem; }
+            .menu-toggle-btn { display: flex; }
         }
-        @media (max-width: 768px) { .mobile-bottom-nav { display: flex; } .menu-toggle-btn { display: block; } }
-        @media (max-width: 576px) { .stats-grid { grid-template-columns: 1fr !important; } .charts-row-layout { grid-template-columns: 1fr !important; gap: 1.25rem; } }
+        @media (max-width: 768px) { .mobile-bottom-nav { display: flex; } .menu-toggle-btn { display: flex; } }
+        @media (max-width: 576px) { .stats-grid { grid-template-columns: 1fr !important; } .charts-row-layout { grid-template-columns: 1fr !important; gap: 1rem; } }
 
         @media print {
+            @page {
+                size: A4 portrait;
+                margin: 0mm !important; /* إلغاء ترويسة وتاريخ المتصفح نهائياً من برنت الحكيم */
+            }
             body * { visibility: hidden; }
             #printRxContainer, #printRxContainer * { visibility: visible; }
-            #printRxContainer { display: block !important; position: absolute; left: 0; top: 0; width: 100%; padding: 10mm; box-sizing: border-box; background: #fff; color: #000; font-family: 'Cairo', sans-serif; dir: rtl; text-align: start; }
-            .print-header-grid { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 2px solid #0f172a; padding-bottom: 12px; margin-bottom: 20px; }
+            #printRxContainer { 
+                display: block !important; 
+                position: absolute; 
+                left: 0; 
+                top: 0; 
+                width: 100%; 
+                max-height: 100vh;
+                padding: 15mm; 
+                box-sizing: border-box; 
+                background: #fff; 
+                color: #000; 
+                font-family: 'Cairo', sans-serif; 
+                dir: rtl; 
+                text-align: start; 
+                page-break-inside: avoid;
+            }
+            .print-header-grid { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 3px solid #0d9488; padding-bottom: 12px; margin-bottom: 15px; }
             .print-header-left { text-align: left; font-size: 0.85rem; line-height: 1.5; }
-            .print-header-right h1 { font-size: 1.6rem; font-weight: 700; margin: 0; color: #0d9488; }
-            .print-header-right p { font-size: 0.95rem; font-weight: 600; margin: 3px 0 0; color: #334155; }
-            .print-meta-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; margin-bottom: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+            .print-header-right h1 { font-size: 1.7rem; font-weight: 700; margin: 0; color: #0d9488; }
+            .print-header-right p { font-size: 1rem; font-weight: 600; margin: 3px 0 0; color: #334155; }
+            .print-meta-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin-bottom: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
             .print-meta-box p { margin: 0; font-size: 0.9rem; color: #334155; }
-            .print-table { width: 100%; border-collapse: collapse; margin-bottom: 25px; }
+            .print-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
             .print-table th { background: #f1f5f9; text-align: start; padding: 10px; font-weight: 700; font-size: 0.85rem; border-bottom: 2px solid #cbd5e1; }
-            .print-table td { padding: 10px; font-size: 0.9rem; border-bottom: 1px solid #e2e8f0; vertical-align: top; text-align: start; }
-            .print-footer-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px; margin-top: 15px; }
-            .print-financial-summary { border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px; background: #f8fafc; }
-            .print-financial-row { display: flex; justify-content: space-between; padding: 5px 0; font-size: 0.85rem; border-bottom: 1px dashed #e2e8f0; }
-            .print-financial-row:last-child { border-bottom: none; font-weight: 700; color: #0d9488; font-size: 0.95rem; }
-            .print-signature-space { text-align: left; display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end; font-weight: 700; font-size: 0.95rem; padding-top: 35px; }
+            .print-table td { padding: 12px 10px; font-size: 0.9rem; border-bottom: 1px solid #e2e8f0; vertical-align: top; text-align: start; }
+            .print-footer-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 25px; margin-top: 15px; }
+            .print-financial-summary { border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; background: #f8fafc; }
+            .print-financial-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 0.85rem; border-bottom: 1px dashed #e2e8f0; }
+            .print-financial-row:last-child { border-bottom: none; font-weight: 700; color: #0d9488; font-size: 1rem; }
+            .print-signature-space { text-align: left; display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end; font-weight: 700; font-size: 0.95rem; padding-top: 25px; }
         }
     </style>
 </head>
@@ -312,6 +332,7 @@
             <div class="brand"><i class="fa-solid fa-tooth"></i><div class="brand-info"><div class="brand-title" id="txtHeaderTitle">جاري التعرف...</div><small style="color: var(--text-muted); font-weight: 700; font-size: 0.75rem;">OS v15.0 Enterprise</small></div></div>
             <ul class="nav-menu">
                 <li class="nav-menu-item nav-item active" id="liTabMain"><a href="javascript:void(0)" onclick="setActiveNav('liTabMain')"><i class="fa-solid fa-chart-line"></i> <span id="tabMain">الرئيسية ولوحة التحكم</span></a></li>
+                <li class="nav-menu-item nav-item" id="liTabSchedule"><a href="javascript:void(0)" onclick="setActiveNav('liTabSchedule')"><i class="fa-solid fa-calendar-days"></i> <span id="tabSchedule">جدول المواعيد اليومية</span></a></li>
                 <li class="nav-menu-item nav-item" id="liTabApp"><a href="javascript:void(0)" onclick="setActiveNav('liTabApp')"><i class="fa-solid fa-folder-plus"></i> <span id="lblAddAppTitle">إضافة سجل وموعد جديد</span></a></li>
                 <li class="nav-menu-item nav-item" id="liTabArchive"><a href="javascript:void(0)" onclick="setActiveNav('liTabArchive')"><i class="fa-solid fa-server"></i> <span id="tabPatients">أرشيف وإدارة المرضى</span></a></li>
             </ul>
@@ -324,6 +345,7 @@
 
         <div class="mobile-bottom-nav">
             <button class="mobile-nav-btn active" id="mBtnMain" onclick="setActiveNav('liTabMain')"><i class="fa-solid fa-chart-line"></i><span>الرئيسية</span></button>
+            <button class="mobile-nav-btn" id="mBtnSchedule" onclick="setActiveNav('liTabSchedule')"><i class="fa-solid fa-calendar-days"></i><span>المواعيد</span></button>
             <button class="mobile-nav-btn" id="mBtnApp" onclick="setActiveNav('liTabApp')"><i class="fa-solid fa-folder-plus"></i><span>إضافة سجل</span></button>
             <button class="mobile-nav-btn" id="mBtnArchive" onclick="setActiveNav('liTabArchive')"><i class="fa-solid fa-server"></i><span>الأرشيف</span></button>
             <button class="mobile-nav-btn" id="mBtnMenu" onclick="toggleSidebarMenu()"><i class="fa-solid fa-bars"></i><span>المزيد</span></button>
@@ -391,6 +413,33 @@
                 </div>
             </section>
 
+            <!-- 📅 قسم جدول المواعيد الملوكي المستقل المضاف حديثاً بناءً على طلب الحكيم -->
+            <section id="secSchedule" class="page-section">
+                <div class="card">
+                    <div class="table-filter-header">
+                        <h3 class="card-title" style="border:none; margin:0; padding:0;"><i class="fa-solid fa-calendar-check"></i> <span id="lblScheduleTitle">جدول المواعيد وتنظيم الجلسات</span></h3>
+                        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                            <button class="sys-btn" onclick="filterScheduleByDay('today')" id="btnSchedToday" style="padding: 8px 14px;">اليوم</button>
+                            <button class="sys-btn" onclick="filterScheduleByDay('tomorrow')" id="btnSchedTomorrow" style="padding: 8px 14px;">غداً</button>
+                            <input type="date" id="schedDatePicker" class="form-control" style="max-width:160px; padding:6px 12px;" onchange="filterScheduleByCustomDate(this.value)">
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="custom-table" style="min-width: 900px;">
+                            <thead>
+                                <tr>
+                                    <th style="width: 25%;" id="thSchedName">اسم المريض المعني</th>
+                                    <th style="width: 30%;" id="thSchedProc">الإجراء الطبي الأساسي</th>
+                                    <th style="width: 20%;" id="thSchedTime">التوقيت وجدولة الجلسة</th>
+                                    <th style="width: 25%;" id="thSchedActions">إدارة وجدولة الموعد السحابي</th>
+                                </tr>
+                            </thead>
+                            <tbody id="scheduleTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
             <section id="secAppointment" class="page-section">
                 <div class="card">
                     <h3 class="card-title"><i class="fa-solid fa-square-plus"></i> <span id="lblAddAppTitleInner">إنشاء سجل طبي ومالي متكامل للمريض</span></h3>
@@ -448,7 +497,7 @@
                             <label class="clinical-checkbox-label"><input type="checkbox" class="health-chk" value="سكري" onchange="handleHealthStatusSelection(this)"> <span>سكري</span></label>
                             <label class="clinical-checkbox-label"><input type="checkbox" class="health-chk" value="ضغط" onchange="handleHealthStatusSelection(this)"> <span>ضغط</span></label>
                             <label class="clinical-checkbox-label"><input type="checkbox" class="health-chk" value="ربو" onchange="handleHealthStatusSelection(this)"> <span>ربو</span></label>
-                            <label class="clinical-checkbox-label"><input type="checkbox" class="health-chk" value="غدة درقية" onchange="change="handleHealthStatusSelection(this)"> <span>غدة درقية</span></label>
+                            <label class="clinical-checkbox-label"><input type="checkbox" class="health-chk" value="غدة درقية" onchange="handleHealthStatusSelection(this)"> <span>غدة درقية</span></label>
                             <label class="clinical-checkbox-label"><input type="checkbox" class="health-chk" value="التهاب الكبد" onchange="handleHealthStatusSelection(this)"> <span>التهاب الكبد</span></label>
                             <label class="clinical-checkbox-label"><input type="checkbox" id="chkHealthyStatus" value="سليم" onchange="handleHealthyClear(this)"> <span style="color:var(--primary)">سليم / لا شيء</span></label>
                             <label class="clinical-checkbox-label"><input type="checkbox" id="chkOtherStatus" value="غير ذلك" onchange="handleOtherHealthField()"> <span>غير ذلك...</span></label>
@@ -690,6 +739,8 @@
         let authMode = 'login';
         let currentActiveSystem = 'FDI'; // FDI, UNIVERSAL, PALMER
         let selectedToothCodes = [];
+        let currentScheduleDayFilter = 'today'; // today, tomorrow, custom
+        let currentScheduleCustomDateStr = '';
         let imageMatrixUrls = { XrayBefore: "", XrayAfter: "", PhotoBefore: "", PhotoAfter: "" };
 
         const ADULT_TEETH_DATA = [
@@ -798,7 +849,7 @@
             document.querySelectorAll('.notation-btn').forEach(btn => btn.classList.remove('active'));
             if(systemCode === 'FDI') document.getElementById('btnFdi').classList.add('active');
             if(systemCode === 'UNIVERSAL') document.getElementById('btnUniversal').classList.add('active');
-            if(systemCode === 'PALMER') document.getElementById('btnPalmer').classList.add('active');
+            if(systemCode === 'Palmer') document.getElementById('btnPalmer').classList.add('active');
             
             ADULT_TEETH_DATA.forEach(tooth => {
                 const node = document.querySelector(`#tooth-${tooth.fdi} .tooth-lbl-txt`);
@@ -949,8 +1000,27 @@
             try {
                 if (!dbClient || !currentUser) return;
                 const { data, error } = await dbClient.from('appointments').select('*').eq('user_id', currentUser.id).order('id', { ascending: false });
-                if (error) throw error; records = data || []; renderTable(); updateCounters();
+                if (error) throw error; records = data || []; 
+                renderTable(); 
+                renderSchedule();
+                updateCounters();
             } catch (error) { console.error(error); }
+        }
+
+        // دالة مضافة لترجمة نصوص العمليات الطبية القادمة من الداتا بيز لحظياً منعاً للتسريب
+        function translateProcedureText(procText) {
+            if (currentLang !== 'en') return procText;
+            let text = procText;
+            text = text.replace("تنظيف وتلميع أسنان", "Scaling & Polishing");
+            text = text.replace("معالجة عصب (Root Canal)", "Root Canal Therapy (RCT)");
+            text = text.replace("حشوة تجميلية (Composite)", "Composite Filling");
+            text = text.replace("قلع (Tooth Extraction)", "Surgical Extraction");
+            text = text.replace("تركيب تيجان / جسور", "Crowns & Bridges Fixed");
+            text = text.replace("وتر فايبر (Fiber Post)", "Fiber Post");
+            text = text.replace("وتد معدن (Metal Post)", "Metal Cast Post");
+            text = text.replace("جراحة لثة وتجميل", "Periodontal Surgery");
+            text = text.replace("عام / استشارة ومعاينة", "General / Consultation");
+            return text;
         }
 
         async function addPatientRecordCloud() {
@@ -1124,8 +1194,8 @@
                     tr.innerHTML = `
                         ${patientCell} ${detailsCell}
                         <td>
-                            <span style="background:var(--primary-light); color:var(--primary); padding:4px 8px; border-radius:6px; font-weight:700; font-size:0.85rem;"><i class="fa-solid fa-tooth"></i> ${v.proc}</span>
-                            ${cInfo.cleanNotes ? `<div class="clinical-blockquote-notes">📜 ${cInfo.cleanNotes}</div>` : ''}
+                            <span style="background:var(--primary-light); color:var(--primary); padding:4px 8px; border-radius:6px; font-weight:700; font-size:0.85rem;"><i class="fa-solid fa-tooth"></i> ${translateProcedureText(v.proc)}</span>
+                            ${v.notes && cInfo.cleanNotes ? `<div class="clinical-blockquote-notes">📜 ${cInfo.cleanNotes}</div>` : ''}
                         </td>
                         <td style="color:var(--accent); font-weight:600; font-family:'Plus Jakarta Sans', sans-serif; font-size:0.85rem;">${v.date}</td>
                         <td style="font-weight:600; font-family:'Plus Jakarta Sans', sans-serif;">$${v.total}</td>
@@ -1147,6 +1217,79 @@
                     tbody.appendChild(tr);
                 });
             });
+        }
+
+        // 📅 دالات معالجة وبناء جدول المواعيد السحابي الجديد لحظة بلحظة وبسلاسة تامة
+        function filterScheduleByDay(dayType) {
+            currentScheduleDayFilter = dayType;
+            document.getElementById('btnSchedToday').style.background = dayType === 'today' ? 'var(--primary-light)' : '';
+            document.getElementById('btnSchedTomorrow').style.background = dayType === 'tomorrow' ? 'var(--primary-light)' : '';
+            renderSchedule();
+        }
+
+        function filterScheduleByCustomDate(dateStr) {
+            if(!dateStr) return;
+            currentScheduleDayFilter = 'custom';
+            currentScheduleCustomDateStr = dateStr;
+            document.getElementById('btnSchedToday').style.background = '';
+            document.getElementById('btnSchedTomorrow').style.background = '';
+            renderSchedule();
+        }
+
+        function renderSchedule() {
+            const tbody = document.getElementById('scheduleTableBody'); if(!tbody) return;
+            tbody.innerHTML = '';
+
+            const todayStr = new Date().toISOString().split('T')[0];
+            const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
+            const tomorrowStr = tomorrow.toISOString().split('T')[0];
+
+            let targetDateStr = todayStr;
+            if(currentScheduleDayFilter === 'tomorrow') targetDateStr = tomorrowStr;
+            if(currentScheduleDayFilter === 'custom') targetDateStr = currentScheduleCustomDateStr;
+
+            const dayRecords = records.filter(r => r.date && r.date.startsWith(targetDateStr));
+
+            if(dayRecords.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="no-data-msg">${currentLang === 'ar' ? 'لا يوجد مواعيد مجدولة لهذا اليوم.' : 'No clinical appointments scheduled for this day.'}</td></tr>`;
+                return;
+            }
+
+            dayRecords.forEach(v => {
+                const tr = document.createElement('tr');
+                const timePart = v.date.split(' ')[1] || v.date;
+                const rescheduleLabel = currentLang === 'en' ? 'Reschedule' : 'إعادة جدولة الموعد';
+                const cInfo = parseClinicalNotesString(v.notes);
+
+                tr.innerHTML = `
+                    <td style="font-weight:700;"><i class="fa-solid fa-user-clock" style="margin-inline-end:6px; color:var(--primary);"></i>${v.name}</td>
+                    <td><span style="background:var(--primary-light); color:var(--primary); padding:4px 8px; border-radius:6px; font-weight:700; font-size:0.85rem;">${translateProcedureText(v.proc)}</span></td>
+                    <td style="color:var(--accent); font-weight:700; font-family:'Plus Jakarta Sans';">${timePart}</td>
+                    <td>
+                        <button class="sys-btn" style="padding:6px 12px; font-size:0.8rem; border-color:var(--accent); color:var(--accent);" onclick="rescheduleAppointmentCloud(${v.id})">
+                            <i class="fa-solid fa-calendar-rotate"></i> ${rescheduleLabel}
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function rescheduleAppointmentCloud(id) {
+            const targetRec = records.find(r => r.id === id); if(!targetRec) return;
+            const promptMsg = currentLang === 'en' ? 'Enter new date and time (YYYY-MM-DD HH:MM):' : 'أدخل التاريخ والوقت الجديد للموعد (مثال: 2026-06-29 16:30):';
+            const userNewDate = prompt(promptMsg, targetRec.date);
+            if(!userNewDate || userNewDate.trim() === '') return;
+
+            if(dbClient) {
+                const { error } = await dbClient.from('appointments').update({ date: userNewDate.trim() }).eq('id', id);
+                if(!error) {
+                    triggerToast(currentLang === 'en' ? 'Appointment rescheduled successfully!' : 'تمت إعادة جدولة الموعد السحابي بنجاح!');
+                    fetchCloudData(true);
+                } else {
+                    triggerToast(error.message, 'error');
+                }
+            }
         }
 
         function printDoctorPrescriptionFromRecord(id) {
@@ -1264,9 +1407,20 @@
                 if (monthlyChartInstance) monthlyChartInstance.destroy(); if (procsChartInstance) procsChartInstance.destroy();
                 Chart.defaults.font.family = "'Cairo', sans-serif"; Chart.defaults.color = getComputedStyle(document.body).getPropertyValue('--text-muted');
                 const ctx1 = document.getElementById('monthlyDonutChart').getContext('2d');
-                monthlyChartInstance = new Chart(ctx1, { type: 'doughnut', data: { labels: ['مرضى', 'عمليات', 'كاش $'], datasets: [{ data: [pats, ops, cash], backgroundColor: ['#0d9488', '#eab308', '#22c55e'], borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: false, cutout: '73%' } });
+                
+                // ترجمة نصوص ومسميات الكارتات التفاعلية والتشارت حسب لغة السيستم
+                const label1 = currentLang === 'en' ? 'Patients' : 'مرضى';
+                const label2 = currentLang === 'en' ? 'Operations' : 'عمليات';
+                const label3 = currentLang === 'en' ? 'Cash $' : 'كاش $';
+
+                monthlyChartInstance = new Chart(ctx1, { type: 'doughnut', data: { labels: [label1, label2, label3], datasets: [{ data: [pats, ops, cash], backgroundColor: ['#0d9488', '#eab308', '#22c55e'], borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: false, cutout: '73%' } });
+                
                 const ctx2 = document.getElementById('proceduresDonutChart').getContext('2d');
-                procsChartInstance = new Chart(ctx2, { type: 'pie', data: { labels: ['خلع', 'تنظيف', 'عصب', 'تركيب', 'تقويم', 'زراعة', 'تبييض', 'حشوة'], datasets: [{ data: [procs["خلع"], procs["تنظيف"], procs["عصب"], procs["تركيب"], procs["تقويم"], procs["زراعة"], procs["تبييض"], procs["حشوة"]], backgroundColor: ['#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#6366f1', '#ec4899', '#14b8a6', '#8b5cf6'], borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: false } });
+                const pLabels = currentLang === 'en' 
+                    ? ['Extraction', 'Scaling', 'RCT', 'Fitting', 'Ortho', 'Implants', 'Bleaching', 'Composite']
+                    : ['خلع', 'تنظيف', 'عصب', 'تركيب', 'تقويم', 'زراعة', 'تبييض', 'حشوة'];
+
+                procsChartInstance = new Chart(ctx2, { type: 'pie', data: { labels: pLabels, datasets: [{ data: [procs["خلع"], procs["تنظيف"], procs["عصب"], procs["تركيب"], procs["تقويم"], procs["زراعة"], procs["تبييض"], procs["حشوة"]], backgroundColor: ['#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#6366f1', '#ec4899', '#14b8a6', '#8b5cf6'], borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: false } });
             } catch(e) {}
         }
 
@@ -1305,6 +1459,11 @@
                 document.getElementById('liTabMain').classList.add('active');
                 document.getElementById('mBtnMain').classList.add('active');
                 document.getElementById('secDashboard').classList.add('active-page');
+            } else if (activeId === 'liTabSchedule') {
+                document.getElementById('liTabSchedule').classList.add('active');
+                document.getElementById('mBtnSchedule').classList.add('active');
+                document.getElementById('secSchedule').classList.add('active-page');
+                renderSchedule();
             } else if (activeId === 'liTabApp') {
                 document.getElementById('liTabApp').classList.add('active');
                 document.getElementById('mBtnApp').classList.add('active');
@@ -1340,7 +1499,7 @@
                 }
                 const cInfo = parseClinicalNotesString(v.notes);
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td style="font-weight:600; color:var(--accent);">${v.date}</td><td><span style="background:var(--primary-light); color:var(--primary); padding:4px 8px; border-radius:6px; font-weight:700">${v.proc}</span><div class="clinical-blockquote-notes"><strong>💡 تقرير الزيارة:</strong> ${cInfo.cleanNotes}</div></td><td>$${v.total}</td><td style="color:var(--accent); font-weight:600;">$${cInfo.lab}</td><td style="color:#22c55e;">$${v.paid}</td><td style="font-weight:700; color:#ef4444;">$${v.debt}</td>`;
+                tr.innerHTML = `<td style="font-weight:600; color:var(--accent);">${v.date}</td><td><span style="background:var(--primary-light); color:var(--primary); padding:4px 8px; border-radius:6px; font-weight:700">${translateProcedureText(v.proc)}</span><div class="clinical-blockquote-notes"><strong>💡 تقرير الزيارة:</strong> ${cInfo.cleanNotes}</div></td><td>$${v.total}</td><td style="color:var(--accent); font-weight:600;">$${cInfo.lab}</td><td style="color:#22c55e;">$${v.paid}</td><td style="font-weight:700; color:#ef4444;">$${v.debt}</td>`;
                 tableBody.appendChild(tr);
             });
             document.getElementById('profTotalDebt').innerText = `$${accumulatedDebt}`;
@@ -1357,7 +1516,7 @@
             if (btnIcon && btnText) { if (theme === 'dark') { btnIcon.className = 'fa-solid fa-sun'; btnText.innerText = currentLang === 'ar' ? 'الوضع النهارى' : 'Light Mode'; } else { btnIcon.className = 'fa-solid fa-moon'; btnText.innerText = currentLang === 'ar' ? 'الوضع الليلي' : 'Dark Mode'; } }
         }
 
-        function toggleLanguage() { currentLang = currentLang === 'ar' ? 'en' : 'ar'; localStorage.setItem('clinic_lang', currentLang); initDatePicker(); applyLanguageUI(); renderTable(); updateCounters(); }
+        function toggleLanguage() { currentLang = currentLang === 'ar' ? 'en' : 'ar'; localStorage.setItem('clinic_lang', currentLang); initDatePicker(); applyLanguageUI(); renderTable(); renderSchedule(); updateCounters(); }
 
         function applyLanguageUI() {
             const h = document.getElementById('htmlTag'); const btn = document.getElementById('btnLangToggle'); const isDark = h.getAttribute('data-theme') === 'dark';
@@ -1366,8 +1525,19 @@
                 h.dir = 'ltr'; h.lang = 'en'; if(btn) btn.innerText = '🌐 العربية';
                 document.getElementById('searchBar').placeholder = "Search central clinical logs...";
                 document.getElementById('tabMain').innerText = "Dashboard";
+                document.getElementById('tabSchedule').innerText = "Daily Appointments";
                 document.getElementById('lblAddAppTitle').innerText = "New Record";
                 document.getElementById('tabPatients').innerText = "Clinical Archive";
+                
+                // ترجمة ترويسة الجدول والجدول الفرعي الجديد
+                document.getElementById('lblScheduleTitle').innerText = "Daily Appointments & Session Management";
+                document.getElementById('btnSchedToday').innerText = "Today";
+                document.getElementById('btnSchedTomorrow').innerText = "Tomorrow";
+                document.getElementById('thSchedName').innerText = "Patient Identity";
+                document.getElementById('thSchedProc').innerText = "Scheduled Procedure";
+                document.getElementById('thSchedTime').innerText = "Session Time";
+                document.getElementById('thSchedActions').innerText = "Manage / Update Slot";
+
                 document.getElementById('thName').innerText = "Patient Identity";
                 document.getElementById('thProfileDetails').innerText = "Medical & Demographics";
                 document.getElementById('thProc').innerText = "Procedures Log";
@@ -1381,6 +1551,7 @@
                 
                 document.getElementById('lblLogoutText').innerText = "Logout";
                 document.querySelector('#mBtnMain span').innerText = "Home";
+                document.querySelector('#mBtnSchedule span').innerText = "Schedule";
                 document.querySelector('#mBtnApp span').innerText = "New Entry";
                 document.querySelector('#mBtnArchive span').innerText = "Archive";
                 document.querySelector('#mBtnMenu span').innerText = "More";
@@ -1433,11 +1604,21 @@
                 h.dir = 'rtl'; h.lang = 'ar'; if(btn) btn.innerText = '🌐 English'; 
                 document.getElementById('searchBar').placeholder = "البحث عن عملية، تقرير، أو اسم مريض...";
                 document.getElementById('tabMain').innerText = "الرئيسية ولوحة التحكم";
+                document.getElementById('tabSchedule').innerText = "جدول المواعيد اليومية";
                 document.getElementById('lblAddAppTitle').innerText = "إضافة سجل وموعد جديد";
                 document.getElementById('tabPatients').innerText = "أرشيف وإدارة المرضى";
                 
+                document.getElementById('lblScheduleTitle').innerText = "جدول المواعيد وتنظيم الجلسات";
+                document.getElementById('btnSchedToday').innerText = "اليوم";
+                document.getElementById('btnSchedTomorrow').innerText = "غداً";
+                document.getElementById('thSchedName').innerText = "اسم المريض المعني";
+                document.getElementById('thSchedProc').innerText = "الإجراء الطبي المقرر";
+                document.getElementById('thSchedTime').innerText = "التوقيت وجدولة الجلسة";
+                document.getElementById('thSchedActions').innerText = "إدارة وجدولة الموعد السحابي";
+
                 document.getElementById('lblLogoutText').innerText = "تسجيل الخروج";
                 document.querySelector('#mBtnMain span').innerText = "الرئيسية";
+                document.querySelector('#mBtnSchedule span').innerText = "المواعيد";
                 document.querySelector('#mBtnApp span').innerText = "إضافة سجل";
                 document.querySelector('#mBtnArchive span').innerText = "الأرشيف";
                 document.querySelector('#mBtnMenu span').innerText = "المزيد";
@@ -1669,7 +1850,6 @@
             const regLink = document.getElementById('btnAuthRegister');
             const extra = document.getElementById('signUpDetailsGroup');
             
-            // إعادة إظهار كافة الحقول والتأكد من تهيئتها عند التبديل
             document.getElementById('lblAuthEmail').parentElement.style.display = 'block';
             document.getElementById('authPassword').parentElement.style.display = 'block';
             document.getElementById('authPassword').placeholder = "••••••••";
@@ -1684,7 +1864,6 @@
             }
         }
 
-        // دالة إرسال رابط إعادة تعيين كلمة المرور إلى إيميل الدكتور
         async function handleForgotPassword() {
             const email = document.getElementById('authEmail').value.trim();
 
@@ -1696,7 +1875,7 @@
             document.getElementById('btnAuthSubmit').disabled = true;
 
             const { data, error } = await dbClient.auth.resetPasswordForEmail(email, {
-                redirectTo: 'redirectTo: window.location.origin + window.location.pathname,', 
+                redirectTo: window.location.origin + window.location.pathname, 
             });
 
             document.getElementById('btnAuthSubmit').disabled = false;
@@ -1710,7 +1889,6 @@
             }
         }
 
-        // مراقبة الرابط عند فتح الموقع أو تغيره للتحقق إذا كان رابط استعادة
         window.addEventListener('hashchange', () => { checkRecoveryLink(); });
         window.addEventListener('load', () => { checkRecoveryLink(); });
 
@@ -1735,7 +1913,6 @@
             }
         }
 
-        // دالة حفظ كلمة المرور الجديدة في السوبابيز
         async function handleUpdatePassword() {
             const newPassword = document.getElementById('authPassword').value.trim();
 
@@ -1761,7 +1938,6 @@
             }
         }
 
-        // دالة تحويل الواجهة عند الضغط على "نسيت كلمة المرور؟"
         function showForgotPasswordView() {
             authMode = 'forgot';
             document.getElementById('lblAuthTitle').innerText = "استعادة الحساب";
@@ -1778,33 +1954,32 @@
         }
 
         async function submitAuthForm() {
-    const email = document.getElementById('authEmail').value.trim();
-    const password = document.getElementById('authPassword').value.trim();
-    if(!email || !password) return triggerToast("الرجاء إدخال البريد الإلكتروني وكلمة المرور", "error");
-    if(!dbClient) return triggerToast("Supabase client is not configured correctly.", "error");
+            const email = document.getElementById('authEmail').value.trim();
+            const password = document.getElementById('authPassword').value.trim();
+            if(!email || !password) return triggerToast("الرجاء إدخال البريد الإلكتروني وكلمة المرور", "error");
+            if(!dbClient) return triggerToast("Supabase client is not configured correctly.", "error");
 
-    if(authMode === 'register') {
-        const fullName = document.getElementById('authFullName').value.trim();
-        const clinicPhone = document.getElementById('authClinicPhone').value.trim();
-        const clinicAddress = document.getElementById('authClinicAddress').value.trim();
-        if(!fullName) return triggerToast("الرجاء إدخال اسم الدكتور الثلاثي", "error");
-        
-        // 🔥 ضفنا الـ redirectTo الديناميكي هون كمان لإنشاء الحساب الجديد عشان يروح ع جيت هاب فوراً
-        const { data, error } = await dbClient.auth.signUp({
-            email, password,
-            options: { 
-                data: { full_name: fullName, clinic_phone: clinicPhone, clinic_address: clinicAddress },
-                redirectTo: window.location.origin + window.location.pathname
+            if(authMode === 'register') {
+                const fullName = document.getElementById('authFullName').value.trim();
+                const clinicPhone = document.getElementById('authClinicPhone').value.trim();
+                const clinicAddress = document.getElementById('authClinicAddress').value.trim();
+                if(!fullName) return triggerToast("الرجاء إدخال اسم الدكتور الثلاثي", "error");
+                
+                const { data, error } = await dbClient.auth.signUp({
+                    email, password,
+                    options: { 
+                        data: { full_name: fullName, clinic_phone: clinicPhone, clinic_address: clinicAddress },
+                        redirectTo: window.location.origin + window.location.pathname
+                    }
+                });
+                if(error) triggerToast(error.message, "error");
+                else triggerToast("تم إنشاء الحساب بنجاح!");
+            } else {
+                const { data, error } = await dbClient.auth.signInWithPassword({ email, password });
+                if(error) triggerToast(error.message, "error");
+                else triggerToast("مرحباً بك مجدداً دكتور!");
             }
-        });
-        if(error) triggerToast(error.message, "error");
-        else triggerToast("تم إنشاء الحساب بنجاح! يرجى مراجعة بريدك للتأكيد.");
-    } else {
-        const { data, error } = await dbClient.auth.signInWithPassword({ email, password });
-        if(error) triggerToast(error.message, "error");
-        else triggerToast("مرحباً بك مجدداً دكتور!");
-    }
-}
+        }
 
         async function handleLogout() {
             if(dbClient) { await dbClient.auth.signOut(); triggerToast("تم تسجيل الخروج بأمان."); }
